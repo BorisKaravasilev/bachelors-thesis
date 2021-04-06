@@ -10,6 +10,9 @@ public class GenerateTerrainNodesPreviews : SingleTask
 	private float previewNodeRadius;
 	private Transform previewParent;
 
+	// Output
+	private List<TerrainNodePreview> previews;
+
 	/// <summary>
 	/// Initializes the task's parameters and assigns the action to be executed after its execution is finished.
 	/// </summary>
@@ -19,38 +22,27 @@ public class GenerateTerrainNodesPreviews : SingleTask
 		this.previewNodeRadius = previewNodeRadius;
 		this.previewParent = previewParent;
 		this.setTerrainNodePreviews = setTerrainNodePreviews;
+
+		previews = new List<TerrainNodePreview>();
 	}
 
 	public void SetTerrainNodes(List<TerrainNode> terrainNodes)
 	{
 		this.terrainNodes = terrainNodes;
+		TotalSteps = terrainNodes.Count;
+		RemainingSteps = TotalSteps;
 	}
 
-	/// <summary>
-	/// Executes the whole task at once.
-	/// </summary>
-	public override void Execute()
+	protected override void ExecuteStep()
 	{
-		throw new System.NotImplementedException();
+		int currentNodeIndex = TotalSteps - RemainingSteps;
+		TerrainNode currentNode = terrainNodes[currentNodeIndex];
+		TerrainNodePreview newPreview = new TerrainNodePreview(currentNode, previewNodeRadius, previewParent);
+		previews.Add(newPreview);
 	}
 
-	/// <summary>
-	/// Executes a part of the task and returns true if finished.
-	/// </summary>
-	public override bool ExecuteStep()
+	protected override void PassTaskResults()
 	{
-		List<TerrainNodePreview> previews = new List<TerrainNodePreview>();
-
-		foreach (TerrainNode node in terrainNodes)
-		{
-			TerrainNodePreview newPreview = new TerrainNodePreview(node, previewNodeRadius, previewParent);
-			previews.Add(newPreview);
-		}
-
 		setTerrainNodePreviews(previews);
-
-		Finished = true;
-		Progress = 1f;
-		return true;
 	}
 }

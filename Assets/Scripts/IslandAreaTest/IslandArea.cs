@@ -11,13 +11,11 @@ public class IslandArea : GridObject
 	private List<TerrainNode> terrainNodes;
 	private List<TerrainNodePreview> terrainNodesPreviews;
 	
-	//private Vector3 nodePreviewDimensions;
 	private ComposedTask generateAreaTask;
 	private bool generationPreview;
 
 	private const string DEFAULT_NAME = "IslandArea";
 	private const int HM_RESOLUTION = 100;
-	private Vector3 nodePreviewDimensions;
 	private bool paramsAssigned = false;
 
 	public IslandArea()
@@ -66,8 +64,8 @@ public class IslandArea : GridObject
 	{
 		if (paramsAssigned)
 		{
-			ShowHeightMapPreview();
-			bool allDone = generateAreaTask.ExecuteStep();
+			ShowHeightMapPreview(); // TODO: Move into separate task
+			generateAreaTask.ExecuteStepSize();
 		}
 		else
 		{

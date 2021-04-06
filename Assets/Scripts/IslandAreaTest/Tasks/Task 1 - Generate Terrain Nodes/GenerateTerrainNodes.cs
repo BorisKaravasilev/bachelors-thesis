@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class GenerateTerrainNodes : SingleTask
 {
-	private Action<List<TerrainNode>> setTerrainNodes;
+	// Inputs
 	private GenerateTerrainNodesParams nodesParams;
 	private GridObjectParams objectParams;
+	private Action<List<TerrainNode>> setTerrainNodes;
+
+	// Outputs
+	private List<TerrainNode> terrainNodes;
 
 	/// <summary>
 	/// Initializes the task's parameters and assigns the action to be executed after its execution is finished.
@@ -18,37 +22,50 @@ public class GenerateTerrainNodes : SingleTask
 		this.nodesParams = nodesParams;
 		this.objectParams = objectParams;
 		this.setTerrainNodes = setTerrainNodes;
+
+		terrainNodes = new List<TerrainNode>();
+		TotalSteps = RandomFromSeed.Range(objectParams.Position, nodesParams.MinNodes, nodesParams.MaxNodes + 1);
+		RemainingSteps = TotalSteps;
 	}
 
-	/// <summary>
-	/// Executes the whole task at once.
-	/// </summary>
-	public override void Execute()
+	protected override void ExecuteStep()
 	{
-		throw new System.NotImplementedException();
+		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(objectParams.Position, Vector3.zero, objectParams.Radius);
+		int randTypeIndex = RandomFromSeed.Range(objectParams.Position, 0, nodesParams.TerrainTypes.Count);
+
+		TerrainNode randomNode = new TerrainNode(randPosition, nodesParams.TerrainTypes[randTypeIndex]);
+		terrainNodes.Add(randomNode);
+	}
+
+	protected override void PassTaskResults()
+	{
+		setTerrainNodes(terrainNodes);
 	}
 
 	/// <summary>
 	/// Executes a part of the task and returns true if finished.
 	/// </summary>
-	public override bool ExecuteStep()
-	{
-		List<TerrainNode> terrainNodes = new List<TerrainNode>();
-		int generatedNodesCount = RandomFromSeed.Range(objectParams.Position, nodesParams.MinNodes, nodesParams.MaxNodes + 1);
+	//public override int ExecuteStepSize()
+	//{
+	//	if (nodesToGenerate > 0)
+	//	{
+	//		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(objectParams.Position, Vector3.zero, objectParams.Radius);
+	//		int randTypeIndex = RandomFromSeed.Range(objectParams.Position, 0, nodesParams.TerrainTypes.Count);
 
-		for (int i = 0; i < generatedNodesCount; i++)
-		{
-			Vector3 randPosition = RandomFromSeed.RandomPointInRadius(objectParams.Position, Vector3.zero, objectParams.Radius);
-			int randTypeIndex = RandomFromSeed.Range(objectParams.Position, 0, nodesParams.TerrainTypes.Count);
+	//		TerrainNode randomNode = new TerrainNode(randPosition, nodesParams.TerrainTypes[randTypeIndex]);
+	//		terrainNodes.Add(randomNode);
 
-			TerrainNode randomNode = new TerrainNode(randPosition, nodesParams.TerrainTypes[randTypeIndex]);
-			terrainNodes.Add(randomNode);
-		}
+	//		nodesToGenerate--;
+	//	}
 
-		setTerrainNodes(terrainNodes);
-
-		Finished = true;
-		Progress = 1f;
-		return true;
-	}
+	//	if (nodesToGenerate == 0)
+	//	{
+	//		setTerrainNodes(terrainNodes);
+	//		return true;
+	//	}
+	//	else
+	//	{
+	//		return false;
+	//	}
+	//}
 }

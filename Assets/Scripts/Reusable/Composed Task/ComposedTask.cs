@@ -8,22 +8,12 @@ using UnityEngine;
 /// </summary>
 public class ComposedTask
 {
-	public bool Finished { get; set; }
+	public bool Finished => AreAllTasksFinished();
 
-	private float progress;
 	/// <summary>
 	/// In range of 0 to 1.
 	/// </summary>
-	public float Progress
-	{
-		get { return progress; }
-		protected set
-		{
-			if (value < 0f) progress = 0f;
-			else if (value > 1f) progress = 1f;
-			else progress = value;
-		}
-	}
+	public float Progress => GetProgress();
 
 	private List<SingleTask> taskList;
 
@@ -35,22 +25,44 @@ public class ComposedTask
 	public void AddTask(SingleTask newTask)
 	{
 		taskList.Add(newTask);
-		Finished = AreAllTasksFinished();
-		Progress = GetProgress();
 	}
 
-	public void Execute()
+	/// <summary>
+	/// Executes all tasks at once and returns the number of steps that it took.
+	/// </summary>
+	public int Execute()
 	{
-
-	}
-
-	public bool ExecuteStep()
-	{
+		int executedSteps = 0;
 		SingleTask firstUnfinishedTask = FindFirstUnfinishedTask();
-		firstUnfinishedTask?.ExecuteStep();
-		return AreAllTasksFinished();
+
+		while (firstUnfinishedTask != null)
+		{
+			executedSteps += firstUnfinishedTask.Execute();
+			firstUnfinishedTask = FindFirstUnfinishedTask();
+		}
+
+		return executedSteps;
 	}
 
+	/// <summary>
+	/// Executes the number of steps defined by "StepSize" in each sub-task and returns the number of steps executed.
+	/// </summary>
+	public int ExecuteStepSize()
+	{
+		int executedSteps = 0;
+		SingleTask firstUnfinishedTask = FindFirstUnfinishedTask();
+
+		if (firstUnfinishedTask != null)
+		{
+			executedSteps = firstUnfinishedTask.ExecuteStepSize();
+		}
+
+		return executedSteps;
+	}
+
+	/// <summary>
+	/// Returns the first enabled unfinished task in the "taskList" or null if none is found.
+	/// </summary>
 	private SingleTask FindFirstUnfinishedTask()
 	{
 		SingleTask firstUnfinishedTask = null;
