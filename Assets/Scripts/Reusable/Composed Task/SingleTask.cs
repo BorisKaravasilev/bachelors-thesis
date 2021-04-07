@@ -1,7 +1,8 @@
 ﻿public abstract class SingleTask
 {
 	public string Name { get; protected set; }
-	public bool Finished => remainingSteps == 0;
+	public bool Finished => RemainingSteps == 0;
+	public bool NotStarted => RemainingSteps == TotalSteps;
 
 	private int totalSteps = 1;
 	public int TotalSteps
@@ -50,6 +51,8 @@
 	/// </summary>
 	public int Execute()
 	{
+		if (NotStarted) GetInputFromPreviousStep();
+
 		int executedSteps = 0;
 
 		while (RemainingSteps > 0)
@@ -59,7 +62,6 @@
 			executedSteps++;
 		}
 
-		PassTaskResults();
 		return executedSteps;
 	}
 
@@ -68,6 +70,8 @@
 	/// </summary>
 	public int ExecuteStepSize()
 	{
+		if (NotStarted) GetInputFromPreviousStep();
+
 		int executedSteps = 0;
 		int stepsToExecute = StepSize;
 
@@ -79,10 +83,16 @@
 			executedSteps++;
 		}
 
-		if (Finished) PassTaskResults();
 		return executedSteps;
 	}
 
+	/// <summary>
+	/// Defines how a single step is executed.
+	/// </summary>
 	protected abstract void ExecuteStep();
-	protected abstract void PassTaskResults();
+
+	/// <summary>
+	/// Gets called before the first step is executed.
+	/// </summary>
+	protected abstract void GetInputFromPreviousStep();
 }

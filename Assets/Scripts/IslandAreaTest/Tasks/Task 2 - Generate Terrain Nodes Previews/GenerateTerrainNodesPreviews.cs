@@ -5,32 +5,29 @@ using UnityEngine;
 
 public class GenerateTerrainNodesPreviews : SingleTask
 {
-	private Action<List<TerrainNodePreview>> setTerrainNodePreviews;
-	private List<TerrainNode> terrainNodes;
+	// Inputs
 	private float previewNodeRadius;
 	private Transform previewParent;
+	private Func<List<TerrainNode>> getTerrainNodes;
 
 	// Output
 	private List<TerrainNodePreview> previews;
 
+	// Internal
+	private List<TerrainNode> terrainNodes;
+
 	/// <summary>
-	/// Initializes the task's parameters and assigns the action to be executed after its execution is finished.
+	/// Initializes the task's parameters.
 	/// </summary>
-	public GenerateTerrainNodesPreviews(float previewNodeRadius, Transform previewParent, Action<List<TerrainNodePreview>> setTerrainNodePreviews)
+	/// <param name="getTerrainNodes">Delegate function that collects the result from the previous task.</param>
+	public GenerateTerrainNodesPreviews(float previewNodeRadius, Transform previewParent, Func<List<TerrainNode>> getTerrainNodes)
 	{
 		Name = "Generate Terrain Nodes Previews";
 		this.previewNodeRadius = previewNodeRadius;
 		this.previewParent = previewParent;
-		this.setTerrainNodePreviews = setTerrainNodePreviews;
+		this.getTerrainNodes = getTerrainNodes;
 
 		previews = new List<TerrainNodePreview>();
-	}
-
-	public void SetTerrainNodes(List<TerrainNode> terrainNodes)
-	{
-		this.terrainNodes = terrainNodes;
-		TotalSteps = terrainNodes.Count;
-		RemainingSteps = TotalSteps;
 	}
 
 	protected override void ExecuteStep()
@@ -41,8 +38,10 @@ public class GenerateTerrainNodesPreviews : SingleTask
 		previews.Add(newPreview);
 	}
 
-	protected override void PassTaskResults()
+	protected override void GetInputFromPreviousStep()
 	{
-		setTerrainNodePreviews(previews);
+		this.terrainNodes = getTerrainNodes();
+		TotalSteps = terrainNodes.Count;
+		RemainingSteps = TotalSteps;
 	}
 }

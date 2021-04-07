@@ -5,36 +5,33 @@ using UnityEngine;
 
 public class IslandArea : GridObject
 {
-	private Texture2D heightMap;
-	private TexturePreview heightMapPreview;
-
-	private List<TerrainNode> terrainNodes;
-	private List<TerrainNodePreview> terrainNodesPreviews;
+	//private Texture2D heightMap;
+	//private TexturePreview heightMapPreview;
 	
 	private ComposedTask generateAreaTask;
-	private bool generationPreview;
 
 	private const string DEFAULT_NAME = "IslandArea";
-	private const int HM_RESOLUTION = 100;
 	private bool paramsAssigned = false;
+	//private const int HM_RESOLUTION = 100;
 
 	public IslandArea()
 	{
 		gameObject.name = DEFAULT_NAME;
-		heightMap = new Texture2D(HM_RESOLUTION, HM_RESOLUTION);
-		terrainNodes = new List<TerrainNode>();
+		//heightMap = new Texture2D(HM_RESOLUTION, HM_RESOLUTION);
 		generateAreaTask = new ComposedTask();
 	}
 
 	/// <summary>
 	/// Assigns all necessary parameters for island area generation.
 	/// </summary>
-	public void AssignParams(bool generationPreview, GenerateTerrainNodesParams terrainNodesParams)
+	public void AssignParams(bool previewProgress, GenerateTerrainNodesParams terrainNodesParams)
 	{
-		this.generationPreview = generationPreview;
+		// Terrain nodes
+		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters);
 
-		GenerateTerrainNodesPreviews generateTerrainNodesPreviews = new GenerateTerrainNodesPreviews(Parameters.Radius / 10f, gameObject.transform, SetTerrainNodesPreviews);
-		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters, generateTerrainNodesPreviews.SetTerrainNodes);
+		// Terrain nodes (previews)
+		GenerateTerrainNodesPreviews generateTerrainNodesPreviews = new GenerateTerrainNodesPreviews(Parameters.Radius / 10f, gameObject.transform, generateTerrainNodes.GetResult);
+		generateTerrainNodesPreviews.Enabled = previewProgress;
 
 		generateAreaTask.AddTask(generateTerrainNodes);
 		generateAreaTask.AddTask(generateTerrainNodesPreviews);
@@ -44,13 +41,9 @@ public class IslandArea : GridObject
 
 	public GameObject Generate()
 	{
-		throw new NotImplementedException();
-
 		if (paramsAssigned)
 		{
-			//ShowHeightMapPreview();
-			//bool allDone = generateAreaTask.ExecuteStep();
-			//ShowTerrainNodes();
+			generateAreaTask.Execute();
 		}
 		else
 		{
@@ -64,7 +57,6 @@ public class IslandArea : GridObject
 	{
 		if (paramsAssigned)
 		{
-			ShowHeightMapPreview(); // TODO: Move into separate task
 			generateAreaTask.ExecuteStepSize();
 		}
 		else
@@ -75,36 +67,44 @@ public class IslandArea : GridObject
 		return gameObject;
 	}
 
-	public override void Destroy()
+	private void PrintErrorParamsNotAssigned(string requiringFuncName, string assignmentFuncName)
 	{
-		//terrainNodes.ForEach(node => node.Destroy()); TODO: Destroy terrain nodes previews
-		terrainNodes.Clear();
-
-		heightMapPreview?.Destroy();
-
-		base.Destroy();
+		Debug.LogError(
+			$"{DEFAULT_NAME}'s parameters not assigned before calling \"{requiringFuncName}\"." +
+			$" Call \"{assignmentFuncName}\" first."
+		);
 	}
 
+	//public override void Destroy()
+	//{
+	//	//terrainNodes.ForEach(node => node.Destroy()); TODO: Destroy terrain nodes previews
+	//	terrainNodes.Clear();
+
+	//	heightMapPreview?.Destroy();
+
+	//	base.Destroy();
+	//}
 
 
 
-	private void ShowHeightMapPreview()
-	{
-		if (heightMapPreview == null)
-		{
-			heightMapPreview = new TexturePreview(gameObject.transform);
-			heightMapPreview.SetDimensions(new Vector3(2f * Parameters.Radius, 1, 2f * Parameters.Radius));
-		}
-		else
-		{
-			heightMapPreview.Show();
-		}
-	}
 
-	private void HideHeightMapPreview()
-	{
-		heightMapPreview?.Hide();
-	}
+	//private void ShowHeightMapPreview()
+	//{
+	//	if (heightMapPreview == null)
+	//	{
+	//		heightMapPreview = new TexturePreview(gameObject.transform);
+	//		heightMapPreview.SetDimensions(new Vector3(2f * Parameters.Radius, 1, 2f * Parameters.Radius));
+	//	}
+	//	else
+	//	{
+	//		heightMapPreview.Show();
+	//	}
+	//}
+
+	//private void HideHeightMapPreview()
+	//{
+	//	heightMapPreview?.Hide();
+	//}
 
 	//private void ShowTerrainNodes()
 	//{
@@ -116,21 +116,13 @@ public class IslandArea : GridObject
 	//	terrainNodes?.ForEach(node => node.HidePreview());
 	//}
 
-	private void SetTerrainNodes(List<TerrainNode> newTerrainNodes)
-	{
-		terrainNodes = newTerrainNodes;
-	}
+	//private void SetTerrainNodes(List<TerrainNode> newTerrainNodes)
+	//{
+	//	terrainNodes = newTerrainNodes;
+	//}
 
-	private void SetTerrainNodesPreviews(List<TerrainNodePreview> newTerrainNodesPreviews)
-	{
-		terrainNodesPreviews = newTerrainNodesPreviews;
-	}
-
-	private void PrintErrorParamsNotAssigned(string requiringFuncName, string assignmentFuncName)
-	{
-		Debug.LogError(
-			$"{DEFAULT_NAME}'s parameters not assigned before calling \"{requiringFuncName}\"." +
-			$" Call \"{assignmentFuncName}\" first."
-		);
-	}
+	//private void SetTerrainNodesPreviews(List<TerrainNodePreview> newTerrainNodesPreviews)
+	//{
+	//	terrainNodesPreviews = newTerrainNodesPreviews;
+	//}
 }
