@@ -26,6 +26,12 @@ public class GenerateTerrainNodes : SingleTask
 		RemainingSteps = TotalSteps;
 	}
 
+	public List<TerrainNode> GetResult()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		return terrainNodes;
+	}
+
 	protected override void GetInputFromPreviousStep() { /* Not used */ }
 
 	protected override void ExecuteStep()
@@ -35,15 +41,5 @@ public class GenerateTerrainNodes : SingleTask
 
 		TerrainNode randomNode = new TerrainNode(randPosition, nodesParams.TerrainTypes[randTypeIndex]);
 		terrainNodes.Add(randomNode);
-	}
-
-	public List<TerrainNode> GetResult()
-	{
-		if (Finished) return terrainNodes;
-		else
-		{
-			Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-			return terrainNodes;
-		}
 	}
 }

@@ -30,11 +30,26 @@ public class IslandArea : GridObject
 		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters);
 
 		// Terrain nodes (previews)
-		GenerateTerrainNodesPreviews generateTerrainNodesPreviews = new GenerateTerrainNodesPreviews(Parameters.Radius / 10f, gameObject.transform, generateTerrainNodes.GetResult);
-		generateTerrainNodesPreviews.Enabled = previewProgress;
+		ShowTerrainNodes showTerrainNodes =
+			new ShowTerrainNodes(Parameters.Radius / 10f, gameObject.transform, generateTerrainNodes.GetResult)
+			{
+				Enabled = previewProgress
+			};
+
+		// Height map
+		const int resolution = 100;
+
+		GenerateNodesHeightmap generateNodesHeightmap =
+			new GenerateNodesHeightmap(resolution, Parameters.Radius, generateTerrainNodes.GetResult);
+
+		// Height map (preview)
+		ShowNodesHeightmap showNodesHeightmap =
+			new ShowNodesHeightmap(Parameters.Radius, resolution, gameObject.transform, generateNodesHeightmap.GetResult);
 
 		generateAreaTask.AddTask(generateTerrainNodes);
-		generateAreaTask.AddTask(generateTerrainNodesPreviews);
+		generateAreaTask.AddTask(showTerrainNodes);
+		generateAreaTask.AddTask(generateNodesHeightmap);
+		generateAreaTask.AddTask(showNodesHeightmap);
 
 		paramsAssigned = true;
 	}
@@ -58,6 +73,7 @@ public class IslandArea : GridObject
 		if (paramsAssigned)
 		{
 			generateAreaTask.ExecuteStepSize();
+			Debug.Log($"Progress of composed task is: {generateAreaTask.Progress}");
 		}
 		else
 		{
@@ -74,55 +90,4 @@ public class IslandArea : GridObject
 			$" Call \"{assignmentFuncName}\" first."
 		);
 	}
-
-	//public override void Destroy()
-	//{
-	//	//terrainNodes.ForEach(node => node.Destroy()); TODO: Destroy terrain nodes previews
-	//	terrainNodes.Clear();
-
-	//	heightMapPreview?.Destroy();
-
-	//	base.Destroy();
-	//}
-
-
-
-
-	//private void ShowHeightMapPreview()
-	//{
-	//	if (heightMapPreview == null)
-	//	{
-	//		heightMapPreview = new TexturePreview(gameObject.transform);
-	//		heightMapPreview.SetDimensions(new Vector3(2f * Parameters.Radius, 1, 2f * Parameters.Radius));
-	//	}
-	//	else
-	//	{
-	//		heightMapPreview.Show();
-	//	}
-	//}
-
-	//private void HideHeightMapPreview()
-	//{
-	//	heightMapPreview?.Hide();
-	//}
-
-	//private void ShowTerrainNodes()
-	//{
-	//	terrainNodes?.ForEach(node => node.ShowPreview(gameObject.transform, nodePreviewDimensions));
-	//}
-
-	//private void HideTerrainNodes()
-	//{
-	//	terrainNodes?.ForEach(node => node.HidePreview());
-	//}
-
-	//private void SetTerrainNodes(List<TerrainNode> newTerrainNodes)
-	//{
-	//	terrainNodes = newTerrainNodes;
-	//}
-
-	//private void SetTerrainNodesPreviews(List<TerrainNodePreview> newTerrainNodesPreviews)
-	//{
-	//	terrainNodesPreviews = newTerrainNodesPreviews;
-	//}
 }

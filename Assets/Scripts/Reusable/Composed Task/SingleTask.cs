@@ -22,20 +22,14 @@
 			else remainingSteps = value;
 		}
 	}
-
+	
+	public int ExecutedSteps => TotalSteps - RemainingSteps;
 	public int StepSize { get; protected set; }
 
 	/// <summary>
 	/// In range of 0 to 1.
 	/// </summary>
-	public float Progress
-	{
-		get
-		{
-			float executedSteps = totalSteps - remainingSteps;
-			return executedSteps / totalSteps;
-		}
-	}
+	public float Progress => (float) ExecutedSteps / totalSteps;
 
 	public bool Enabled { get; set; }
 

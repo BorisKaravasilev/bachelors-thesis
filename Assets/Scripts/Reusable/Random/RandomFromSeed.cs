@@ -3,17 +3,21 @@
 public static class RandomFromSeed
 {
 	/// <summary>
-	/// Return a random point between center [inclusive] and center + radius [inclusive] in X and Z axis.
+	/// Return a random point between center [inclusive] and center +- radius [inclusive] in X and Z axis.
 	/// Y coordinate is same as center.
 	/// </summary>
 	public static Vector3 RandomPointInRadius(Vector3 seedPosition, Vector3 center, float radius)
 	{
 		//Random.InitState(PositionToIntSeed(seedPosition));
-		float x = center.x + Random.Range(-radius, radius);
-		float y = center.y;
-		float z = center.z + Random.Range(-radius, radius);
+		Vector3 randomPoint = new Vector3();
+		do
+		{
+			randomPoint.x = center.x + Random.Range(-radius, radius);
+			randomPoint.y = center.y;
+			randomPoint.z = center.z + Random.Range(-radius, radius);
+		} while (Vector3.Distance(randomPoint, center) > radius);
 
-		return new Vector3(x, y, z);
+		return randomPoint;
 	}
 
 	/// <summary>

@@ -3,24 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateTerrainNodesPreviews : SingleTask
+public class ShowTerrainNodes : SingleTask
 {
 	// Inputs
 	private float previewNodeRadius;
 	private Transform previewParent;
 	private Func<List<TerrainNode>> getTerrainNodes;
 
+	// Inputs from previous task
+	private List<TerrainNode> terrainNodes;
+
 	// Output
 	private List<TerrainNodePreview> previews;
-
-	// Internal
-	private List<TerrainNode> terrainNodes;
 
 	/// <summary>
 	/// Initializes the task's parameters.
 	/// </summary>
 	/// <param name="getTerrainNodes">Delegate function that collects the result from the previous task.</param>
-	public GenerateTerrainNodesPreviews(float previewNodeRadius, Transform previewParent, Func<List<TerrainNode>> getTerrainNodes)
+	public ShowTerrainNodes(float previewNodeRadius, Transform previewParent, Func<List<TerrainNode>> getTerrainNodes)
 	{
 		Name = "Generate Terrain Nodes Previews";
 		this.previewNodeRadius = previewNodeRadius;
