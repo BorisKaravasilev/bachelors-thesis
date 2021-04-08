@@ -47,7 +47,7 @@ public class IslandArea : GridObject
 			};
 
 		// Generate Nodes Noise
-		Noise2DParams noiseParams = new Noise2DParams(0.1f, 11.5f, 29.43f);
+		Noise2DParams noiseParams = new Noise2DParams(0.01f, 11.5f, 29.43f);
 		GenerateNoiseHeightmap generateNoiseHeightmap = new GenerateNoiseHeightmap(resolution, noiseParams);
 
 		// Show Nodes Noise
@@ -62,8 +62,8 @@ public class IslandArea : GridObject
 		generateAreaTask.AddTask(showTerrainNodes);
 		generateAreaTask.AddTask(generateNodesHeightmap);
 		generateAreaTask.AddTask(showNodesHeightmap);
-		generateAreaTask.AddTask(generateNoiseHeightmap);
-		generateAreaTask.AddTask(showNoiseHeightmap);
+		//generateAreaTask.AddTask(generateNoiseHeightmap);
+		//generateAreaTask.AddTask(showNoiseHeightmap);
 
 		paramsAssigned = true;
 	}

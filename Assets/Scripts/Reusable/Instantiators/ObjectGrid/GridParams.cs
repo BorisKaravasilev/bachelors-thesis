@@ -4,13 +4,13 @@
 public class GridParams
 {
 	[Range(1, 20)]
-	public int spacing;
+	public int spacing = 15;
 
 	[Range(0.5f, 10f)]
-	public float maxObjectRadius;
+	public float maxObjectRadius = 5;
 
 	[Range(100, 1000)]
-	public int objectCountLimit;
+	public int objectCountLimit = 500;
 
-	public bool destroyFarObjects;
+	public bool destroyFarObjects = true;
 }
