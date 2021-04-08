@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GenerateTerrainNodes : SingleTask
@@ -38,8 +36,9 @@ public class GenerateTerrainNodes : SingleTask
 	{
 		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(objectParams.Position, Vector3.zero, objectParams.Radius);
 		int randTypeIndex = RandomFromSeed.Range(objectParams.Position, 0, nodesParams.TerrainTypes.Count);
+		float maxRadius = objectParams.Radius - Vector3.Distance(randPosition, Vector3.zero);
 
-		TerrainNode randomNode = new TerrainNode(randPosition, nodesParams.TerrainTypes[randTypeIndex]);
+		TerrainNode randomNode = new TerrainNode(randPosition, nodesParams.TerrainTypes[randTypeIndex], maxRadius);
 		terrainNodes.Add(randomNode);
 	}
 }

@@ -1,22 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class Noise2D
 {
-	protected NoiseParams parameters;
+	protected Noise2DParams parameters;
 
 	public Noise2D()
 	{
-		this.parameters = new NoiseParams(1f, 0f, 0f);
+		this.parameters = new Noise2DParams(1f, 0f, 0f);
 	}
 
-	public Noise2D(NoiseParams parameters)
+	public Noise2D(Noise2DParams parameters)
 	{
-		this.parameters = parameters;
+		SetParameters(parameters);
 	}
 
-	public void SetParameters(NoiseParams parameters)
+	public void SetParameters(Noise2DParams parameters)
 	{
 		this.parameters = parameters;
 	}

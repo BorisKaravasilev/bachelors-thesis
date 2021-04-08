@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class GridOffsetParams
@@ -11,7 +9,7 @@ public class GridOffsetParams
 	[Range(0f, 1f)]
 	public float threshold;
 
-	public NoiseParams xOffsetParams;
-	public NoiseParams zOffsetParams;
-	public NoiseParams thresholdParams;
+	public Noise2DParams xOffsetParams;
+	public Noise2DParams zOffsetParams;
+	public Noise2DParams thresholdParams;
 }

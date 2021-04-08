@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,16 +43,27 @@ public class GenerateNodesHeightmap : SingleTask
 	{
 		int pixelIndex = ExecutedSteps;
 		Color pixelColor;
-		Vector2Int pixelCoords = Flattened2DArrayIndexToCoords(pixelIndex);
+		Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, pixelIndex);
 		Vector3 areaCenter = Vector3.zero;
 
-		if (GetPixelDistanceFromPoint(pixelCoords, areaCenter) > areaRadius)
+		if (GetPixelDistanceFromPoint(pixel2DCoords, areaCenter) > areaRadius)
 		{
 			pixelColor = new Color(0f, 0f, 0f, 0f);
 		}
 		else
 		{
-			pixelColor = new Color(0f, 0f, 0f, 1f);
+			float pixelIntensity = 0f;
+
+			foreach (TerrainNode terrainNode in terrainNodes)
+			{
+				float distanceFromNode = GetPixelDistanceFromPoint(pixel2DCoords, terrainNode.Position);
+				float normalizedDistance = Mathf.Clamp(distanceFromNode, 0f, terrainNode.Radius) / terrainNode.Radius;
+				pixelIntensity += 1f - normalizedDistance;
+
+				if (pixelIntensity > 1f) pixelIntensity = 1f;
+			}
+
+			pixelColor = new Color(pixelIntensity, pixelIntensity, pixelIntensity, 1f);
 		}
 
 		texturePixels[pixelIndex] = pixelColor;
@@ -87,12 +97,5 @@ public class GenerateNodesHeightmap : SingleTask
 	private float GetPixelsLength(int pixelsCount)
 	{
 		return ((float) pixelsCount / resolution) * areaDiameter;
-	}
-
-	private Vector2Int Flattened2DArrayIndexToCoords(int index)
-	{
-		int x = index % resolution;
-		int y = index / resolution;
-		return new Vector2Int(x, y);
 	}
 }

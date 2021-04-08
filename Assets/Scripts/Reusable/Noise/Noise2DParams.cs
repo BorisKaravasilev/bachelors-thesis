@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-[System.Serializable]
-public class NoiseParams
+﻿[System.Serializable]
+public class Noise2DParams
 {
 	public float Scale;
 	public float OffsetX;
 	public float OffsetY;
 
-	public NoiseParams(float scale, float offsetX, float offsetY)
+	public Noise2DParams(float scale, float offsetX, float offsetY)
 	{
 		Scale = scale;
 		OffsetX = offsetX;

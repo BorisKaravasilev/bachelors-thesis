@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 /// <summary>
 /// Manages a list of SingleTasks. Tasks that are not enabled are ignored.

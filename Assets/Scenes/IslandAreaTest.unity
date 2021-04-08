@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1598694479}
   gridParams:
-    spacing: 15
+    spacing: 20
     maxObjectRadius: 6
     objectCountLimit: 500
     destroyFarObjects: 1
@@ -201,6 +201,7 @@ GameObject:
   - component: {fileID: 142699284}
   - component: {fileID: 142699286}
   - component: {fileID: 142699287}
+  - component: {fileID: 142699288}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: Untagged
@@ -318,6 +319,22 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &142699288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142699282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1edae8a5e1a4f6048a18d01db26ffe90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textColor: {r: 0, g: 0, b: 0, a: 1}
+  fontSize: 12
+  updatePeriod: 0.5
+  lowFpsThreshold: 60
 --- !u!1 &623333805
 GameObject:
   m_ObjectHideFlags: 0

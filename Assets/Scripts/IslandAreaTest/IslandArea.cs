@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class IslandArea : GridObject
 {
@@ -37,19 +34,36 @@ public class IslandArea : GridObject
 			};
 
 		// Height map
-		const int resolution = 100;
+		const int resolution = 99;
 
 		GenerateNodesHeightmap generateNodesHeightmap =
 			new GenerateNodesHeightmap(resolution, Parameters.Radius, generateTerrainNodes.GetResult);
 
 		// Height map (preview)
-		ShowNodesHeightmap showNodesHeightmap =
-			new ShowNodesHeightmap(Parameters.Radius, resolution, gameObject.transform, generateNodesHeightmap.GetResult);
+		ShowTexture showNodesHeightmap =
+			new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, generateNodesHeightmap.GetResult)
+			{
+				Enabled = previewProgress
+			};
 
+		// Generate Nodes Noise
+		Noise2DParams noiseParams = new Noise2DParams(0.1f, 11.5f, 29.43f);
+		GenerateNoiseHeightmap generateNoiseHeightmap = new GenerateNoiseHeightmap(resolution, noiseParams);
+
+		// Show Nodes Noise
+		ShowTexture showNoiseHeightmap =
+			new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, generateNoiseHeightmap.GetResult)
+			{
+				Enabled = previewProgress
+			};
+
+		// Composed task
 		generateAreaTask.AddTask(generateTerrainNodes);
 		generateAreaTask.AddTask(showTerrainNodes);
 		generateAreaTask.AddTask(generateNodesHeightmap);
 		generateAreaTask.AddTask(showNodesHeightmap);
+		generateAreaTask.AddTask(generateNoiseHeightmap);
+		generateAreaTask.AddTask(showNoiseHeightmap);
 
 		paramsAssigned = true;
 	}
