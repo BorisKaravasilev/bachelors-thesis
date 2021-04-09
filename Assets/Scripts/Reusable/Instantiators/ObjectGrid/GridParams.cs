@@ -9,7 +9,7 @@ public class GridParams
 	[Range(0.5f, 10f)]
 	public float maxObjectRadius = 5;
 
-	[Range(100, 1000)]
+	[Range(1, 1000)]
 	public int objectCountLimit = 500;
 
 	public bool destroyFarObjects = true;

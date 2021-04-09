@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Manages a list of SingleTasks. Tasks that are not enabled are ignored.
 /// </summary>
-public class ComposedTask
+public class TaskList
 {
 	public bool Finished => AreAllTasksFinished();
 
@@ -12,9 +13,12 @@ public class ComposedTask
 	/// </summary>
 	public float Progress => GetProgress();
 
+	public SingleTask CurrentTask => FindFirstUnfinishedTask();
+	public bool DebugMode = false;
+
 	private List<SingleTask> taskList;
 
-	public ComposedTask()
+	public TaskList()
 	{
 		taskList = new List<SingleTask>();
 	}
@@ -52,6 +56,12 @@ public class ComposedTask
 		if (firstUnfinishedTask != null)
 		{
 			executedSteps = firstUnfinishedTask.ExecuteStepSize();
+
+			if (DebugMode)
+			{
+				Debug.Log($"{firstUnfinishedTask.Name} ({firstUnfinishedTask.Progress:P0})");
+				Debug.Log($"Total: {Progress:P0}");
+			}
 		}
 
 		return executedSteps;

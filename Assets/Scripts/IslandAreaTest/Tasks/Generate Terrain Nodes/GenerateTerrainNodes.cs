@@ -20,8 +20,6 @@ public class GenerateTerrainNodes : SingleTask
 		this.objectParams = objectParams;
 
 		terrainNodes = new List<TerrainNode>();
-		TotalSteps = RandomFromSeed.Range(objectParams.Position, nodesParams.MinNodes, nodesParams.MaxNodes + 1);
-		RemainingSteps = TotalSteps;
 	}
 
 	public List<TerrainNode> GetResult()
@@ -31,6 +29,12 @@ public class GenerateTerrainNodes : SingleTask
 	}
 
 	protected override void GetInputFromPreviousStep() { /* Not used */ }
+
+	protected override void SetSteps()
+	{
+		TotalSteps = RandomFromSeed.Range(objectParams.Position, nodesParams.MinNodes, nodesParams.MaxNodes + 1);
+		RemainingSteps = TotalSteps;
+	}
 
 	protected override void ExecuteStep()
 	{

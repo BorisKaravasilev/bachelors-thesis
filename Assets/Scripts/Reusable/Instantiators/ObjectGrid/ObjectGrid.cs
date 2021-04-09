@@ -108,7 +108,7 @@ public class ObjectGrid<TObject, TNoise2D>
 		{
 			for (int x = objectMinX; x <= objectMaxX; x += gridParams.spacing)
 			{
-				if (ObjectCountLimitReached()) return objects;
+				if (ObjectCountLimitReached()) return newlyInstantiated;
 
 				Vector3 objectPosition = new Vector3(x, gameObject.transform.position.y, z);
 				objectPosition = OffsetPositionByNoise(objectPosition);

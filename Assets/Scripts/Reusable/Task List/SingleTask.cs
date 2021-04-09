@@ -33,9 +33,9 @@
 
 	public bool Enabled { get; set; }
 
-	public SingleTask()
+	public SingleTask(string name = "Single Task")
 	{
-		Name = "Single Task";
+		Name = name;
 		Enabled = true;
 		StepSize = 1;
 	}
@@ -45,7 +45,11 @@
 	/// </summary>
 	public int Execute()
 	{
-		if (NotStarted) GetInputFromPreviousStep();
+		if (NotStarted)
+		{
+			GetInputFromPreviousStep();
+			SetSteps();
+		}
 
 		int executedSteps = 0;
 
@@ -64,7 +68,11 @@
 	/// </summary>
 	public int ExecuteStepSize()
 	{
-		if (NotStarted) GetInputFromPreviousStep();
+		if (NotStarted)
+		{
+			GetInputFromPreviousStep();
+			SetSteps();
+		}
 
 		int executedSteps = 0;
 		int stepsToExecute = StepSize;
@@ -89,4 +97,10 @@
 	/// Gets called before the first step is executed.
 	/// </summary>
 	protected abstract void GetInputFromPreviousStep();
+
+	/// <summary>
+	/// Gets called before the first step, but after "GetInputFromPreviousStep()" is called.
+	/// "TotalSteps", "RemainingSteps" and "StepSize" can be set here.
+	/// </summary>
+	protected abstract void SetSteps();
 }

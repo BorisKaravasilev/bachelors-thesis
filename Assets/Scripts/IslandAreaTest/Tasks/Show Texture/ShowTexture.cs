@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Generates a preview object for a texture.
+/// Generates a preview object for a texture pixels array.
 /// </summary>
 public class ShowTexture : SingleTask
 {
@@ -10,9 +10,9 @@ public class ShowTexture : SingleTask
 	private float sideLength;
 	private int resolution;
 	private Transform parent;
-	private Func<Color[]> getTexturePixels;
 
 	// Inputs from previous steps
+	private Func<Color[]> getTexturePixels;
 	private Color[] texturePixels;
 
 	// Output
@@ -20,7 +20,7 @@ public class ShowTexture : SingleTask
 
 	public ShowTexture(float sideLength, int resolution, Transform parent , Func<Color[]> getTexturePixels)
 	{
-		Name = "Generate Terrain Nodes";
+		Name = "Show Texture";
 
 		this.sideLength = sideLength;
 		this.resolution = resolution;
@@ -43,5 +43,11 @@ public class ShowTexture : SingleTask
 	protected override void GetInputFromPreviousStep()
 	{
 		texturePixels = getTexturePixels();
+	}
+
+	protected override void SetSteps()
+	{
+		TotalSteps = 1;
+		RemainingSteps = TotalSteps;
 	}
 }

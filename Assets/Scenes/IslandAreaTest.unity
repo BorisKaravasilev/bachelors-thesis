@@ -156,7 +156,7 @@ MonoBehaviour:
   islandGridParams:
     spacing: 15
     maxObjectRadius: 5
-    objectCountLimit: 500
+    objectCountLimit: 416
     destroyFarObjects: 1
   islandGridOffsetParams:
     maxOffset: 0
@@ -545,8 +545,8 @@ MonoBehaviour:
   seaBedMaterial: {fileID: 2100000, guid: 7904f68233bd1f84c9844bf9d8f67753, type: 2}
   seaTileGridParams:
     tileSize: 20
-    xTiles: 1
-    zTiles: 1
+    xTiles: 0
+    zTiles: 0
     destroyFarTiles: 1
   seaLevel: 1
   previewMode: 1

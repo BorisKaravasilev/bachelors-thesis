@@ -5,7 +5,7 @@ public class IslandArea : GridObject
 	//private Texture2D heightMap;
 	//private TexturePreview heightMapPreview;
 	
-	private ComposedTask generateAreaTask;
+	private TaskList taskList;
 
 	private const string DEFAULT_NAME = "IslandArea";
 	private bool paramsAssigned = false;
@@ -15,7 +15,8 @@ public class IslandArea : GridObject
 	{
 		gameObject.name = DEFAULT_NAME;
 		//heightMap = new Texture2D(HM_RESOLUTION, HM_RESOLUTION);
-		generateAreaTask = new ComposedTask();
+		taskList = new TaskList();
+		taskList.DebugMode = true;
 	}
 
 	/// <summary>
@@ -23,8 +24,16 @@ public class IslandArea : GridObject
 	/// </summary>
 	public void AssignParams(bool previewProgress, GenerateTerrainNodesParams terrainNodesParams)
 	{
+		const int resolution = 99;
+
+		// Display radius
+		//Color[] blackPixels = TextureFunctions.GetBlackPixels(resolution * resolution);
+		//ShowTexture showRadius = new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, () => blackPixels);
+		//taskList.AddTask(showRadius);
+
 		// Terrain nodes
 		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters);
+		taskList.AddTask(generateTerrainNodes);
 
 		// Terrain nodes (previews)
 		ShowTerrainNodes showTerrainNodes =
@@ -32,19 +41,34 @@ public class IslandArea : GridObject
 			{
 				Enabled = previewProgress
 			};
+		taskList.AddTask(showTerrainNodes);
 
 		// Height map
-		const int resolution = 99;
-
-		GenerateNodesHeightmap generateNodesHeightmap =
-			new GenerateNodesHeightmap(resolution, Parameters.Radius, generateTerrainNodes.GetResult);
+		//GenerateNodesHeightmap generateNodesHeightmap =
+		//	new GenerateNodesHeightmap(resolution, Parameters.Radius, generateTerrainNodes.GetResult);
 
 		// Height map (preview)
-		ShowTexture showNodesHeightmap =
-			new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, generateNodesHeightmap.GetResult)
-			{
-				Enabled = previewProgress
-			};
+		//ShowTexture showNodesHeightmap =
+		//	new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, generateNodesHeightmap.GetResult)
+		//	{
+		//		Enabled = previewProgress
+		//	};
+
+		// Generate Nodes Gradients
+		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, Parameters.Radius, generateTerrainNodes.GetResult);
+		taskList.AddTask(generateNodesGradients);
+
+		// Show Gradients
+		//ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, resolution, gameObject.transform, generateNodesGradients.GetResult);
+		//generateAreaTask.AddTask(showGradients);
+
+		// Add heightmaps
+		AddTextures addHeightmaps = new AddTextures(generateNodesGradients.GetResult);
+		taskList.AddTask(addHeightmaps);
+
+		// Show added heightmaps
+		ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, addHeightmaps.GetResult);
+		taskList.AddTask(showAddedHeightmaps);
 
 		// Generate Nodes Noise
 		Noise2DParams noiseParams = new Noise2DParams(0.01f, 11.5f, 29.43f);
@@ -58,10 +82,9 @@ public class IslandArea : GridObject
 			};
 
 		// Composed task
-		generateAreaTask.AddTask(generateTerrainNodes);
-		generateAreaTask.AddTask(showTerrainNodes);
-		generateAreaTask.AddTask(generateNodesHeightmap);
-		generateAreaTask.AddTask(showNodesHeightmap);
+		//generateAreaTask.AddTask(generateNodesHeightmap);
+		//generateAreaTask.AddTask(showNodesHeightmap);
+		
 		//generateAreaTask.AddTask(generateNoiseHeightmap);
 		//generateAreaTask.AddTask(showNoiseHeightmap);
 
@@ -72,7 +95,7 @@ public class IslandArea : GridObject
 	{
 		if (paramsAssigned)
 		{
-			generateAreaTask.Execute();
+			taskList.Execute();
 		}
 		else
 		{
@@ -86,8 +109,8 @@ public class IslandArea : GridObject
 	{
 		if (paramsAssigned)
 		{
-			generateAreaTask.ExecuteStepSize();
-			Debug.Log($"Progress of composed task is: {generateAreaTask.Progress}");
+			int executedSteps = taskList.ExecuteStepSize();
+			if (executedSteps > 0) Debug.Log($"Executed steps: {executedSteps}");
 		}
 		else
 		{

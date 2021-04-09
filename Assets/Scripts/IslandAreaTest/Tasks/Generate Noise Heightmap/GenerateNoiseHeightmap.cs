@@ -6,7 +6,6 @@ public class GenerateNoiseHeightmap : SingleTask
 {
 	// Inputs
 	private int resolution;
-	private Noise2DParams noiseParams;
 
 	// Inputs from previous task
 
@@ -14,19 +13,15 @@ public class GenerateNoiseHeightmap : SingleTask
 	private Color[] noiseTexturePixels;
 
 	// Internal
+	private int pixelCount;
 	private PerlinNoise2D perlinNoise;
 
 	public GenerateNoiseHeightmap(int resolution, Noise2DParams noiseParams)
 	{
-		int pixelCount = resolution * resolution;
-
+		pixelCount = resolution * resolution;
 		Name = "Generate Noise Heightmap";
-		StepSize = resolution;
-		TotalSteps = pixelCount;
-		RemainingSteps = TotalSteps;
 
 		this.resolution = resolution;
-		this.noiseParams = noiseParams;
 
 		noiseTexturePixels = new Color[pixelCount];
 		perlinNoise = new PerlinNoise2D(noiseParams);
@@ -41,7 +36,7 @@ public class GenerateNoiseHeightmap : SingleTask
 	protected override void ExecuteStep()
 	{
 		int index = ExecutedSteps;
-		Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, index);
+		Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, resolution, index);
 		float intensity = perlinNoise.GetValue(pixel2DCoords);
 		Color pixelColor = new Color(intensity, intensity, intensity);
 		noiseTexturePixels[index] = pixelColor;
@@ -50,5 +45,12 @@ public class GenerateNoiseHeightmap : SingleTask
 	protected override void GetInputFromPreviousStep()
 	{
 		// TODO
+	}
+
+	protected override void SetSteps()
+	{
+		TotalSteps = pixelCount;
+		RemainingSteps = TotalSteps;
+		StepSize = resolution;
 	}
 }

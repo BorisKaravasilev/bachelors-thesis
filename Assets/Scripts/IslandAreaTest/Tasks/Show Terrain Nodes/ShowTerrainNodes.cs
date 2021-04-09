@@ -40,6 +40,10 @@ public class ShowTerrainNodes : SingleTask
 	protected override void GetInputFromPreviousStep()
 	{
 		this.terrainNodes = getTerrainNodes();
+	}
+
+	protected override void SetSteps()
+	{
 		TotalSteps = terrainNodes.Count;
 		RemainingSteps = TotalSteps;
 	}

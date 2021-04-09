@@ -22,7 +22,6 @@ public class GenerateNodesHeightmap : SingleTask
 	public GenerateNodesHeightmap(int resolution, float areaRadius, Func<List<TerrainNode>> getTerrainNodes)
 	{
 		Name = "Generate Nodes Heightmap";
-		StepSize = resolution / 2;
 
 		this.resolution = resolution;
 		this.areaRadius = areaRadius;
@@ -43,7 +42,7 @@ public class GenerateNodesHeightmap : SingleTask
 	{
 		int pixelIndex = ExecutedSteps;
 		Color pixelColor;
-		Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, pixelIndex);
+		Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, resolution, pixelIndex);
 		Vector3 areaCenter = Vector3.zero;
 
 		if (GetPixelDistanceFromPoint(pixel2DCoords, areaCenter) > areaRadius)
@@ -72,8 +71,13 @@ public class GenerateNodesHeightmap : SingleTask
 	protected override void GetInputFromPreviousStep()
 	{
 		this.terrainNodes = getTerrainNodes();
-		TotalSteps = resolution*resolution;
+	}
+
+	protected override void SetSteps()
+	{
+		TotalSteps = resolution * resolution;
 		RemainingSteps = TotalSteps;
+		StepSize = resolution / 2;
 	}
 
 	/// <summary>
