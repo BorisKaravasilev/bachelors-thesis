@@ -25,17 +25,20 @@ public class ObjectGrid<TObject, TNoise2D>
 	/// <summary>
 	/// Initializes an ObjectGrid from settings without any objects.
 	/// </summary>
-	public ObjectGrid(GridParams gridParams, GridOffsetParams gridOffsetParams)
+	public ObjectGrid(GridParams gridParams, GridOffsetParams gridOffsetParams, Transform parent = null)
 	{
-		this.objects = new List<TObject>();
-		this.gameObject = new GameObject("ObjectGrid");
+		gameObject = new GameObject("ObjectGrid");
+		gameObject.transform.SetParent(parent);
+		gameObject.transform.localPosition = Vector3.zero;
 
 		this.gridParams = gridParams;
 		this.gridOffsetParams = gridOffsetParams;
 
-		this.xOffsetNoise = new TNoise2D();
-		this.zOffsetNoise = new TNoise2D();
-		this.thresholdNoise = new TNoise2D();
+		objects = new List<TObject>();
+
+		xOffsetNoise = new TNoise2D();
+		zOffsetNoise = new TNoise2D();
+		thresholdNoise = new TNoise2D();
 
 		xOffsetNoise.SetParameters(gridOffsetParams.xOffsetParams);
 		zOffsetNoise.SetParameters(gridOffsetParams.zOffsetParams);

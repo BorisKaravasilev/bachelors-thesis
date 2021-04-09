@@ -38,7 +38,7 @@ public class GenerateTerrainNodes : SingleTask
 
 	protected override void ExecuteStep()
 	{
-		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(objectParams.Position, Vector3.zero, objectParams.Radius);
+		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(objectParams.Position, Vector3.zero, objectParams.Radius * 0.7f);
 		int randTypeIndex = RandomFromSeed.Range(objectParams.Position, 0, nodesParams.TerrainTypes.Count);
 		float maxRadius = objectParams.Radius - Vector3.Distance(randPosition, Vector3.zero);
 

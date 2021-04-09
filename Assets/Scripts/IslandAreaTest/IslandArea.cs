@@ -35,7 +35,7 @@ public class IslandArea : GridObject
 		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters);
 		taskList.AddTask(generateTerrainNodes);
 
-		// Terrain nodes (previews)
+		// Show Terrain nodes
 		ShowTerrainNodes showTerrainNodes =
 			new ShowTerrainNodes(Parameters.Radius / 10f, gameObject.transform, generateTerrainNodes.GetResult)
 			{
@@ -60,33 +60,35 @@ public class IslandArea : GridObject
 
 		// Show Gradients
 		//ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, resolution, gameObject.transform, generateNodesGradients.GetResult);
-		//generateAreaTask.AddTask(showGradients);
+		//taskList.AddTask(showGradients);
 
 		// Add heightmaps
 		AddTextures addHeightmaps = new AddTextures(generateNodesGradients.GetResult);
 		taskList.AddTask(addHeightmaps);
 
 		// Show added heightmaps
-		//ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, addHeightmaps.GetResult);
-		//taskList.AddTask(showAddedHeightmaps);
+		ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, 0.01f, resolution, gameObject.transform, addHeightmaps.GetResult);
+		showAddedHeightmaps.Enabled = previewProgress;
+		taskList.AddTask(showAddedHeightmaps);
 
 		// Generate Nodes Noise
-		Noise2DParams noiseParams = new Noise2DParams(0.01f, 11.5f, 29.43f);
+		Noise2DParams noiseParams = new Noise2DParams(0.03f, gameObject.transform.position.x * 2.42f, gameObject.transform.position.z * 2.42f);
 		GenerateNoiseHeightmap generateNoiseHeightmap = new GenerateNoiseHeightmap(resolution, noiseParams);
+		taskList.AddTask(generateNoiseHeightmap);
 
 		// Show Nodes Noise
 		ShowTexture showNoiseHeightmap =
-			new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, generateNoiseHeightmap.GetResult)
+			new ShowTexture(Parameters.Radius * 2, 0.02f, resolution, gameObject.transform, generateNoiseHeightmap.GetResult)
 			{
 				Enabled = previewProgress
 			};
+		taskList.AddTask(showNoiseHeightmap);
 
-		// Composed task
-		//generateAreaTask.AddTask(generateNodesHeightmap);
-		//generateAreaTask.AddTask(showNodesHeightmap);
-		
-		//generateAreaTask.AddTask(generateNoiseHeightmap);
-		//generateAreaTask.AddTask(showNoiseHeightmap);
+		// Multiply Textures
+
+
+		// Show Multiplied Textures
+
 
 		paramsAssigned = true;
 	}

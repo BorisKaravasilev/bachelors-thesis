@@ -16,7 +16,7 @@ public class GridObject
 	{
 		SetParent(parent);
 		Parameters = parameters;
-		SetLocalPosition(parameters.Position);
+		SetPosition(parameters.Position);
 
 		return gameObject;
 	}
@@ -34,10 +34,10 @@ public class GridObject
 		gameObject.transform.SetParent(parent);
 	}
 
-	public void SetLocalPosition(Vector3 localPosition)
+	public void SetPosition(Vector3 position)
 	{
 		Transform transform = gameObject.transform;
-		transform.localPosition = localPosition;
+		transform.position = position;
 	}
 
 	public Vector3 GetPosition()

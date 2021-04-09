@@ -19,5 +19,5 @@ MonoBehaviour:
     Color: {r: 0.20833963, g: 0.7830189, b: 0.040628344, a: 0}
   - Name: Rock
     Color: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
-  MinNodes: 1
-  MaxNodes: 3
+  MinNodes: 2
+  MaxNodes: 4

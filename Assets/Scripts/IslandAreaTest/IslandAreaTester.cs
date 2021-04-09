@@ -11,6 +11,7 @@ public class IslandAreaTester : MonoBehaviour
 
 	[Header("Generation Steps Parameters")]
 	[SerializeField] private GenerateTerrainNodesParams generateTerrainNodesParams;
+	[SerializeField] private bool previewProgress = true;
 
 	//private TileGrid seaTileGrid;
 	private BoundingBox3D generatedWorldArea;
@@ -20,8 +21,7 @@ public class IslandAreaTester : MonoBehaviour
 	void Start()
     {
 		// Islands grid
-		islandGrid = new ObjectGrid<IslandArea, PerlinNoise2D>(islandGridParams, islandGridOffsetParams);
-		islandGrid.SetParent(gameObject.transform);
+		islandGrid = new ObjectGrid<IslandArea, PerlinNoise2D>(islandGridParams, islandGridOffsetParams, gameObject.transform);
 	}
 
     // Update is called once per frame
@@ -30,7 +30,7 @@ public class IslandAreaTester : MonoBehaviour
 	    generatedWorldArea = seaTileGrid.GetBoundingBox();
 		List<IslandArea> newIslandAreas = islandGrid.InstantiateInBoundingBox(generatedWorldArea);
 
-		newIslandAreas?.ForEach(area => area.AssignParams(true, generateTerrainNodesParams));
+		newIslandAreas?.ForEach(area => area.AssignParams(previewProgress, generateTerrainNodesParams));
 		islandGrid.GetObjects()?.ForEach(area => area.GenerateStep());
     }
 
