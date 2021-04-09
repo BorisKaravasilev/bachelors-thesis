@@ -55,12 +55,15 @@ public class TaskList
 
 		if (firstUnfinishedTask != null)
 		{
+			float timeBeforeExecution = 0;
+			if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
+
 			executedSteps = firstUnfinishedTask.ExecuteStepSize();
 
 			if (DebugMode)
 			{
-				Debug.Log($"{firstUnfinishedTask.Name} ({firstUnfinishedTask.Progress:P0})");
-				Debug.Log($"Total: {Progress:P0}");
+				float executionTimeMs = (Time.realtimeSinceStartup - timeBeforeExecution) * 1000;
+				LogExecutionStep(firstUnfinishedTask, executedSteps, executionTimeMs);
 			}
 		}
 
@@ -124,5 +127,11 @@ public class TaskList
 		});
 
 		return enabledTasks;
+	}
+
+	private void LogExecutionStep(SingleTask task, int executedSteps, float executionTimeMs)
+	{
+		Debug.Log($"                                     {task.Name} ({task.Progress:P0})                           " +
+		          $"Executed steps: {executedSteps} (in {executionTimeMs:0.}ms)\n(Total: {Progress:P0})");
 	}
 }
