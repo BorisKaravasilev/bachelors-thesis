@@ -67,8 +67,8 @@ public class IslandArea : GridObject
 		taskList.AddTask(addHeightmaps);
 
 		// Show added heightmaps
-		ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, addHeightmaps.GetResult);
-		taskList.AddTask(showAddedHeightmaps);
+		//ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, addHeightmaps.GetResult);
+		//taskList.AddTask(showAddedHeightmaps);
 
 		// Generate Nodes Noise
 		Noise2DParams noiseParams = new Noise2DParams(0.01f, 11.5f, 29.43f);
@@ -110,7 +110,6 @@ public class IslandArea : GridObject
 		if (paramsAssigned)
 		{
 			int executedSteps = taskList.ExecuteStepSize();
-			if (executedSteps > 0) Debug.Log($"Executed steps: {executedSteps}");
 		}
 		else
 		{

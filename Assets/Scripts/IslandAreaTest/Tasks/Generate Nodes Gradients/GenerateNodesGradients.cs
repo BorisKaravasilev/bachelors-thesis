@@ -52,9 +52,6 @@ public class GenerateNodesGradients : SingleTask
 		TerrainNode terrainNode = terrainNodes[nodeIndex];
 		PixelBoundingBox gradientArea = GetNodeBoundingBox(terrainNode);
 
-		Debug.Log(gradientArea.BottomLeft);
-		Debug.Log(gradientArea.TopRight);
-
 		// Loop through pixels in the gradient's bounding box and calculation of the gradient pixels
 		for (int x = gradientArea.BottomLeft.x; x <= gradientArea.TopRight.x; x++)
 		{
@@ -95,16 +92,16 @@ public class GenerateNodesGradients : SingleTask
 	private Vector2Int LocalPositionToPixel(Vector3 position)
 	{
 		int x = (int) ((position.x + areaRadius) / worldPixelLength);
-		int y = (int) ((position.y + areaRadius) / worldPixelLength);
+		int z = (int) ((position.z + areaRadius) / worldPixelLength);
 
 		int maxPixelIndex = resolution - 1;
 		if (x < 0) x = 0;
 		if (x > maxPixelIndex) x = maxPixelIndex;
 
-		if (y < 0) y = 0;
-		if (y > maxPixelIndex) y = maxPixelIndex;
+		if (z < 0) z = 0;
+		if (z > maxPixelIndex) z = maxPixelIndex;
 
-		return new Vector2Int(x, y);
+		return new Vector2Int(x, z);
 	}
 
 	private float PixelsWorldLength(int pixelsCount)
@@ -116,11 +113,11 @@ public class GenerateNodesGradients : SingleTask
 	{
 		Vector3 areaLocalBottomLeft = node.Position;
 		areaLocalBottomLeft.x -= node.Radius;
-		areaLocalBottomLeft.y -= node.Radius;
+		areaLocalBottomLeft.z -= node.Radius;
 
 		Vector3 areaLocalTopRight = node.Position;
 		areaLocalTopRight.x += node.Radius;
-		areaLocalTopRight.y += node.Radius;
+		areaLocalTopRight.z += node.Radius;
 
 		Vector2Int areaPixelBottomLeft = LocalPositionToPixel(areaLocalBottomLeft);
 		Vector2Int areaPixelTopRight = LocalPositionToPixel(areaLocalTopRight);
