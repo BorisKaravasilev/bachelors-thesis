@@ -19,12 +19,14 @@ public class ShowTerrainNodes : SingleTask
 	/// Initializes the task's parameters.
 	/// </summary>
 	/// <param name="getTerrainNodes">Delegate function that collects the result from the previous task.</param>
-	public ShowTerrainNodes(float previewNodeRadius, Transform previewParent, Func<List<TerrainNode>> getTerrainNodes)
+	public ShowTerrainNodes(float previewNodeRadius, Transform previewParent, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
 	{
 		Name = "Generate Terrain Nodes Previews";
 		this.previewNodeRadius = previewNodeRadius;
 		this.previewParent = previewParent;
 		this.getTerrainNodes = getTerrainNodes;
+
+		StepSize = stepSize;
 
 		previews = new List<TerrainNodePreview>();
 	}

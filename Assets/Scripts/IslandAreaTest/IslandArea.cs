@@ -2,14 +2,12 @@
 
 public class IslandArea : GridObject
 {
-	//private Texture2D heightMap;
-	//private TexturePreview heightMapPreview;
-	
 	private TaskList taskList;
 
 	private const string DEFAULT_NAME = "IslandArea";
-	private bool paramsAssigned = false;
-	//private const int HM_RESOLUTION = 100;
+
+	public bool ParamsAssigned { get; private set; }
+	public bool Finished => taskList?.Finished ?? false;
 
 	public IslandArea()
 	{
@@ -17,6 +15,7 @@ public class IslandArea : GridObject
 		//heightMap = new Texture2D(HM_RESOLUTION, HM_RESOLUTION);
 		taskList = new TaskList();
 		taskList.DebugMode = true;
+		ParamsAssigned = false;
 	}
 
 	/// <summary>
@@ -26,36 +25,22 @@ public class IslandArea : GridObject
 	{
 		const int resolution = 99;
 
-		// Display radius
-		//Color[] blackPixels = TextureFunctions.GetBlackPixels(resolution * resolution);
-		//ShowTexture showRadius = new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, () => blackPixels);
-		//taskList.AddTask(showRadius);
+		// Calculate and assign round transparent mask
 
 		// Terrain nodes
-		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters);
+		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters, terrainNodesParams.MaxNodes);
 		taskList.AddTask(generateTerrainNodes);
 
 		// Show Terrain nodes
 		ShowTerrainNodes showTerrainNodes =
-			new ShowTerrainNodes(Parameters.Radius / 10f, gameObject.transform, generateTerrainNodes.GetResult)
+			new ShowTerrainNodes(Parameters.Radius / 10f, gameObject.transform, generateTerrainNodes.GetResult, terrainNodesParams.MaxNodes)
 			{
 				Enabled = previewProgress
 			};
 		taskList.AddTask(showTerrainNodes);
 
-		// Height map
-		//GenerateNodesHeightmap generateNodesHeightmap =
-		//	new GenerateNodesHeightmap(resolution, Parameters.Radius, generateTerrainNodes.GetResult);
-
-		// Height map (preview)
-		//ShowTexture showNodesHeightmap =
-		//	new ShowTexture(Parameters.Radius * 2, resolution, gameObject.transform, generateNodesHeightmap.GetResult)
-		//	{
-		//		Enabled = previewProgress
-		//	};
-
 		// Generate Nodes Gradients
-		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, Parameters.Radius, generateTerrainNodes.GetResult);
+		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, Parameters.Radius, generateTerrainNodes.GetResult, terrainNodesParams.MaxNodes);
 		taskList.AddTask(generateNodesGradients);
 
 		// Show Gradients
@@ -63,7 +48,7 @@ public class IslandArea : GridObject
 		//taskList.AddTask(showGradients);
 
 		// Add heightmaps
-		AddTextures addHeightmaps = new AddTextures(generateNodesGradients.GetResult);
+		AddTextures addHeightmaps = new AddTextures(generateNodesGradients.GetResult, terrainNodesParams.MaxNodes);
 		taskList.AddTask(addHeightmaps);
 
 		// Show added heightmaps
@@ -72,8 +57,8 @@ public class IslandArea : GridObject
 		taskList.AddTask(showAddedHeightmaps);
 
 		// Generate Nodes Noise
-		Noise2DParams noiseParams = new Noise2DParams(0.03f, gameObject.transform.position.x * 2.42f, gameObject.transform.position.z * 2.42f);
-		GenerateNoiseHeightmap generateNoiseHeightmap = new GenerateNoiseHeightmap(resolution, noiseParams);
+		Noise2DParams noiseParams = new Noise2DParams(0.05f, gameObject.transform.position.x * 2.42f, gameObject.transform.position.z * 2.42f);
+		GenerateNoiseHeightmap generateNoiseHeightmap = new GenerateNoiseHeightmap(resolution, noiseParams, resolution * resolution);
 		taskList.AddTask(generateNoiseHeightmap);
 
 		// Show Nodes Noise
@@ -84,18 +69,20 @@ public class IslandArea : GridObject
 			};
 		taskList.AddTask(showNoiseHeightmap);
 
-		// Multiply Textures
-
+		// Multiply Nodes Gradients and Noises
+		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(addHeightmaps.GetResultInList, generateNoiseHeightmap.GetResultInList, terrainNodesParams.MaxNodes);
+		taskList.AddTask(multiplyGradientsAndNoises);
 
 		// Show Multiplied Textures
+		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.03f, resolution, gameObject.transform, multiplyGradientsAndNoises.GetResult);
+		taskList.AddTask(showMultiplicationResult);
 
-
-		paramsAssigned = true;
+		ParamsAssigned = true;
 	}
 
 	public GameObject Generate()
 	{
-		if (paramsAssigned)
+		if (ParamsAssigned)
 		{
 			taskList.Execute();
 		}
@@ -109,7 +96,7 @@ public class IslandArea : GridObject
 
 	public GameObject GenerateStep()
 	{
-		if (paramsAssigned)
+		if (ParamsAssigned)
 		{
 			int executedSteps = taskList.ExecuteStepSize();
 		}

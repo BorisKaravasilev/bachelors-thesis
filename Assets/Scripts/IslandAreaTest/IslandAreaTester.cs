@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class IslandAreaTester : MonoBehaviour
@@ -12,6 +13,8 @@ public class IslandAreaTester : MonoBehaviour
 	[Header("Generation Steps Parameters")]
 	[SerializeField] private GenerateTerrainNodesParams generateTerrainNodesParams;
 	[SerializeField] private bool previewProgress = true;
+	[SerializeField] private bool generateSequentially = true;
+	[SerializeField] private bool generateEachIslandInSteps = true;
 
 	//private TileGrid seaTileGrid;
 	private BoundingBox3D generatedWorldArea;
@@ -29,13 +32,56 @@ public class IslandAreaTester : MonoBehaviour
     {
 	    generatedWorldArea = seaTileGrid.GetBoundingBox();
 		List<IslandArea> newIslandAreas = islandGrid.InstantiateInBoundingBox(generatedWorldArea);
+		List<IslandArea> islandAreas = islandGrid.GetObjects();
 
-		newIslandAreas?.ForEach(area => area.AssignParams(previewProgress, generateTerrainNodesParams));
-		islandGrid.GetObjects()?.ForEach(area => area.GenerateStep());
+		if (generateSequentially)
+			GenerateNextIslandArea(islandAreas);
+		else
+			GenerateAllIslandAreas(islandAreas);
     }
 
     void OnValidate()
     {
 		islandGrid?.UpdateParameters(islandGridParams, islandGridOffsetParams);
     }
+
+	private void GenerateNextIslandArea(List<IslandArea> islandAreas)
+    {
+	    if (islandAreas.Count > 0)
+	    {
+		    foreach (IslandArea islandArea in islandAreas)
+		    {
+			    if (!islandArea.ParamsAssigned)
+			    {
+				    islandArea.AssignParams(previewProgress, generateTerrainNodesParams);
+			    }
+			    else if (!islandArea.Finished)
+			    {
+				    if (generateEachIslandInSteps)
+					    islandArea.GenerateStep();
+					else
+					    islandArea.Generate();
+				    break;
+			    }
+		    }
+	    }
+	}
+
+	private void GenerateAllIslandAreas(List<IslandArea> islandAreas)
+	{
+		foreach (IslandArea islandArea in islandAreas)
+		{
+			if (!islandArea.ParamsAssigned)
+			{
+				islandArea.AssignParams(previewProgress, generateTerrainNodesParams);
+			}
+			else if (!islandArea.Finished)
+			{
+				if (generateEachIslandInSteps)
+					islandArea.GenerateStep();
+				else
+					islandArea.Generate();
+			}
+		}
+	}
 }

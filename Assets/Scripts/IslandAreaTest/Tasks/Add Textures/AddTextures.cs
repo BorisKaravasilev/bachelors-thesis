@@ -15,9 +15,10 @@ public class AddTextures : SingleTask
 	// Outputs
 	private Color[] finalTexture;
 
-	public AddTextures(Func<List<Color[]>> getTextures)
+	public AddTextures(Func<List<Color[]>> getTextures, int stepSize = 1)
 	{
 		Name = "Add Textures";
+		StepSize = stepSize;
 		this.getTextures = getTextures;
 	}
 
@@ -25,6 +26,15 @@ public class AddTextures : SingleTask
 	{
 		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
 		return finalTexture;
+	}
+
+	public List<Color[]> GetResultInList()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		List<Color[]> resultWrapperList = new List<Color[]>();
+		resultWrapperList.Add(finalTexture);
+
+		return resultWrapperList;
 	}
 
 	protected override void ExecuteStep()

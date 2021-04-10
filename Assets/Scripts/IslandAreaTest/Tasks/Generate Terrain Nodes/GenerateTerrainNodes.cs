@@ -13,11 +13,13 @@ public class GenerateTerrainNodes : SingleTask
 	/// <summary>
 	/// Initializes the task's parameters.
 	/// </summary>
-	public GenerateTerrainNodes(GenerateTerrainNodesParams nodesParams, GridObjectParams objectParams)
+	public GenerateTerrainNodes(GenerateTerrainNodesParams nodesParams, GridObjectParams objectParams, int stepSize = 1)
 	{
 		Name = "Generate Terrain Nodes";
 		this.nodesParams = nodesParams;
 		this.objectParams = objectParams;
+
+		StepSize = stepSize;
 
 		terrainNodes = new List<TerrainNode>();
 	}

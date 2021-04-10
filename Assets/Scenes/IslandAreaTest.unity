@@ -175,6 +175,8 @@ MonoBehaviour:
       OffsetY: 0
   generateTerrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
   previewProgress: 1
+  generateSequentially: 1
+  generateEachIslandInSteps: 1
 --- !u!4 &28307291
 Transform:
   m_ObjectHideFlags: 0
@@ -545,7 +547,7 @@ MonoBehaviour:
   seaMaterial: {fileID: 2100000, guid: 9e3114b079ae86a449435e0378423e9f, type: 2}
   seaBedMaterial: {fileID: 2100000, guid: 7904f68233bd1f84c9844bf9d8f67753, type: 2}
   seaTileGridParams:
-    tileSize: 20
+    tileSize: 25
     xTiles: 1
     zTiles: 1
     destroyFarTiles: 1
