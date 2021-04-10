@@ -11,7 +11,7 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private GridOffsetParams islandGridOffsetParams;
 
 	[Header("Generation Steps Parameters")]
-	[SerializeField] private GenerateTerrainNodesParams generateTerrainNodesParams;
+	[SerializeField] private TerrainNodesParams terrainNodesParams;
 	[SerializeField] private bool previewProgress = true;
 	[SerializeField] private bool generateSequentially = true;
 	[SerializeField] private bool generateInSteps = true;
@@ -53,7 +53,7 @@ public class IslandAreaTester : MonoBehaviour
 		    {
 			    if (!islandArea.ParamsAssigned)
 			    {
-				    islandArea.AssignParams(previewProgress, generateTerrainNodesParams);
+				    islandArea.AssignParams(previewProgress, terrainNodesParams);
 			    }
 			    else if (!islandArea.Finished)
 			    {
@@ -73,7 +73,7 @@ public class IslandAreaTester : MonoBehaviour
 		{
 			if (!islandArea.ParamsAssigned)
 			{
-				islandArea.AssignParams(previewProgress, generateTerrainNodesParams);
+				islandArea.AssignParams(previewProgress, terrainNodesParams);
 			}
 			else if (!islandArea.Finished)
 			{

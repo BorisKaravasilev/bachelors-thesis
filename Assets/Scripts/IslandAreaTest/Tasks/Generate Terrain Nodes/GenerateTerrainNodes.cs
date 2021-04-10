@@ -4,8 +4,14 @@ using UnityEngine;
 public class GenerateTerrainNodes : SingleTask
 {
 	// Inputs
-	private GenerateTerrainNodesParams nodesParams;
-	private GridObjectParams objectParams;
+	private Vector3 seedPosition;
+	private float objectRadius;
+
+	private int minNodes;
+	private int maxNodes;
+	private float maxDistanceMultiplier;
+
+	private List<TerrainType> terrainTypes;
 
 	// Outputs
 	private List<TerrainNode> terrainNodes;
@@ -13,14 +19,19 @@ public class GenerateTerrainNodes : SingleTask
 	/// <summary>
 	/// Initializes the task's parameters.
 	/// </summary>
-	public GenerateTerrainNodes(GenerateTerrainNodesParams nodesParams, GridObjectParams objectParams, int stepSize = 1)
+	public GenerateTerrainNodes(TerrainNodesParams nodesParams, GridObjectParams objectParams, int stepSize = 1)
 	{
 		Name = "Generate Terrain Nodes";
-		this.nodesParams = nodesParams;
-		this.objectParams = objectParams;
-
 		StepSize = stepSize;
 
+		seedPosition = objectParams.Position;
+		objectRadius = objectParams.Radius;
+
+		minNodes = nodesParams.MinNodes;
+		maxNodes = nodesParams.MaxNodes;
+		maxDistanceMultiplier = nodesParams.MaxDistanceMultiplier;
+
+		terrainTypes = nodesParams.TerrainTypes;
 		terrainNodes = new List<TerrainNode>();
 	}
 
@@ -34,17 +45,18 @@ public class GenerateTerrainNodes : SingleTask
 
 	protected override void SetSteps()
 	{
-		TotalSteps = RandomFromSeed.Range(objectParams.Position, nodesParams.MinNodes, nodesParams.MaxNodes + 1);
+		TotalSteps = RandomFromSeed.Range(seedPosition, minNodes, maxNodes + 1);
 		RemainingSteps = TotalSteps;
 	}
 
 	protected override void ExecuteStep()
 	{
-		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(objectParams.Position, Vector3.zero, objectParams.Radius * 0.7f);
-		int randTypeIndex = RandomFromSeed.Range(objectParams.Position, 0, nodesParams.TerrainTypes.Count);
-		float maxRadius = objectParams.Radius - Vector3.Distance(randPosition, Vector3.zero);
+		float maxNodeDistance = objectRadius * maxDistanceMultiplier; // From center
+		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(seedPosition, Vector3.zero, maxNodeDistance);
+		int randTypeIndex = RandomFromSeed.Range(seedPosition, 0, terrainTypes.Count);
+		float maxRadius = objectRadius - Vector3.Distance(randPosition, Vector3.zero);
 
-		TerrainNode randomNode = new TerrainNode(randPosition, nodesParams.TerrainTypes[randTypeIndex], maxRadius);
+		TerrainNode randomNode = new TerrainNode(randPosition, terrainTypes[randTypeIndex], maxRadius);
 		terrainNodes.Add(randomNode);
 	}
 }

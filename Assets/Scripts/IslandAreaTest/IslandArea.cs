@@ -21,13 +21,13 @@ public class IslandArea : GridObject
 	/// <summary>
 	/// Assigns all necessary parameters for island area generation.
 	/// </summary>
-	public void AssignParams(bool previewProgress, GenerateTerrainNodesParams terrainNodesParams)
+	public void AssignParams(bool previewProgress, TerrainNodesParams terrainNodesParams)
 	{
 		const int resolution = 99;
 
-		// Calculate and assign round transparent mask
+		// TODO: Calculate and assign round transparent mask
 
-		// Terrain nodes
+		// Generate Terrain nodes
 		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters, terrainNodesParams.MaxNodes);
 		taskList.AddTask(generateTerrainNodes);
 
