@@ -38,7 +38,17 @@ public class TaskList
 
 		while (firstUnfinishedTask != null)
 		{
+			float timeBeforeExecution = 0;
+			if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
+
 			executedSteps += firstUnfinishedTask.Execute();
+
+			if (DebugMode)
+			{
+				float executionTimeMs = (Time.realtimeSinceStartup - timeBeforeExecution) * 1000;
+				LogExecutionStep(firstUnfinishedTask, executedSteps, executionTimeMs);
+			}
+
 			firstUnfinishedTask = FindFirstUnfinishedTask();
 		}
 
