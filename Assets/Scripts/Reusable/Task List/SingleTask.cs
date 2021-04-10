@@ -1,6 +1,6 @@
 ﻿public abstract class SingleTask
 {
-	public string Name { get; protected set; }
+	public string Name { get; set; }
 	public bool Finished => RemainingSteps == 0;
 	public bool NotStarted => RemainingSteps == TotalSteps;
 
@@ -24,7 +24,7 @@
 	}
 	
 	public int ExecutedSteps => TotalSteps - RemainingSteps;
-	public int StepSize { get; protected set; }
+	public int StepSize { get; set; }
 
 	/// <summary>
 	/// In range of 0 to 1.
@@ -38,6 +38,12 @@
 		Name = name;
 		Enabled = true;
 		StepSize = 1;
+	}
+
+	public void SetParams(int stepSize, bool enabled)
+	{
+		StepSize = stepSize;
+		Enabled = enabled;
 	}
 
 	/// <summary>

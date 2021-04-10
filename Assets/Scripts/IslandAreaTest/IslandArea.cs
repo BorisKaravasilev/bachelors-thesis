@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 public class IslandArea : GridObject
 {
@@ -24,57 +25,57 @@ public class IslandArea : GridObject
 	public void AssignParams(bool previewProgress, TerrainNodesParams terrainNodesParams)
 	{
 		const int resolution = 99;
+		int maxNodes = terrainNodesParams.MaxNodes;
+		float nodePreviewRadius = Parameters.Radius / 10f;
+		Transform parent = gameObject.transform;
 
 		// TODO: Calculate and assign round transparent mask
 
 		// Generate Terrain nodes
-		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters, terrainNodesParams.MaxNodes);
+		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters, maxNodes);
 		taskList.AddTask(generateTerrainNodes);
 
 		// Show Terrain nodes
-		ShowTerrainNodes showTerrainNodes =
-			new ShowTerrainNodes(Parameters.Radius / 10f, gameObject.transform, generateTerrainNodes.GetResult, terrainNodesParams.MaxNodes)
-			{
-				Enabled = previewProgress
-			};
+		ShowTerrainNodes showTerrainNodes = new ShowTerrainNodes(nodePreviewRadius, parent, generateTerrainNodes.GetResult);
+		showTerrainNodes.SetParams(1, previewProgress);
 		taskList.AddTask(showTerrainNodes);
 
 		// Generate Nodes Gradients
-		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, Parameters.Radius, generateTerrainNodes.GetResult, terrainNodesParams.MaxNodes);
+		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, Parameters.Radius, generateTerrainNodes.GetResult, maxNodes);
 		taskList.AddTask(generateNodesGradients);
 
 		// Show Gradients
-		ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, 0.01f, resolution, gameObject.transform,
+		ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, 0.01f, resolution, parent,
 				generateNodesGradients.GetResult)
 			{Enabled = false};//previewProgress };
 		taskList.AddTask(showGradients);
 
 		// Generate Nodes Noises
-		GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(resolution, generateTerrainNodes.GetResult, terrainNodesParams.MaxNodes);
+		GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(resolution, generateTerrainNodes.GetResult, maxNodes);
 		taskList.AddTask(generateNodesNoises);
 
 		// Show Nodes Noises
-		ShowTextures showNodesNoises = new ShowTextures(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.2f, resolution, gameObject.transform,
+		ShowTextures showNodesNoises = new ShowTextures(Parameters.Radius * 2, 0.01f * maxNodes + 0.2f, resolution, parent,
 				generateNodesNoises.GetResult)
 			{ Enabled = previewProgress };
 		taskList.AddTask(showNodesNoises);
 
 		// Multiply Nodes Gradients and Noises
-		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, terrainNodesParams.MaxNodes);
+		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, maxNodes);
 		taskList.AddTask(multiplyGradientsAndNoises);
 
 		// Show Gradients and Noises Multiplication Result
-		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.6f, resolution, gameObject.transform,
+		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.01f * maxNodes + 0.6f, resolution, parent,
 				multiplyGradientsAndNoises.GetResult)
 			{ Enabled = previewProgress };
 		taskList.AddTask(showMultiplicationResult);
 
 		// Add Nodes Gradient Noises Together
-		AddTextures addGradientNoises = new AddTextures(multiplyGradientsAndNoises.GetResult, terrainNodesParams.MaxNodes);
+		AddTextures addGradientNoises = new AddTextures(multiplyGradientsAndNoises.GetResult, maxNodes);
 		taskList.AddTask(addGradientNoises);
 
 		// Show Gradient Noises Addition Result
-		ShowTexture showGradientNoisesAddition = new ShowTexture(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 2f, resolution, gameObject.transform, addGradientNoises.GetResult);
+		ShowTexture showGradientNoisesAddition = new ShowTexture(Parameters.Radius * 2, 0.01f * maxNodes + 2f, resolution, parent, addGradientNoises.GetResult);
 		taskList.AddTask(showGradientNoisesAddition);
 
 		ParamsAssigned = true;

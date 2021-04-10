@@ -5,7 +5,7 @@ using UnityEngine;
 public class ShowTerrainNodes : SingleTask
 {
 	// Inputs
-	private float previewNodeRadius;
+	private float nodePreviewRadius;
 	private Transform previewParent;
 	private Func<List<TerrainNode>> getTerrainNodes;
 
@@ -19,14 +19,13 @@ public class ShowTerrainNodes : SingleTask
 	/// Initializes the task's parameters.
 	/// </summary>
 	/// <param name="getTerrainNodes">Delegate function that collects the result from the previous task.</param>
-	public ShowTerrainNodes(float previewNodeRadius, Transform previewParent, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
+	public ShowTerrainNodes(float nodePreviewRadius, Transform previewParent, Func<List<TerrainNode>> getTerrainNodes)
 	{
-		Name = "Generate Terrain Nodes Previews";
-		this.previewNodeRadius = previewNodeRadius;
+		Name = "Show Terrain Nodes Previews";
+
+		this.nodePreviewRadius = nodePreviewRadius;
 		this.previewParent = previewParent;
 		this.getTerrainNodes = getTerrainNodes;
-
-		StepSize = stepSize;
 
 		previews = new List<TerrainNodePreview>();
 	}
@@ -35,7 +34,7 @@ public class ShowTerrainNodes : SingleTask
 	{
 		int currentNodeIndex = TotalSteps - RemainingSteps;
 		TerrainNode currentNode = terrainNodes[currentNodeIndex];
-		TerrainNodePreview newPreview = new TerrainNodePreview(currentNode, previewNodeRadius, previewParent);
+		TerrainNodePreview newPreview = new TerrainNodePreview(currentNode, nodePreviewRadius, previewParent);
 		previews.Add(newPreview);
 	}
 
