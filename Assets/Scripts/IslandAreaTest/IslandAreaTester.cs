@@ -14,7 +14,7 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private GenerateTerrainNodesParams generateTerrainNodesParams;
 	[SerializeField] private bool previewProgress = true;
 	[SerializeField] private bool generateSequentially = true;
-	[SerializeField] private bool generateEachIslandInSteps = true;
+	[SerializeField] private bool generateInSteps = true;
 
 	//private TileGrid seaTileGrid;
 	private BoundingBox3D generatedWorldArea;
@@ -57,7 +57,7 @@ public class IslandAreaTester : MonoBehaviour
 			    }
 			    else if (!islandArea.Finished)
 			    {
-				    if (generateEachIslandInSteps)
+				    if (generateInSteps)
 					    islandArea.GenerateStep();
 					else
 					    islandArea.Generate();
@@ -77,7 +77,7 @@ public class IslandAreaTester : MonoBehaviour
 			}
 			else if (!islandArea.Finished)
 			{
-				if (generateEachIslandInSteps)
+				if (generateInSteps)
 					islandArea.GenerateStep();
 				else
 					islandArea.Generate();
