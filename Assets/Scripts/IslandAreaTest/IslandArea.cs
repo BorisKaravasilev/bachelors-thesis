@@ -44,26 +44,28 @@ public class IslandArea : GridObject
 		taskList.AddTask(generateNodesGradients);
 
 		// Show Gradients
-		//ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, resolution, gameObject.transform, generateNodesGradients.GetResult);
-		//taskList.AddTask(showGradients);
+		ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, 0.01f, resolution, gameObject.transform,
+				generateNodesGradients.GetResult)
+			{ Enabled = previewProgress };
+		taskList.AddTask(showGradients);
 
 		// Add heightmaps
 		AddTextures addHeightmaps = new AddTextures(generateNodesGradients.GetResult, terrainNodesParams.MaxNodes);
 		taskList.AddTask(addHeightmaps);
 
 		// Show added heightmaps
-		ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, 0.01f, resolution, gameObject.transform, addHeightmaps.GetResult);
+		ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.1f, resolution, gameObject.transform, addHeightmaps.GetResult);
 		showAddedHeightmaps.Enabled = previewProgress;
 		taskList.AddTask(showAddedHeightmaps);
 
 		// Generate Nodes Noise
-		Noise2DParams noiseParams = new Noise2DParams(0.05f, gameObject.transform.position.x * 2.42f, gameObject.transform.position.z * 2.42f);
+		Noise2DParams noiseParams = new Noise2DParams(Noise2DType.PerlinNoise, 0.05f, gameObject.transform.position.x * 2.42f, gameObject.transform.position.z * 2.42f);
 		GenerateNoiseHeightmap generateNoiseHeightmap = new GenerateNoiseHeightmap(resolution, noiseParams, resolution * resolution);
 		taskList.AddTask(generateNoiseHeightmap);
 
 		// Show Nodes Noise
 		ShowTexture showNoiseHeightmap =
-			new ShowTexture(Parameters.Radius * 2, 0.02f, resolution, gameObject.transform, generateNoiseHeightmap.GetResult)
+			new ShowTexture(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.2f, resolution, gameObject.transform, generateNoiseHeightmap.GetResult)
 			{
 				Enabled = previewProgress
 			};
@@ -74,7 +76,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(multiplyGradientsAndNoises);
 
 		// Show Multiplied Textures
-		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.03f, resolution, gameObject.transform, multiplyGradientsAndNoises.GetResult);
+		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.3f, resolution, gameObject.transform, multiplyGradientsAndNoises.GetResult);
 		taskList.AddTask(showMultiplicationResult);
 
 		ParamsAssigned = true;

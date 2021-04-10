@@ -17,7 +17,6 @@ public class GenerateNodesNoises : SingleTask
 
 	// Internal
 	private int texturePixelCount;
-	private PerlinNoise2D perlinNoise;
 
 	public GenerateNodesNoises(int resolution, Noise2DParams noiseParams, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
 	{
@@ -39,10 +38,17 @@ public class GenerateNodesNoises : SingleTask
 		for (int pixelIndex = 0; pixelIndex < texturePixelCount; pixelIndex++)
 		{
 			Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, resolution, pixelIndex);
-			float intensity = perlinNoise.GetValue(pixel2DCoords);
+
+			Noise2DParams nodeNoiseParams = terrainNodes[nodeIndex].Type.NoiseParams;
+			Noise2D nodeNoise = Noise2DFactory.GetNoise(nodeNoiseParams);
+
+			float intensity = nodeNoise.GetValue(pixel2DCoords);
 			Color pixelColor = new Color(intensity, intensity, intensity);
+
 			noise[pixelIndex] = pixelColor;
 		}
+
+		noises.Add(noise);
 	}
 
 	protected override void GetInputFromPreviousStep()

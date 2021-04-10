@@ -6,7 +6,7 @@ public abstract class Noise2D
 
 	public Noise2D()
 	{
-		this.parameters = new Noise2DParams(1f, 0f, 0f);
+		this.parameters = new Noise2DParams(Noise2DType.PerlinNoise, 1f, 0f, 0f);
 	}
 
 	public Noise2D(Noise2DParams parameters)
