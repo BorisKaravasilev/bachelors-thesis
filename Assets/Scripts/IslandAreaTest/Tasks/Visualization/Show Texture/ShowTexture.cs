@@ -18,6 +18,9 @@ public class ShowTexture : SingleTask
 	// Output
 	private TexturePreview previewObject;
 
+	// Internal
+	private const float initialElevation = 0.1f;
+
 	public ShowTexture(float sideLength, int resolution, Transform parent , Func<Color[]> getTexturePixels)
 	{
 		Name = "Show Texture";
@@ -36,9 +39,11 @@ public class ShowTexture : SingleTask
 		texture.SetPixels(texturePixels);
 		texture.Apply();
 
+		float elevation = initialElevation;
+
 		previewObject.SetTexture(texture);
 		previewObject.SetDimensions(new Vector3(sideLength, 0f, sideLength));
-		previewObject.SetLocalPosition(Vector3.zero);
+		previewObject.SetLocalPosition(new Vector3(0f, elevation, 0f));
 	}
 
 	protected override void GetInputFromPreviousStep()

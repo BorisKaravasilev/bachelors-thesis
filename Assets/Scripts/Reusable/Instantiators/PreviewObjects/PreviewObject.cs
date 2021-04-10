@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PreviewObject
+public class PreviewObject : IHideable
 {
 	protected GameObject gameObject;
 

@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seaTileGrid: {fileID: 832104319}
   islandGridParams:
-    spacing: 15
+    spacing: 16
     maxObjectRadius: 5
     objectCountLimit: 500
     destroyFarObjects: 1
@@ -176,10 +176,12 @@ MonoBehaviour:
       OffsetX: 0
       OffsetY: 0
       Type: 0
+  textureResolution: 100
   terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
   previewProgress: 1
   generateSequentially: 1
   generateInSteps: 1
+  visualStepTime: 0.5
 --- !u!4 &28307291
 Transform:
   m_ObjectHideFlags: 0

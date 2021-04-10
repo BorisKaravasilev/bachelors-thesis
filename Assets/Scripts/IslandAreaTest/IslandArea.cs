@@ -1,9 +1,14 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IslandArea : GridObject
 {
 	private TaskList taskList;
+	private TextMesh progressText;
+
+	private string lastTaskName = "";
+	private float progress = 0f;
 
 	private const string DEFAULT_NAME = "IslandArea";
 	
@@ -23,6 +28,11 @@ public class IslandArea : GridObject
 	/// </summary>
 	public void Init(bool previewProgress, float visualStepTime, int resolution, TerrainNodesParams terrainNodesParams)
 	{
+		if (previewProgress)
+		{
+			InstantiateProgressText();
+		}
+
 		float radius = Parameters.Radius;
 		float diameter = radius * 2;
 
@@ -49,7 +59,14 @@ public class IslandArea : GridObject
 		// Show Gradients
 		ShowTextures showGradients = new ShowTextures(diameter, resolution, parent, generateNodesGradients.GetResult);
 		showGradients.SetParams(1, previewProgress, visualStepTime);
+		showGradients.Name = "Show Node Gradients";
 		taskList.AddTask(showGradients);
+
+		// Hide Gradients
+		HidePreviewObjects<TexturePreview> hideGradients = new HidePreviewObjects<TexturePreview>(showGradients.GetResult);
+		hideGradients.SetParams(1, previewProgress);
+		hideGradients.Name = "Hide Node Gradients";
+		taskList.AddTask(hideGradients);
 
 		// Generate Nodes Noises
 		GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(resolution, generateTerrainNodes.GetResult, maxNodes);
@@ -58,26 +75,65 @@ public class IslandArea : GridObject
 		// Show Nodes Noises
 		ShowTextures showNodesNoises = new ShowTextures(diameter, resolution, parent, generateNodesNoises.GetResult);
 		showNodesNoises.SetParams(1, previewProgress, visualStepTime);
+		showNodesNoises.Name = "Show Nodes Noises";
 		taskList.AddTask(showNodesNoises);
+
+		// Hide Nodes Noises
+		HidePreviewObjects<TexturePreview> hideNodesNoises = new HidePreviewObjects<TexturePreview>(showNodesNoises.GetResult);
+		hideNodesNoises.SetParams(1, previewProgress);
+		hideNodesNoises.Name = "Hide Node Gradients";
+		taskList.AddTask(hideNodesNoises);
 
 		// Multiply Nodes Gradients and Noises
 		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, maxNodes);
+		multiplyGradientsAndNoises.Name = "Multiply Node Gradients and Noises";
 		taskList.AddTask(multiplyGradientsAndNoises);
 
 		// Show Gradients and Noises Multiplication Result
 		ShowTextures showMultiplicationResult = new ShowTextures(diameter, resolution, parent, multiplyGradientsAndNoises.GetResult);
 		showMultiplicationResult.SetParams(1, previewProgress, visualStepTime);
+		showMultiplicationResult.Name = "Show Gradients and Noises Multiplication Result";
 		taskList.AddTask(showMultiplicationResult);
 
-		// Add Nodes Gradient Noises Together
-		AddTextures addGradientNoises = new AddTextures(multiplyGradientsAndNoises.GetResult, maxNodes);
-		taskList.AddTask(addGradientNoises);
+		// Hide Gradients and Noises Multiplication Result
+		HidePreviewObjects<TexturePreview> hideMultiplicationResult = new HidePreviewObjects<TexturePreview>(showMultiplicationResult.GetResult);
+		hideMultiplicationResult.SetParams(1, previewProgress);
+		hideMultiplicationResult.Name = "Hide Gradients and Noises Multiplication Result";
+		taskList.AddTask(hideMultiplicationResult);
 
-		// Show Gradient Noises Addition Result
-		ShowTexture showGradientNoisesAddition = new ShowTexture(diameter, resolution, parent, addGradientNoises.GetResult);
+		// Add Multiplication Results Together
+		AddTextures addMultiplicationResults = new AddTextures(multiplyGradientsAndNoises.GetResult, maxNodes);
+		addMultiplicationResults.Name = "Add Multiplication Results Together";
+		taskList.AddTask(addMultiplicationResults);
+
+		// Show Addition Result
+		ShowTexture showGradientNoisesAddition = new ShowTexture(diameter, resolution, parent, addMultiplicationResults.GetResult);
+		showGradientNoisesAddition.Name = "Show Addition Result";
 		taskList.AddTask(showGradientNoisesAddition);
 
 		Initialized = true;
+	}
+
+	private GameObject InstantiateProgressText()
+	{
+		GameObject progressTextObject = new GameObject("Progress text");
+		progressTextObject.transform.SetParent(gameObject.transform);
+		progressTextObject.transform.eulerAngles = new Vector3(90f, 0f, 0f);
+		progressTextObject.transform.localPosition = new Vector3(-Parameters.Radius, 0f, -Parameters.Radius - 0.5f);
+		progressTextObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+		progressText = progressTextObject.AddComponent<TextMesh>();
+		progressText.fontSize = 20;
+
+		return progressTextObject;
+	}
+
+	private void SetProgressText(string currentTaskName, float totalProgress)
+	{
+		if (progressText != null)
+		{
+			progressText.text = $"{currentTaskName}\n{totalProgress:P}";
+		}
 	}
 
 	public GameObject Generate()
@@ -99,6 +155,14 @@ public class IslandArea : GridObject
 		if (Initialized)
 		{
 			int executedSteps = taskList.ExecuteStepSize();
+
+			if (taskList.CurrentTask != null)
+			{
+				lastTaskName = taskList.CurrentTask.Name;
+			}
+
+			progress = taskList.Progress;
+			SetProgressText(lastTaskName, progress);
 		}
 		else
 		{

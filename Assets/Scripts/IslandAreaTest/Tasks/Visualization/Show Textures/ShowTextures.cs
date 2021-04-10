@@ -19,6 +19,9 @@ public class ShowTextures : SingleTask
 	// Output
 	private List<TexturePreview> previewObjects;
 
+	// Internal
+	private const float initialElevation = 0.1f;
+
 	public ShowTextures(float sideLength, int resolution, Transform parent, Func<List<Color[]>> getTextures)
 	{
 		Name = "Show Textures";
@@ -31,6 +34,12 @@ public class ShowTextures : SingleTask
 		previewObjects = new List<TexturePreview>();
 	}
 
+	public List<TexturePreview> GetResult()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		return previewObjects;
+	}
+
 	protected override void ExecuteStep()
 	{
 		int textureIndex = ExecutedSteps;
@@ -40,7 +49,7 @@ public class ShowTextures : SingleTask
 		texture.SetPixels(textures[textureIndex]);
 		texture.Apply();
 
-		float elevation = textureIndex * 0.01f;
+		float elevation = textureIndex * 0.01f + initialElevation;
 
 		previewObject.SetTexture(texture);
 		previewObject.SetDimensions(new Vector3(sideLength, 0f, sideLength));
