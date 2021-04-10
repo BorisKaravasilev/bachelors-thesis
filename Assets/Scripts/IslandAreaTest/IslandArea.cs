@@ -46,38 +46,36 @@ public class IslandArea : GridObject
 		// Show Gradients
 		ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, 0.01f, resolution, gameObject.transform,
 				generateNodesGradients.GetResult)
-			{ Enabled = previewProgress };
+			{Enabled = false};//previewProgress };
 		taskList.AddTask(showGradients);
 
-		// Add heightmaps
-		AddTextures addHeightmaps = new AddTextures(generateNodesGradients.GetResult, terrainNodesParams.MaxNodes);
-		taskList.AddTask(addHeightmaps);
+		// Generate Nodes Noises
+		GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(resolution, generateTerrainNodes.GetResult, terrainNodesParams.MaxNodes);
+		taskList.AddTask(generateNodesNoises);
 
-		// Show added heightmaps
-		ShowTexture showAddedHeightmaps = new ShowTexture(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.1f, resolution, gameObject.transform, addHeightmaps.GetResult);
-		showAddedHeightmaps.Enabled = previewProgress;
-		taskList.AddTask(showAddedHeightmaps);
-
-		// Generate Nodes Noise
-		Noise2DParams noiseParams = new Noise2DParams(Noise2DType.PerlinNoise, 0.05f, gameObject.transform.position.x * 2.42f, gameObject.transform.position.z * 2.42f);
-		GenerateNoiseHeightmap generateNoiseHeightmap = new GenerateNoiseHeightmap(resolution, noiseParams, resolution * resolution);
-		taskList.AddTask(generateNoiseHeightmap);
-
-		// Show Nodes Noise
-		ShowTexture showNoiseHeightmap =
-			new ShowTexture(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.2f, resolution, gameObject.transform, generateNoiseHeightmap.GetResult)
-			{
-				Enabled = previewProgress
-			};
-		taskList.AddTask(showNoiseHeightmap);
+		// Show Nodes Noises
+		ShowTextures showNodesNoises = new ShowTextures(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.2f, resolution, gameObject.transform,
+				generateNodesNoises.GetResult)
+			{ Enabled = previewProgress };
+		taskList.AddTask(showNodesNoises);
 
 		// Multiply Nodes Gradients and Noises
-		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(addHeightmaps.GetResultInList, generateNoiseHeightmap.GetResultInList, terrainNodesParams.MaxNodes);
+		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, terrainNodesParams.MaxNodes);
 		taskList.AddTask(multiplyGradientsAndNoises);
 
-		// Show Multiplied Textures
-		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.3f, resolution, gameObject.transform, multiplyGradientsAndNoises.GetResult);
+		// Show Gradients and Noises Multiplication Result
+		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 0.6f, resolution, gameObject.transform,
+				multiplyGradientsAndNoises.GetResult)
+			{ Enabled = previewProgress };
 		taskList.AddTask(showMultiplicationResult);
+
+		// Add Nodes Gradient Noises Together
+		AddTextures addGradientNoises = new AddTextures(multiplyGradientsAndNoises.GetResult, terrainNodesParams.MaxNodes);
+		taskList.AddTask(addGradientNoises);
+
+		// Show Gradient Noises Addition Result
+		ShowTexture showGradientNoisesAddition = new ShowTexture(Parameters.Radius * 2, 0.01f * terrainNodesParams.MaxNodes + 2f, resolution, gameObject.transform, addGradientNoises.GetResult);
+		taskList.AddTask(showGradientNoisesAddition);
 
 		ParamsAssigned = true;
 	}

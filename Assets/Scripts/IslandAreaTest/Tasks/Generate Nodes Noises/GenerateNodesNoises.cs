@@ -18,7 +18,7 @@ public class GenerateNodesNoises : SingleTask
 	// Internal
 	private int texturePixelCount;
 
-	public GenerateNodesNoises(int resolution, Noise2DParams noiseParams, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
+	public GenerateNodesNoises(int resolution, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
 	{
 		Name = "Generate Nodes Noises";
 		StepSize = stepSize;
@@ -28,6 +28,12 @@ public class GenerateNodesNoises : SingleTask
 
 		noises = new List<Color[]>();
 		texturePixelCount = resolution * resolution;
+	}
+
+	public List<Color[]> GetResult()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		return noises;
 	}
 
 	protected override void ExecuteStep()

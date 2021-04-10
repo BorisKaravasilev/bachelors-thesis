@@ -14,10 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TerrainTypes:
   - Name: Sand
-    Color: {r: 0.9339623, g: 0.82732743, b: 0.048460312, a: 0}
+    Color: {r: 0.9830379, g: 1, b: 0.0141509175, a: 0}
+    NoiseParams:
+      Scale: 0.03
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
   - Name: Grass
-    Color: {r: 0.20833963, g: 0.7830189, b: 0.040628344, a: 0}
+    Color: {r: 0.32696408, g: 0.735849, b: 0.12842648, a: 0}
+    NoiseParams:
+      Scale: 0.04
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
   - Name: Rock
-    Color: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
+    Color: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 0}
+    NoiseParams:
+      Scale: 0.05
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
   MinNodes: 2
-  MaxNodes: 4
+  MaxNodes: 3
