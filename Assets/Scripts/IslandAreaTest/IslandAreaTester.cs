@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class IslandAreaTester : MonoBehaviour
@@ -11,6 +12,8 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private GridOffsetParams islandGridOffsetParams;
 
 	[Header("Generation Steps Parameters")]
+	[Range(100, 1000)]
+	[SerializeField] private int textureResolution = 100;
 	[SerializeField] private TerrainNodesParams terrainNodesParams;
 	[SerializeField] private bool previewProgress = true;
 	[SerializeField] private bool generateSequentially = true;
@@ -34,10 +37,7 @@ public class IslandAreaTester : MonoBehaviour
 		List<IslandArea> newIslandAreas = islandGrid.InstantiateInBoundingBox(generatedWorldArea);
 		List<IslandArea> islandAreas = islandGrid.GetObjects();
 
-		if (generateSequentially)
-			GenerateNextIslandArea(islandAreas);
-		else
-			GenerateAllIslandAreas(islandAreas);
+		GenerateIslandAreas(islandAreas);
     }
 
     void OnValidate()
@@ -45,43 +45,51 @@ public class IslandAreaTester : MonoBehaviour
 		islandGrid?.UpdateParameters(islandGridParams, islandGridOffsetParams);
     }
 
-	private void GenerateNextIslandArea(List<IslandArea> islandAreas)
-    {
-	    if (islandAreas.Count > 0)
-	    {
-		    foreach (IslandArea islandArea in islandAreas)
-		    {
-			    if (!islandArea.Initialized)
-			    {
-				    islandArea.Init(previewProgress, terrainNodesParams);
-			    }
-			    else if (!islandArea.Finished)
-			    {
-				    if (generateInSteps)
-					    islandArea.GenerateStep();
-					else
-					    islandArea.Generate();
-				    break;
-			    }
-		    }
-	    }
-	}
-
-	private void GenerateAllIslandAreas(List<IslandArea> islandAreas)
+	/// <summary>
+	/// Generates or initializes one or all island areas depending on "generateSequentially".
+	/// </summary>
+	private void GenerateIslandAreas(List<IslandArea> islandAreas)
 	{
 		foreach (IslandArea islandArea in islandAreas)
 		{
-			if (!islandArea.Initialized)
-			{
-				islandArea.Init(previewProgress, terrainNodesParams);
-			}
-			else if (!islandArea.Finished)
-			{
-				if (generateInSteps)
-					islandArea.GenerateStep();
-				else
-					islandArea.Generate();
-			}
+			bool initializedOrGenerated = InitOrGenerateArea(islandArea);
+			if (initializedOrGenerated && generateSequentially) break;
 		}
+	}
+
+	/// <summary>
+	/// Returns  true if area got initialized or generated.
+	/// </summary>
+	/// <param name="islandArea"></param>
+	/// <returns></returns>
+	private bool InitOrGenerateArea(IslandArea islandArea)
+	{
+		if (!islandArea.Initialized)
+		{
+			islandArea.Init(previewProgress, textureResolution, terrainNodesParams);
+			return true;
+		}
+
+		return GenerateIslandArea(islandArea);
+	}
+
+	/// <summary>
+	/// Returns true if the given island area was not finished and generation step got executed.
+	/// </summary>
+	private bool GenerateIslandArea(IslandArea islandArea)
+	{
+		if (!islandArea.Finished)
+		{
+			if (generateInSteps)
+				islandArea.GenerateStep();
+			else
+			{
+				islandArea.Generate();
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 }

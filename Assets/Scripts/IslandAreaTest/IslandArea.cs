@@ -21,13 +21,14 @@ public class IslandArea : GridObject
 	/// <summary>
 	/// Creates a list of tasks defining the creation process of the area.
 	/// </summary>
-	public void Init(bool previewProgress, TerrainNodesParams terrainNodesParams)
+	public void Init(bool previewProgress, int resolution, TerrainNodesParams terrainNodesParams)
 	{
-		const int resolution = 99;
 		float radius = Parameters.Radius;
 		float diameter = radius * 2;
+
 		int maxNodes = terrainNodesParams.MaxNodes;
 		float nodePreviewRadius = radius / 10f;
+
 		Transform parent = gameObject.transform;
 		
 		// TODO: Calculate and assign round transparent mask
