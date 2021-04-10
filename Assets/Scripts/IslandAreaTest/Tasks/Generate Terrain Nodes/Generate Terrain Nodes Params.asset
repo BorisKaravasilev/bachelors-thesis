@@ -36,3 +36,4 @@ MonoBehaviour:
       Type: 0
   MinNodes: 2
   MaxNodes: 3
+  MaxDistanceMultiplier: 0.7

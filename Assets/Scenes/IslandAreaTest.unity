@@ -165,18 +165,21 @@ MonoBehaviour:
       Scale: 0
       OffsetX: 0
       OffsetY: 0
+      Type: 0
     zOffsetParams:
       Scale: 0
       OffsetX: 0
       OffsetY: 0
+      Type: 0
     thresholdParams:
       Scale: 0
       OffsetX: 0
       OffsetY: 0
-  generateTerrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
+      Type: 0
+  terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
   previewProgress: 1
   generateSequentially: 1
-  generateEachIslandInSteps: 1
+  generateInSteps: 1
 --- !u!4 &28307291
 Transform:
   m_ObjectHideFlags: 0
