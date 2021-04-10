@@ -14,13 +14,16 @@ public class TaskList
 	public float Progress => GetProgress();
 
 	public SingleTask CurrentTask => FindFirstUnfinishedTask();
-	public bool DebugMode = false;
+	public bool DebugMode { get; set; }
+	public int ExecutedTasks { get; private set; }
 
 	private List<SingleTask> taskList;
 
 	public TaskList()
 	{
 		taskList = new List<SingleTask>();
+		DebugMode = false;
+		ExecutedTasks = 0;
 	}
 
 	public void AddTask(SingleTask newTask)
@@ -42,13 +45,9 @@ public class TaskList
 			if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
 
 			executedSteps += firstUnfinishedTask.Execute();
+			ExecutedTasks++;
 
-			if (DebugMode)
-			{
-				float executionTimeMs = (Time.realtimeSinceStartup - timeBeforeExecution) * 1000;
-				LogExecutionStep(firstUnfinishedTask, executedSteps, executionTimeMs);
-			}
-
+			LogExecutionStep(firstUnfinishedTask, executedSteps, timeBeforeExecution);
 			firstUnfinishedTask = FindFirstUnfinishedTask();
 		}
 
@@ -69,12 +68,9 @@ public class TaskList
 			if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
 
 			executedSteps = firstUnfinishedTask.ExecuteStepSize();
+			if (firstUnfinishedTask.Finished) ExecutedTasks++;
 
-			if (DebugMode)
-			{
-				float executionTimeMs = (Time.realtimeSinceStartup - timeBeforeExecution) * 1000;
-				LogExecutionStep(firstUnfinishedTask, executedSteps, executionTimeMs);
-			}
+			LogExecutionStep(firstUnfinishedTask, executedSteps, timeBeforeExecution);
 		}
 
 		return executedSteps;
@@ -139,9 +135,13 @@ public class TaskList
 		return enabledTasks;
 	}
 
-	private void LogExecutionStep(SingleTask task, int executedSteps, float executionTimeMs)
+	private void LogExecutionStep(SingleTask task, int executedSteps, float timeBeforeExecution)
 	{
-		Debug.Log($"                                     {task.Name} ({task.Progress:P0})                           " +
-		          $"Executed steps: {executedSteps} (in {executionTimeMs:0.}ms)\n(Total: {Progress:P0})");
+		if (DebugMode)
+		{
+			float executionTimeMs = (Time.realtimeSinceStartup - timeBeforeExecution) * 1000;
+			Debug.Log($"                                     {task.Name} ({task.Progress:P0})                           " +
+				$"Executed steps: {executedSteps} (in {executionTimeMs:0.}ms)\n(Total: {Progress:P0})");
+		}
 	}
 }
