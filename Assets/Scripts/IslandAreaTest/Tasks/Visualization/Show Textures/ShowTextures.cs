@@ -9,7 +9,6 @@ public class ShowTextures : SingleTask
 {
 	// Inputs
 	private float sideLength;
-	private float heightAboveParent;
 	private int resolution;
 	private Transform parent;
 	private Func<List<Color[]>> getTextures;
@@ -20,12 +19,11 @@ public class ShowTextures : SingleTask
 	// Output
 	private List<TexturePreview> previewObjects;
 
-	public ShowTextures(float sideLength, float heightAboveParent, int resolution, Transform parent, Func<List<Color[]>> getTextures)
+	public ShowTextures(float sideLength, int resolution, Transform parent, Func<List<Color[]>> getTextures)
 	{
 		Name = "Show Textures";
 
 		this.sideLength = sideLength;
-		this.heightAboveParent = heightAboveParent;
 		this.resolution = resolution;
 		this.parent = parent;
 		this.getTextures = getTextures;
@@ -42,9 +40,11 @@ public class ShowTextures : SingleTask
 		texture.SetPixels(textures[textureIndex]);
 		texture.Apply();
 
+		float elevation = textureIndex * 0.01f;
+
 		previewObject.SetTexture(texture);
 		previewObject.SetDimensions(new Vector3(sideLength, 0f, sideLength));
-		previewObject.SetLocalPosition(new Vector3(0, heightAboveParent + textureIndex * 0.01f, 0));
+		previewObject.SetLocalPosition(new Vector3(0, elevation, 0));
 
 		previewObjects.Add(previewObject);
 	}

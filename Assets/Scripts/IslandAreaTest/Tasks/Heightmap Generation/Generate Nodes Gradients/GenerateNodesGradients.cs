@@ -26,10 +26,9 @@ public class GenerateNodesGradients : SingleTask
 	private float worldPixelLengthHalf;
 	private float worldPixelLength;
 
-	public GenerateNodesGradients(int resolution, float areaRadius, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
+	public GenerateNodesGradients(int resolution, float areaRadius, Func<List<TerrainNode>> getTerrainNodes)
 	{
 		Name = "Generate Nodes Gradients";
-		StepSize = stepSize;
 
 		this.resolution = resolution;
 		this.areaRadius = areaRadius;

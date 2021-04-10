@@ -51,9 +51,9 @@ public class IslandAreaTester : MonoBehaviour
 	    {
 		    foreach (IslandArea islandArea in islandAreas)
 		    {
-			    if (!islandArea.ParamsAssigned)
+			    if (!islandArea.Initialized)
 			    {
-				    islandArea.AssignParams(previewProgress, terrainNodesParams);
+				    islandArea.Init(previewProgress, terrainNodesParams);
 			    }
 			    else if (!islandArea.Finished)
 			    {
@@ -71,9 +71,9 @@ public class IslandAreaTester : MonoBehaviour
 	{
 		foreach (IslandArea islandArea in islandAreas)
 		{
-			if (!islandArea.ParamsAssigned)
+			if (!islandArea.Initialized)
 			{
-				islandArea.AssignParams(previewProgress, terrainNodesParams);
+				islandArea.Init(previewProgress, terrainNodesParams);
 			}
 			else if (!islandArea.Finished)
 			{

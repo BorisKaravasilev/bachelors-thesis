@@ -8,7 +8,6 @@ public class ShowTexture : SingleTask
 {
 	// Inputs
 	private float sideLength;
-	private float heightAboveParent;
 	private int resolution;
 	private Transform parent;
 
@@ -19,12 +18,11 @@ public class ShowTexture : SingleTask
 	// Output
 	private TexturePreview previewObject;
 
-	public ShowTexture(float sideLength, float heightAboveParent, int resolution, Transform parent , Func<Color[]> getTexturePixels)
+	public ShowTexture(float sideLength, int resolution, Transform parent , Func<Color[]> getTexturePixels)
 	{
 		Name = "Show Texture";
 
 		this.sideLength = sideLength;
-		this.heightAboveParent = heightAboveParent;
 		this.resolution = resolution;
 		this.parent = parent;
 		this.getTexturePixels = getTexturePixels;
@@ -40,7 +38,7 @@ public class ShowTexture : SingleTask
 
 		previewObject.SetTexture(texture);
 		previewObject.SetDimensions(new Vector3(sideLength, 0f, sideLength));
-		previewObject.SetLocalPosition(new Vector3(0,heightAboveParent,0));
+		previewObject.SetLocalPosition(Vector3.zero);
 	}
 
 	protected override void GetInputFromPreviousStep()

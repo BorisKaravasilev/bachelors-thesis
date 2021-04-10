@@ -6,29 +6,30 @@ public class IslandArea : GridObject
 	private TaskList taskList;
 
 	private const string DEFAULT_NAME = "IslandArea";
-
-	public bool ParamsAssigned { get; private set; }
+	
+	public bool Initialized { get; private set; }
 	public bool Finished => taskList?.Finished ?? false;
 
 	public IslandArea()
 	{
 		gameObject.name = DEFAULT_NAME;
-		//heightMap = new Texture2D(HM_RESOLUTION, HM_RESOLUTION);
 		taskList = new TaskList();
 		taskList.DebugMode = true;
-		ParamsAssigned = false;
+		Initialized = false;
 	}
 
 	/// <summary>
-	/// Assigns all necessary parameters for island area generation.
+	/// Creates a list of tasks defining the creation process of the area.
 	/// </summary>
-	public void AssignParams(bool previewProgress, TerrainNodesParams terrainNodesParams)
+	public void Init(bool previewProgress, TerrainNodesParams terrainNodesParams)
 	{
 		const int resolution = 99;
+		float radius = Parameters.Radius;
+		float diameter = radius * 2;
 		int maxNodes = terrainNodesParams.MaxNodes;
-		float nodePreviewRadius = Parameters.Radius / 10f;
+		float nodePreviewRadius = radius / 10f;
 		Transform parent = gameObject.transform;
-
+		
 		// TODO: Calculate and assign round transparent mask
 
 		// Generate Terrain nodes
@@ -41,13 +42,12 @@ public class IslandArea : GridObject
 		taskList.AddTask(showTerrainNodes);
 
 		// Generate Nodes Gradients
-		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, Parameters.Radius, generateTerrainNodes.GetResult, maxNodes);
+		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, radius, generateTerrainNodes.GetResult);
 		taskList.AddTask(generateNodesGradients);
 
 		// Show Gradients
-		ShowTextures showGradients = new ShowTextures(Parameters.Radius * 2, 0.01f, resolution, parent,
-				generateNodesGradients.GetResult)
-			{Enabled = false};//previewProgress };
+		ShowTextures showGradients = new ShowTextures(diameter, resolution, parent, generateNodesGradients.GetResult);
+		showGradients.SetParams(1, previewProgress);
 		taskList.AddTask(showGradients);
 
 		// Generate Nodes Noises
@@ -55,9 +55,8 @@ public class IslandArea : GridObject
 		taskList.AddTask(generateNodesNoises);
 
 		// Show Nodes Noises
-		ShowTextures showNodesNoises = new ShowTextures(Parameters.Radius * 2, 0.01f * maxNodes + 0.2f, resolution, parent,
-				generateNodesNoises.GetResult)
-			{ Enabled = previewProgress };
+		ShowTextures showNodesNoises = new ShowTextures(diameter, resolution, parent, generateNodesNoises.GetResult);
+		showNodesNoises.SetParams(1, previewProgress);
 		taskList.AddTask(showNodesNoises);
 
 		// Multiply Nodes Gradients and Noises
@@ -65,9 +64,8 @@ public class IslandArea : GridObject
 		taskList.AddTask(multiplyGradientsAndNoises);
 
 		// Show Gradients and Noises Multiplication Result
-		ShowTextures showMultiplicationResult = new ShowTextures(Parameters.Radius * 2, 0.01f * maxNodes + 0.6f, resolution, parent,
-				multiplyGradientsAndNoises.GetResult)
-			{ Enabled = previewProgress };
+		ShowTextures showMultiplicationResult = new ShowTextures(diameter, resolution, parent, multiplyGradientsAndNoises.GetResult);
+		showMultiplicationResult.SetParams(1, previewProgress);
 		taskList.AddTask(showMultiplicationResult);
 
 		// Add Nodes Gradient Noises Together
@@ -75,15 +73,15 @@ public class IslandArea : GridObject
 		taskList.AddTask(addGradientNoises);
 
 		// Show Gradient Noises Addition Result
-		ShowTexture showGradientNoisesAddition = new ShowTexture(Parameters.Radius * 2, 0.01f * maxNodes + 2f, resolution, parent, addGradientNoises.GetResult);
+		ShowTexture showGradientNoisesAddition = new ShowTexture(diameter, resolution, parent, addGradientNoises.GetResult);
 		taskList.AddTask(showGradientNoisesAddition);
 
-		ParamsAssigned = true;
+		Initialized = true;
 	}
 
 	public GameObject Generate()
 	{
-		if (ParamsAssigned)
+		if (Initialized)
 		{
 			taskList.Execute();
 		}
@@ -97,7 +95,7 @@ public class IslandArea : GridObject
 
 	public GameObject GenerateStep()
 	{
-		if (ParamsAssigned)
+		if (Initialized)
 		{
 			int executedSteps = taskList.ExecuteStepSize();
 		}
