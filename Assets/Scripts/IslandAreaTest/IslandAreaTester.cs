@@ -18,6 +18,8 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private bool previewProgress = true;
 	[SerializeField] private bool generateSequentially = true;
 	[SerializeField] private bool generateInSteps = true;
+	[Range(0f, 1f)]
+	[SerializeField] private float visualStepTime = 0f;
 
 	//private TileGrid seaTileGrid;
 	private BoundingBox3D generatedWorldArea;
@@ -66,7 +68,7 @@ public class IslandAreaTester : MonoBehaviour
 	{
 		if (!islandArea.Initialized)
 		{
-			islandArea.Init(previewProgress, textureResolution, terrainNodesParams);
+			islandArea.Init(previewProgress, visualStepTime, textureResolution, terrainNodesParams);
 			return true;
 		}
 

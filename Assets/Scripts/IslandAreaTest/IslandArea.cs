@@ -21,7 +21,7 @@ public class IslandArea : GridObject
 	/// <summary>
 	/// Creates a list of tasks defining the creation process of the area.
 	/// </summary>
-	public void Init(bool previewProgress, int resolution, TerrainNodesParams terrainNodesParams)
+	public void Init(bool previewProgress, float visualStepTime, int resolution, TerrainNodesParams terrainNodesParams)
 	{
 		float radius = Parameters.Radius;
 		float diameter = radius * 2;
@@ -39,7 +39,7 @@ public class IslandArea : GridObject
 
 		// Show Terrain nodes
 		ShowTerrainNodes showTerrainNodes = new ShowTerrainNodes(nodePreviewRadius, parent, generateTerrainNodes.GetResult);
-		showTerrainNodes.SetParams(1, previewProgress);
+		showTerrainNodes.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showTerrainNodes);
 
 		// Generate Nodes Gradients
@@ -48,7 +48,7 @@ public class IslandArea : GridObject
 
 		// Show Gradients
 		ShowTextures showGradients = new ShowTextures(diameter, resolution, parent, generateNodesGradients.GetResult);
-		showGradients.SetParams(1, previewProgress);
+		showGradients.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showGradients);
 
 		// Generate Nodes Noises
@@ -57,7 +57,7 @@ public class IslandArea : GridObject
 
 		// Show Nodes Noises
 		ShowTextures showNodesNoises = new ShowTextures(diameter, resolution, parent, generateNodesNoises.GetResult);
-		showNodesNoises.SetParams(1, previewProgress);
+		showNodesNoises.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showNodesNoises);
 
 		// Multiply Nodes Gradients and Noises
@@ -66,7 +66,7 @@ public class IslandArea : GridObject
 
 		// Show Gradients and Noises Multiplication Result
 		ShowTextures showMultiplicationResult = new ShowTextures(diameter, resolution, parent, multiplyGradientsAndNoises.GetResult);
-		showMultiplicationResult.SetParams(1, previewProgress);
+		showMultiplicationResult.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showMultiplicationResult);
 
 		// Add Nodes Gradient Noises Together

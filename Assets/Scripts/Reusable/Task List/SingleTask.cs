@@ -1,7 +1,9 @@
-﻿public abstract class SingleTask
+﻿using UnityEngine;
+
+public abstract class SingleTask
 {
 	public string Name { get; set; }
-	public bool Finished => RemainingSteps == 0;
+	public bool Finished => RemainingSteps == 0 && !IsWaiting;
 	public bool NotStarted => RemainingSteps == TotalSteps;
 
 	private int totalSteps = 1;
@@ -25,6 +27,7 @@
 	
 	public int ExecutedSteps => TotalSteps - RemainingSteps;
 	public int StepSize { get; set; }
+	public float MinStepDuration { get; set; } // For visualization purposes
 
 	/// <summary>
 	/// In range of 0 to 1.
@@ -33,17 +36,24 @@
 
 	public bool Enabled { get; set; }
 
+	public bool IsWaiting { get; private set; }
+	private float lastStepStartTime;
+
 	public SingleTask(string name = "Single Task")
 	{
 		Name = name;
 		Enabled = true;
 		StepSize = 1;
+		MinStepDuration = 0f;
+		lastStepStartTime = 0f;
+		IsWaiting = false;
 	}
 
-	public void SetParams(int stepSize, bool enabled)
+	public void SetParams(int stepSize, bool enabled, float minStepDuration = 0)
 	{
 		StepSize = stepSize;
 		Enabled = enabled;
+		MinStepDuration = minStepDuration;
 	}
 
 	/// <summary>
@@ -74,12 +84,27 @@
 	/// </summary>
 	public int ExecuteStepSize()
 	{
+		if (IsWaiting)
+		{
+			if (MinStepDurationElapsed(MinStepDuration))
+			{
+				IsWaiting = false;
+			}
+
+			return 0;
+		}
+
 		if (NotStarted)
 		{
 			GetInputFromPreviousStep();
 			SetSteps();
 		}
+		else
+		{
+			if (!MinStepDurationElapsed(MinStepDuration)) return 0;
+		}
 
+		lastStepStartTime = Time.realtimeSinceStartup;
 		int executedSteps = 0;
 		int stepsToExecute = StepSize;
 
@@ -91,7 +116,21 @@
 			executedSteps++;
 		}
 
+		if (RemainingSteps == 0 && !MinStepDurationElapsed(MinStepDuration)) IsWaiting = true;
+
 		return executedSteps;
+	}
+
+	private bool MinStepDurationElapsed(float minStepDuration)
+	{
+		float intervalBetweenSteps = Time.realtimeSinceStartup - lastStepStartTime;
+
+		if (intervalBetweenSteps > minStepDuration)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/// <summary>
