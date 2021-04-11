@@ -54,4 +54,54 @@ public static class TextureFunctions
 
 		return true;
 	}
+
+	/// <summary>
+	/// Origin (0,0,0) is expected to be in the center of the texture.
+	/// </summary>
+	public static Vector2Int LocalPositionToPixel(Vector3 position, int resolution, float textureRadius)
+	{
+		float textureDiameter = textureRadius * 2;
+		float worldPixelLength = textureDiameter / resolution;
+
+		int x = (int)((position.x + textureRadius) / worldPixelLength);
+		int z = (int)((position.z + textureRadius) / worldPixelLength);
+
+		int maxPixelIndex = resolution - 1;
+		if (x < 0) x = 0;
+		if (x > maxPixelIndex) x = maxPixelIndex;
+
+		if (z < 0) z = 0;
+		if (z > maxPixelIndex) z = maxPixelIndex;
+
+		return new Vector2Int(x, z);
+	}
+
+	/// <summary>
+	/// Origin (0,0,0) is expected to be in the center of the texture.
+	/// </summary>
+	public static Vector3 PixelToLocalPosition(Vector2Int pixelCoords, float worldPixelLength, float textureRadius)
+	{
+		float worldPixelLengthHalf = worldPixelLength / 2;
+
+		float localX = PixelsWorldLength(pixelCoords.x, worldPixelLength) + worldPixelLengthHalf - textureRadius;
+		float localY = 0f;
+		float localZ = PixelsWorldLength(pixelCoords.y, worldPixelLength) + worldPixelLengthHalf - textureRadius;
+
+		return new Vector3(localX, localY, localZ);
+	}
+
+	private static float PixelsWorldLength(int pixelsCount, float worldPixelLength)
+	{
+		return pixelsCount * worldPixelLength;
+	}
+
+	/// <summary>
+	/// Applies a Sobel filter with a 3x3 core to a gray scale image (edge detector).
+	/// </summary>
+	public static Color[] SobelFilter(Color[] grayScaleImage)
+	{
+
+
+		return new Color[1];
+	}
 }

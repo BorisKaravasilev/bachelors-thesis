@@ -119,7 +119,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(hideAdditionResult);
 
 		// Generate Island Area Texture
-		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult);
+		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(resolution, radius, terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult);
 		taskList.AddTask(generateTexture);
 
 		// Show Island Area Texture

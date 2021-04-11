@@ -55,8 +55,9 @@ public class GenerateTerrainNodes : SingleTask
 		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(seedPosition, Vector3.zero, maxNodeDistance);
 		int randTypeIndex = RandomFromSeed.Range(seedPosition, 0, terrainTypes.Count);
 		float maxRadius = objectRadius - Vector3.Distance(randPosition, Vector3.zero);
+		bool isDominant = RandomFromSeed.UniformValue(seedPosition) <= terrainTypes[randTypeIndex].DominationProbability;
 
-		TerrainNode randomNode = new TerrainNode(randPosition, terrainTypes[randTypeIndex], maxRadius);
+		TerrainNode randomNode = new TerrainNode(randPosition, terrainTypes[randTypeIndex], maxRadius, isDominant);
 		terrainNodes.Add(randomNode);
 	}
 }

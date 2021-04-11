@@ -23,7 +23,6 @@ public class GenerateNodesGradients : SingleTask
 	int heightmapsToGenerate;
 	int pixelsPerHeightmap;
 
-	private float worldPixelLengthHalf;
 	private float worldPixelLength;
 
 	public GenerateNodesGradients(int resolution, float areaRadius, Func<List<TerrainNode>> getTerrainNodes)
@@ -37,7 +36,6 @@ public class GenerateNodesGradients : SingleTask
 		heightmaps = new List<Color[]>();
 		float areaDiameter  = areaRadius * 2;
 		worldPixelLength = areaDiameter / resolution;
-		worldPixelLengthHalf = worldPixelLength / 2;
 	}
 
 	public List<Color[]> GetResult()
@@ -50,7 +48,7 @@ public class GenerateNodesGradients : SingleTask
 	{
 		int nodeIndex = ExecutedSteps;
 		TerrainNode terrainNode = terrainNodes[nodeIndex];
-		PixelBoundingBox gradientArea = GetNodeBoundingBox(terrainNode);
+		PixelBoundingBox gradientArea = terrainNode.GetPixelBoundingBox(resolution, areaRadius);
 
 		// Loop through pixels in the gradient's bounding box and calculation of the gradient pixels
 		for (int x = gradientArea.BottomLeft.x; x <= gradientArea.TopRight.x; x++)
@@ -80,54 +78,9 @@ public class GenerateNodesGradients : SingleTask
 		RemainingSteps = TotalSteps;
 	}
 
-	private Vector3 GetPixelLocalPosition(int x, int y)
-	{
-		float localX = PixelsWorldLength(x) + worldPixelLengthHalf - areaRadius;
-		float localY = 0f;
-		float localZ = PixelsWorldLength(y) + worldPixelLengthHalf - areaRadius;
-
-		return new Vector3(localX, localY, localZ);
-	}
-
-	private Vector2Int LocalPositionToPixel(Vector3 position)
-	{
-		int x = (int) ((position.x + areaRadius) / worldPixelLength);
-		int z = (int) ((position.z + areaRadius) / worldPixelLength);
-
-		int maxPixelIndex = resolution - 1;
-		if (x < 0) x = 0;
-		if (x > maxPixelIndex) x = maxPixelIndex;
-
-		if (z < 0) z = 0;
-		if (z > maxPixelIndex) z = maxPixelIndex;
-
-		return new Vector2Int(x, z);
-	}
-
-	private float PixelsWorldLength(int pixelsCount)
-	{
-		return pixelsCount * worldPixelLength;
-	}
-
-	private PixelBoundingBox GetNodeBoundingBox(TerrainNode node)
-	{
-		Vector3 areaLocalBottomLeft = node.Position;
-		areaLocalBottomLeft.x -= node.Radius;
-		areaLocalBottomLeft.z -= node.Radius;
-
-		Vector3 areaLocalTopRight = node.Position;
-		areaLocalTopRight.x += node.Radius;
-		areaLocalTopRight.z += node.Radius;
-
-		Vector2Int areaPixelBottomLeft = LocalPositionToPixel(areaLocalBottomLeft);
-		Vector2Int areaPixelTopRight = LocalPositionToPixel(areaLocalTopRight);
-
-		return new PixelBoundingBox(areaPixelBottomLeft, areaPixelTopRight);
-	}
-
 	private Color GetGradientPixel(Vector2Int pixelCoords, TerrainNode terrainNode)
 	{
-		Vector3 pixelWorldPos = GetPixelLocalPosition(pixelCoords.x, pixelCoords.y);
+		Vector3 pixelWorldPos = TextureFunctions.PixelToLocalPosition(pixelCoords, worldPixelLength, areaRadius);
 		float distanceFromCenter = Vector3.Distance(pixelWorldPos, terrainNode.Position);
 		float normalizedDistance = distanceFromCenter / terrainNode.Radius;
 

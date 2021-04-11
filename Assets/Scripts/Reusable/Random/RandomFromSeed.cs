@@ -29,6 +29,15 @@ public static class RandomFromSeed
 		return Random.Range(min, max);
 	}
 
+	/// <summary>
+	/// Return a random float between 0.0f [inclusive] and 1.0f [inclusive].
+	/// </summary>
+	public static float UniformValue(Vector3 seedPosition)
+	{
+		//Random.InitState(PositionToIntSeed(seedPosition));
+		return Random.value;
+	}
+
 	private static int PositionToIntSeed(Vector3 seedPosition)
 	{
 		return (int) seedPosition.x + (int)seedPosition.z;
