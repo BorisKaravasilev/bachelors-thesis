@@ -44,6 +44,7 @@ public class ShowTextures : SingleTask
 	{
 		int textureIndex = ExecutedSteps;
 		TexturePreview previewObject = new TexturePreview(parent);
+		previewObject.SetName(Name);
 
 		Texture2D texture = new Texture2D(resolution, resolution);
 		texture.SetPixels(textures[textureIndex]);

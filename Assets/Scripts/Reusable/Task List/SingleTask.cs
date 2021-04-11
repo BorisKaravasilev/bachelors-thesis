@@ -49,7 +49,7 @@ public abstract class SingleTask
 		IsWaiting = false;
 	}
 
-	public void SetParams(int stepSize, bool enabled, float minStepDuration = 0)
+	public void SetParams(int stepSize, bool enabled = true, float minStepDuration = 0)
 	{
 		StepSize = stepSize;
 		Enabled = enabled;

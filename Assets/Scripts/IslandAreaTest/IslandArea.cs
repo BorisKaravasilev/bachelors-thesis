@@ -109,7 +109,23 @@ public class IslandArea : GridObject
 		// Show Addition Result
 		ShowTexture showGradientNoisesAddition = new ShowTexture(diameter, resolution, parent, addMultiplicationResults.GetResult);
 		showGradientNoisesAddition.Name = "Show Addition Result";
+		showGradientNoisesAddition.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showGradientNoisesAddition);
+
+		// Hide Addition Result
+		HidePreviewObjects<TexturePreview> hideAdditionResult = new HidePreviewObjects<TexturePreview>(showGradientNoisesAddition.GetResultInList);
+		hideAdditionResult.SetParams(1, previewProgress);
+		hideAdditionResult.Name = "Hide Addition Result";
+		taskList.AddTask(hideAdditionResult);
+
+		// Generate Island Area Texture
+		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult);
+		taskList.AddTask(generateTexture);
+
+		// Show Island Area Texture
+		ShowTexture showIslandAreaTexture = new ShowTexture(diameter, resolution, parent, generateTexture.GetResult);
+		showIslandAreaTexture.Name = "Show Island Area Texture";
+		taskList.AddTask(showIslandAreaTexture);
 
 		Initialized = true;
 	}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -31,9 +32,27 @@ public class ShowTexture : SingleTask
 		this.getTexturePixels = getTexturePixels;
 	}
 
+	public TexturePreview GetResult()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		return previewObject;
+	}
+
+	/// <summary>
+	/// Wraps the result in a list so it can be processed by tasks requiring a list input.
+	/// </summary>
+	public List<TexturePreview> GetResultInList()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		List<TexturePreview> previewObjectListWrapper = new List<TexturePreview>();
+		previewObjectListWrapper.Add(previewObject);
+		return previewObjectListWrapper;
+	}
+
 	protected override void ExecuteStep()
 	{
 		previewObject = new TexturePreview(parent);
+		previewObject.SetName(Name);
 
 		Texture2D texture = new Texture2D(resolution, resolution);
 		texture.SetPixels(texturePixels);

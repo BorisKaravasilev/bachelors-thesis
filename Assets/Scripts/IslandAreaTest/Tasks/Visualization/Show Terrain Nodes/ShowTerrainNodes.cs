@@ -35,6 +35,7 @@ public class ShowTerrainNodes : SingleTask
 		int currentNodeIndex = TotalSteps - RemainingSteps;
 		TerrainNode currentNode = terrainNodes[currentNodeIndex];
 		TerrainNodePreview newPreview = new TerrainNodePreview(currentNode, nodePreviewRadius, previewParent);
+		newPreview.SetName("Terrain Node Preview");
 		previews.Add(newPreview);
 	}
 
