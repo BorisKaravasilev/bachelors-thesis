@@ -5,7 +5,7 @@ public class TerrainMesh
 {
 	// Height Map
 	public Color[] HeightMap { get; set; }
-	private Vector2Int resolution;
+	public Vector2Int Resolution { get; private set; }
 
 	// Terrain data
 	public Mesh Mesh { get; set; }
@@ -22,7 +22,7 @@ public class TerrainMesh
 	public int TotalVerticesToGenerate { get; }
 	private int generatedVertices;
 
-	private int totalTrianglesToGenerate;
+	public int TotalTrianglesToGenerate { get; private set; }
 	private int generatedTriangles;
 
 	public int GeneratedVertices
@@ -42,12 +42,12 @@ public class TerrainMesh
 
 	public bool MeshGenerationCompleted
 	{
-		get { return generatedTriangles == totalTrianglesToGenerate; }
+		get { return generatedTriangles == TotalVerticesToGenerate; }
 	}
 
 	// Visualization
 	public Transform Parent { get; set; }
-	private GameObject verticesParent;
+	public GameObject VerticesParent { get; set; }
 	private string verticesParentName = "VertexVisualizations";
 	public List<GameObject> VertexVisualizations { get; set; }
 	private Vector3[] oldVertices;
@@ -59,7 +59,7 @@ public class TerrainMesh
 	{
 		// Height Map
 		HeightMap = heightMap;
-		this.resolution = resolution;
+		this.Resolution = resolution;
 
 		// Terrain data
 		Mesh = new Mesh();
@@ -73,7 +73,7 @@ public class TerrainMesh
 		// Generation progress
 		TotalVerticesToGenerate = verticesCount.x * verticesCount.y;
 		generatedVertices = 0;
-		totalTrianglesToGenerate = (verticesCount.x - 1) * (verticesCount.y - 1) * 2;
+		TotalVerticesToGenerate = (verticesCount.x - 1) * (verticesCount.y - 1) * 2;
 		generatedTriangles = 0;
 
 		// Visualization
@@ -155,9 +155,11 @@ public class TerrainMesh
 
 		for (int i = 0; i < targetVertices.Length; i++)
 		{
-			float pixelsPerVertex = (float)resolution.x / (float)VerticesCount.x;
-			int pixelIndex = (int) (i * pixelsPerVertex);
-			Mathf.Clamp(pixelIndex, 0, Vertices.Length * pixelsPerVertex - 1);
+			float pixelsPerVertex = (float) Resolution.x / (float)VerticesCount.x;
+			int pixelX = (int)(pixelsPerVertex * (i % VerticesCount.x));
+			int pixelY = (int)(pixelsPerVertex * (i / VerticesCount.x));
+			Vector2Int pixelCoords = new Vector2Int(pixelX, pixelY);
+			int pixelIndex = TextureFunctions.CoordsToArrayIndex(Resolution.x, Resolution.y, pixelCoords);
 
 			Color heightMapColor = HeightMap[pixelIndex];
 			targetVertices[i] = new Vector3(Vertices[i].x, heightMapColor.r * maxVertexHeight, Vertices[i].z);
@@ -265,7 +267,7 @@ public class TerrainMesh
 	{
 		// Spawn game object
 		GameObject vertexMarker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		vertexMarker.transform.SetParent(verticesParent.transform);
+		vertexMarker.transform.SetParent(VerticesParent.transform);
 
 		// Calculate radius
 		float markerRadius = verticesSpacingX / 2;
@@ -307,13 +309,13 @@ public class TerrainMesh
 	/// <summary>
 	/// Creates a GameObject to encapsulate all vertex markers.
 	/// </summary>
-	private void CreateVerticesParent()
+	public void CreateVerticesParent()
 	{
-		if (verticesParent == null)
+		if (VerticesParent == null)
 		{
-			verticesParent = new GameObject(verticesParentName);
-			verticesParent.transform.SetParent(Parent.transform);
-			verticesParent.transform.localPosition = Vector3.zero;
+			VerticesParent = new GameObject(verticesParentName);
+			VerticesParent.transform.SetParent(Parent.transform);
+			VerticesParent.transform.localPosition = Vector3.zero;
 		}
 	}
 }

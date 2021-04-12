@@ -14,8 +14,6 @@ public class GenerateMeshVertices : SingleTask
 
 	// Inputs from previous task
 	private Func<Color[]> getHeightmap;
-
-	// Internal
 	private Color[] heightmap;
 
 	// Output
@@ -47,6 +45,13 @@ public class GenerateMeshVertices : SingleTask
 	{
 		heightmap = getHeightmap();
 		terrainMesh = new TerrainMesh(parent, heightmap, resolution, dimensions, verticesCount);
+		terrainMesh.CreateVerticesParent();
+
+		Vector3 visualisationOrigin = new Vector3();
+		visualisationOrigin.x = -dimensions.x / 2;
+		visualisationOrigin.y = 0;
+		visualisationOrigin.z = -dimensions.z / 2;
+		terrainMesh.VerticesParent.transform.localPosition = visualisationOrigin;
 	}
 
 	protected override void SetSteps()

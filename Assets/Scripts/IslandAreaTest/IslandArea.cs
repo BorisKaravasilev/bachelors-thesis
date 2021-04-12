@@ -5,7 +5,10 @@ using UnityEngine.UI;
 public class IslandArea : GridObject
 {
 	private TaskList taskList;
+
 	private TextMesh progressText;
+	private MeshRenderer meshRenderer;
+	private MeshFilter meshFilter;
 
 	private string lastTaskName = "";
 	private float progress = 0f;
@@ -21,6 +24,9 @@ public class IslandArea : GridObject
 		taskList = new TaskList();
 		taskList.DebugMode = true;
 		Initialized = false;
+
+		meshRenderer = gameObject.AddComponent<MeshRenderer>();
+		meshFilter = gameObject.AddComponent<MeshFilter>();
 	}
 
 	/// <summary>
@@ -39,7 +45,7 @@ public class IslandArea : GridObject
 		float nodePreviewRadius = Radius / 10f;
 
 		Vector2Int resolution2D = new Vector2Int(resolution, resolution);
-		float maxTerrainHeight = 2f;
+		float maxTerrainHeight = 1f;
 		Vector3 dimensions = new Vector3(diameter, maxTerrainHeight, diameter);
 		Vector2Int verticesCount = new Vector2Int(20, 20);
 
@@ -135,7 +141,18 @@ public class IslandArea : GridObject
 
 		// Generate Mesh Vertices
 		GenerateMeshVertices generateMeshVertices = new GenerateMeshVertices(previewProgress, gameObject.transform, resolution2D, dimensions, verticesCount, addMultiplicationResults.GetResult);
+		generateMeshVertices.SetParams(40, true, previewProgress ? visualStepTime : 0f);
 		taskList.AddTask(generateMeshVertices);
+
+		// Translate Vertices
+		TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(generateMeshVertices.GetResult);
+		translateMeshVertices.SetParams(1, true, visualStepTime / 20);
+		taskList.AddTask(translateMeshVertices);
+
+		// Generate Mesh
+		GenerateMesh generateMesh = new GenerateMesh(meshFilter, meshRenderer, translateMeshVertices.GetResult, generateTexture.GetResult);
+		generateMesh.SetParams(1, true, visualStepTime / 20);
+		taskList.AddTask(generateMesh);
 
 		Initialized = true;
 	}
