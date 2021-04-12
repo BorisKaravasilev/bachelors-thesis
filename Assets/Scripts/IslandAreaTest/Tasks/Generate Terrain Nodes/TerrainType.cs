@@ -19,4 +19,14 @@ public class TerrainType
 		DominationProbability = dominationProbability;
 		NoiseParams = noiseParams;
 	}
+
+	/// <summary>
+	/// Returns a deep copy of the object.
+	/// </summary>
+	public TerrainType DeepCopy()
+	{
+		Noise2DParams noiseParams = new Noise2DParams(NoiseParams.Type, NoiseParams.Scale, NoiseParams.OffsetX, NoiseParams.OffsetY);
+		TerrainType copy = new TerrainType(Name, Color, StartingHeight, DominationProbability, noiseParams);
+		return copy;
+	}
 }
