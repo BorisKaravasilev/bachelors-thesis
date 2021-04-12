@@ -33,18 +33,23 @@ public class IslandArea : GridObject
 			InstantiateProgressText();
 		}
 
-		float radius = Parameters.Radius;
-		float diameter = radius * 2;
+		float diameter = Radius * 2;
 
 		int maxNodes = terrainNodesParams.MaxNodes;
-		float nodePreviewRadius = radius / 10f;
+		float nodePreviewRadius = Radius / 10f;
+
+		Vector2Int resolution2D = new Vector2Int(resolution, resolution);
+		float maxTerrainHeight = 2f;
+		Vector3 dimensions = new Vector3(diameter, maxTerrainHeight, diameter);
+		Vector2Int verticesCount = new Vector2Int(20, 20);
 
 		Transform parent = gameObject.transform;
+		GridObjectParams gridObjectParams = base.GetParams();
 		
 		// TODO: Calculate and assign round transparent mask
 
 		// Generate Terrain nodes
-		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, Parameters, maxNodes);
+		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, gridObjectParams, maxNodes);
 		taskList.AddTask(generateTerrainNodes);
 
 		// Show Terrain nodes
@@ -53,7 +58,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(showTerrainNodes);
 
 		// Generate Nodes Gradients
-		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, radius, generateTerrainNodes.GetResult);
+		GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(resolution, Radius, generateTerrainNodes.GetResult);
 		taskList.AddTask(generateNodesGradients);
 
 		// Show Gradients
@@ -101,7 +106,7 @@ public class IslandArea : GridObject
 		hideMultiplicationResult.Name = "Hide Gradients and Noises Multiplication Result";
 		taskList.AddTask(hideMultiplicationResult);
 
-		// Add Multiplication Results Together
+		// Add Multiplication Results Together (final heightmap)
 		AddTextures addMultiplicationResults = new AddTextures(multiplyGradientsAndNoises.GetResult, maxNodes);
 		addMultiplicationResults.Name = "Add Multiplication Results Together";
 		taskList.AddTask(addMultiplicationResults);
@@ -119,13 +124,18 @@ public class IslandArea : GridObject
 		taskList.AddTask(hideAdditionResult);
 
 		// Generate Island Area Texture
-		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(resolution, radius, terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult, multiplyGradientsAndNoises.GetResult);
+		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(resolution, Radius, terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult, multiplyGradientsAndNoises.GetResult);
 		taskList.AddTask(generateTexture);
 
 		// Show Island Area Texture
 		ShowTexture showIslandAreaTexture = new ShowTexture(diameter, resolution, parent, generateTexture.GetResult);
 		showIslandAreaTexture.Name = "Show Island Area Texture";
+		showIslandAreaTexture.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showIslandAreaTexture);
+
+		// Generate Mesh Vertices
+		GenerateMeshVertices generateMeshVertices = new GenerateMeshVertices(previewProgress, gameObject.transform, resolution2D, dimensions, verticesCount, addMultiplicationResults.GetResult);
+		taskList.AddTask(generateMeshVertices);
 
 		Initialized = true;
 	}
@@ -135,7 +145,7 @@ public class IslandArea : GridObject
 		GameObject progressTextObject = new GameObject("Progress text");
 		progressTextObject.transform.SetParent(gameObject.transform);
 		progressTextObject.transform.eulerAngles = new Vector3(90f, 0f, 0f);
-		progressTextObject.transform.localPosition = new Vector3(-Parameters.Radius, 0f, -Parameters.Radius - 0.5f);
+		progressTextObject.transform.localPosition = new Vector3(-Radius, 0f, -Radius - 0.5f);
 		progressTextObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
 		progressText = progressTextObject.AddComponent<TextMesh>();

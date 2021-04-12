@@ -181,7 +181,7 @@ MonoBehaviour:
   previewProgress: 1
   generateSequentially: 1
   generateInSteps: 1
-  visualStepTime: 0.2
+  visualStepTime: 0
 --- !u!4 &28307291
 Transform:
   m_ObjectHideFlags: 0

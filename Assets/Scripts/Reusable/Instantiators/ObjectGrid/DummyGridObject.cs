@@ -19,7 +19,7 @@ public class DummyGridObject : GridObject
 		Transform pTransform = preview.transform;
 		pTransform.SetParent(gameObject.transform);
 		pTransform.localPosition = new Vector3(0, 0, 0);
-		pTransform.localScale = new Vector3(Parameters.Radius * 2, Parameters.Radius * 2, Parameters.Radius * 2);
+		pTransform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
 
 		return preview;
 	}

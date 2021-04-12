@@ -2,21 +2,28 @@
 
 public class GridObject
 {
+	public Vector3 Position { get; private set; }
+	public float Radius { get; private set; }
+
 	protected GameObject gameObject;
-	public GridObjectParams Parameters { get; private set; }
 
 	private const string DEFAULT_NAME = "GridObject";
 
 	public GridObject()
 	{
 		gameObject = new GameObject(DEFAULT_NAME);
+
+		Position = Vector3.zero;
+		Radius = 1f;
 	}
 
 	public GameObject Init(GridObjectParams parameters, Transform parent)
 	{
+		Position = parameters.Position;
+		Radius = parameters.Radius;
+
 		SetParent(parent);
-		Parameters = parameters;
-		SetPosition(parameters.Position);
+		SetPosition(Position);
 
 		return gameObject;
 	}
@@ -43,5 +50,10 @@ public class GridObject
 	public Vector3 GetPosition()
 	{
 		return gameObject.transform.position;
+	}
+
+	public GridObjectParams GetParams()
+	{
+		return new GridObjectParams(Position, Radius);
 	}
 }
