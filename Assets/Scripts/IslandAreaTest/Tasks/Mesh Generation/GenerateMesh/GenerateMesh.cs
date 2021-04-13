@@ -6,8 +6,7 @@ using UnityEngine;
 public class GenerateMesh : SingleTask
 {
 	// Input
-	private MeshFilter meshFilter;
-	private MeshRenderer meshRenderer;
+	private Material material;
 
 	// Inputs from previous task
 	private Func<TerrainMesh> getTerrainMesh;
@@ -21,12 +20,11 @@ public class GenerateMesh : SingleTask
 	// Output
 
 
-	public GenerateMesh(MeshFilter meshFilter, MeshRenderer meshRenderer, Func<TerrainMesh> getTerrainMesh, Func<Color[]> getTexturePixels)
+	public GenerateMesh(Material material, Func<TerrainMesh> getTerrainMesh, Func<Color[]> getTexturePixels)
 	{
 		Name = "Generate Mesh";
 
-		this.meshFilter = meshFilter;
-		this.meshRenderer = meshRenderer;
+		this.material = material;
 		this.getTerrainMesh = getTerrainMesh;
 		this.getTexturePixels = getTexturePixels;
 	}
@@ -40,6 +38,12 @@ public class GenerateMesh : SingleTask
 	protected override void ExecuteStep()
 	{
 		terrainMesh.GenerateMeshStep(1);
+		Debug.Log($"Triangles total: {terrainMesh.TotalTrianglesToGenerate}      Generated: {terrainMesh.GeneratedTriangles}");
+
+		if (RemainingSteps == 1)
+		{
+			terrainMesh.HideVertexVisualizations();
+		}
 	}
 
 	protected override void GetInputFromPreviousStep()
@@ -47,18 +51,13 @@ public class GenerateMesh : SingleTask
 		terrainMesh = getTerrainMesh();
 		texturePixels = getTexturePixels();
 
-		Texture2D texture = new Texture2D(terrainMesh.Resolution.x, terrainMesh.Resolution.y);
-		texture.SetPixels(texturePixels);
-		texture.Apply();
-
-		meshFilter.mesh = terrainMesh.Mesh;
-		meshRenderer.material.shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default");
-		meshRenderer.material.SetTexture("_MainTex", texture);
+		Vector3 offset = new Vector3(-terrainMesh.Dimensions.x / 2, 0, -terrainMesh.Dimensions.z / 2);
+		terrainMesh.CreateMeshGameObject(texturePixels, offset, material);
 	}
 
 	protected override void SetSteps()
 	{
-		TotalSteps = terrainMesh.TotalTrianglesToGenerate;
+		TotalSteps = terrainMesh.TotalTrianglesToGenerate / 2; // Each step generates two triangles
 		RemainingSteps = TotalSteps;
 	}
 }

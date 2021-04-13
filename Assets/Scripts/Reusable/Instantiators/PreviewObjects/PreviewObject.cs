@@ -4,10 +4,11 @@ public class PreviewObject : IHideable
 {
 	protected GameObject gameObject;
 
-	public PreviewObject(PrimitiveType objectType, Transform parent = null)
+	public PreviewObject(PrimitiveType objectType, Material material, Transform parent = null)
 	{
 		Instantiate(objectType, parent);
 		SetName("PreviewObject");
+		gameObject.GetComponent<MeshRenderer>().material = material;
 	}
 
 	public void Show()
@@ -61,7 +62,7 @@ public class PreviewObject : IHideable
 
 	public void SetColor(Color newColor)
 	{
-		gameObject.GetComponent<Renderer>().material.SetColor("_BaseColor", newColor);
+		gameObject.GetComponent<Renderer>().material.color = newColor;
 	}
 
 	private GameObject Instantiate(PrimitiveType objectType, Transform parent = null)

@@ -153,6 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seaTileGrid: {fileID: 832104319}
+  debugIslandAreas: 0
+  meshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
+  previewObjectMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
+  previewTextureMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
   islandGridParams:
     spacing: 16
     maxObjectRadius: 5
@@ -181,7 +185,7 @@ MonoBehaviour:
   previewProgress: 1
   generateSequentially: 1
   generateInSteps: 1
-  visualStepTime: 0
+  visualStepTime: 0.1
 --- !u!4 &28307291
 Transform:
   m_ObjectHideFlags: 0
@@ -190,7 +194,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 28307289}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -974,7 +978,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2
+  m_Intensity: 1.25
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.802082

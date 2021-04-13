@@ -2,10 +2,8 @@
 
 public sealed class TexturePreview : PreviewObject
 {
-	public TexturePreview(Transform parent = null) : base(PrimitiveType.Quad, parent)
+	public TexturePreview(Material material, Transform parent = null) : base(PrimitiveType.Quad, material, parent)
 	{
-		gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default");
-
 		SetName("TexturePreview");
 		SetTexture(Texture2D.blackTexture);
 		SetLocalEulerAngles(Vector3.zero);
@@ -13,10 +11,10 @@ public sealed class TexturePreview : PreviewObject
 		SetLocalPosition(Vector3.zero);
 	}
 
-	public void SetTexture(Texture2D texture, string materialTextureName = "_MainTex")
+	public void SetTexture(Texture2D texture)
 	{
 		Renderer hmRenderer = gameObject.GetComponent<Renderer>();
-		hmRenderer.material.SetTexture(materialTextureName, texture);
+		hmRenderer.material.mainTexture = texture;
 	}
 
 	public override void SetDimensions(Vector3 dimensions)

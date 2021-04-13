@@ -23,7 +23,7 @@ public class TerrainMesh
 	private int generatedVertices;
 
 	public int TotalTrianglesToGenerate { get; private set; }
-	private int generatedTriangles;
+	public int GeneratedTriangles { get; private set; }
 
 	public int GeneratedVertices
 	{
@@ -42,13 +42,20 @@ public class TerrainMesh
 
 	public bool MeshGenerationCompleted
 	{
-		get { return generatedTriangles == TotalVerticesToGenerate; }
+		get { return GeneratedTriangles == TotalVerticesToGenerate; }
 	}
 
 	// Visualization
-	public Transform Parent { get; set; }
-	public GameObject VerticesParent { get; set; }
-	private string verticesParentName = "VertexVisualizations";
+	public Transform Parent { get; }
+
+	public GameObject MeshGO { get; private set; }
+	private const string MESH_GO_NAME = "Terrain Mesh";
+	private MeshRenderer meshRenderer;
+	private MeshFilter meshFilter;
+
+
+	public GameObject VerticesParent { get; private set; }
+	private const string VERTICES_PARENT_NAME = "VertexVisualizations";
 	public List<GameObject> VertexVisualizations { get; set; }
 	private Vector3[] oldVertices;
 	private Vector3[] targetVertices;
@@ -59,7 +66,7 @@ public class TerrainMesh
 	{
 		// Height Map
 		HeightMap = heightMap;
-		this.Resolution = resolution;
+		Resolution = resolution;
 
 		// Terrain data
 		Mesh = new Mesh();
@@ -73,8 +80,8 @@ public class TerrainMesh
 		// Generation progress
 		TotalVerticesToGenerate = verticesCount.x * verticesCount.y;
 		generatedVertices = 0;
-		TotalVerticesToGenerate = (verticesCount.x - 1) * (verticesCount.y - 1) * 2;
-		generatedTriangles = 0;
+		TotalTrianglesToGenerate = (verticesCount.x - 1) * (verticesCount.y - 1) * 2;
+		GeneratedTriangles = 0;
 
 		// Visualization
 		Parent = parent;
@@ -104,14 +111,14 @@ public class TerrainMesh
 
 		// Three points in a row form one triangle (polygon)
 
-		int z = (generatedTriangles / 2) / xTiles;
+		int z = (GeneratedTriangles / 2) / xTiles;
 
 		// Go through the whole grid tile by tile and connect the vertices
 		// to create each tile from two triangles
 		for (; z < zTiles; z++)
 		{
 			int verticesArrayRowStartIndex = VerticesCount.x * z;
-			int x = (generatedTriangles / 2) % xTiles;
+			int x = (GeneratedTriangles / 2) % xTiles;
 
 			for (; x < xTiles; x++)
 			{
@@ -133,7 +140,7 @@ public class TerrainMesh
 					triangles[trianglesArrayRowStartIndex + 4] = verticesArrayRowStartIndex + x + VerticesCount.x; // Shift a row up
 					triangles[trianglesArrayRowStartIndex + 5] = verticesArrayRowStartIndex + x + VerticesCount.x + 1;
 
-					generatedTriangles += 2;
+					GeneratedTriangles += 2;
 					trianglesToGenerate -= 2;
 				}
 			}
@@ -149,7 +156,7 @@ public class TerrainMesh
 	/// <summary>
 	/// Sets target positions for vertices from height map for following interpolation.
 	/// </summary>
-	public void SetTargetVerticesPositions()
+	public void SetTargetVerticesPositions(bool visualize)
 	{
 		float maxVertexHeight = Dimensions.y;
 
@@ -167,7 +174,11 @@ public class TerrainMesh
 			targetVerticesColors[i] = heightMapColor;
 
 			oldVertices[i] = Vertices[i];
-			oldVerticesColors[i] = VertexVisualizations[i].GetComponent<Renderer>().material.GetColor("_BaseColor");
+
+			if (visualize)
+			{
+				oldVerticesColors[i] = VertexVisualizations[i].GetComponent<Renderer>().material.GetColor("_BaseColor");
+			}
 		}
 	}
 
@@ -175,7 +186,7 @@ public class TerrainMesh
 	/// Linearly interpolates between old and target vertices positions.
 	/// </summary>
 	/// <param name="step">A fraction of the way between point A and B to be taken next step (clamped to 1).</param>	
-	public void UpdateVerticesPositions(float step)
+	public void UpdateVerticesPositions(float step, bool visualize)
 	{
 		verticesTranslationProgress += step;
 		if (verticesTranslationProgress > 1f) verticesTranslationProgress = 1f;
@@ -183,9 +194,13 @@ public class TerrainMesh
 		for (int i = 0; i < targetVertices.Length; i++)
 		{
 			Vertices[i] = Vector3.Lerp(oldVertices[i], targetVertices[i], verticesTranslationProgress);
-			VertexVisualizations[i].transform.localPosition = Vertices[i];
-			Color newColor = Color.Lerp(oldVerticesColors[i], targetVerticesColors[i], verticesTranslationProgress);
-			VertexVisualizations[i].GetComponent<Renderer>().material.SetColor("_BaseColor", newColor);
+
+			if (visualize)
+			{
+				VertexVisualizations[i].transform.localPosition = Vertices[i];
+				Color newColor = Color.Lerp(oldVerticesColors[i], targetVerticesColors[i], verticesTranslationProgress);
+				VertexVisualizations[i].GetComponent<Renderer>().material.SetColor("_BaseColor", newColor);
+			}
 		}
 	}
 
@@ -194,8 +209,6 @@ public class TerrainMesh
 	/// </summary>
 	public void GenerateVerticesStep(int verticesToGenerate, bool visualize)
 	{
-		CreateVerticesParent();
-
 		verticesSpacing.x = Dimensions.x / VerticesCount.x;
 		verticesSpacing.y = Dimensions.z / VerticesCount.y;
 
@@ -218,6 +231,7 @@ public class TerrainMesh
 	/// <returns>Vertices left to generate</returns>
 	private int GenerateVerticesRow(int rowIndex, int verticesToGenerate, bool visualize)
 	{
+		// rowIndex is y coordinate
 		float offsetX = verticesSpacing.x / 2;
 		float offsetY = verticesSpacing.y / 2;
 
@@ -309,13 +323,44 @@ public class TerrainMesh
 	/// <summary>
 	/// Creates a GameObject to encapsulate all vertex markers.
 	/// </summary>
-	public void CreateVerticesParent()
+	public void CreateVerticesParent(Vector3 localPosition)
 	{
 		if (VerticesParent == null)
 		{
-			VerticesParent = new GameObject(verticesParentName);
+			VerticesParent = new GameObject(VERTICES_PARENT_NAME);
 			VerticesParent.transform.SetParent(Parent.transform);
-			VerticesParent.transform.localPosition = Vector3.zero;
+			VerticesParent.transform.localPosition = localPosition;
+		}
+	}
+
+	public void HideVertexVisualizations()
+	{
+		// Hide vertex markers
+		for (int i = 0; i < VertexVisualizations.Count; i++)
+		{
+			MeshRenderer renderer = VertexVisualizations[i].gameObject.GetComponent<MeshRenderer>();
+			renderer.enabled = false;
+		}
+	}
+
+	public void CreateMeshGameObject(Color[] texturePixels, Vector3 localPosition, Material material)
+	{
+		if (MeshGO == null)
+		{
+			MeshGO = new GameObject(MESH_GO_NAME);
+			MeshGO.transform.SetParent(Parent.transform);
+			MeshGO.transform.localPosition = localPosition;
+
+			Texture2D texture = new Texture2D(Resolution.x, Resolution.y);
+			texture.SetPixels(texturePixels);
+			texture.Apply();
+
+			MeshFilter meshFilter = MeshGO.AddComponent<MeshFilter>();
+			MeshRenderer meshRenderer = MeshGO.AddComponent<MeshRenderer>();
+
+			meshFilter.mesh = Mesh;
+			meshRenderer.material = material;
+			meshRenderer.material.mainTexture = texture;
 		}
 	}
 }

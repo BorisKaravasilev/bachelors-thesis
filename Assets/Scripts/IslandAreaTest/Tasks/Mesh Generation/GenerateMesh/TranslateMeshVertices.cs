@@ -6,6 +6,7 @@ using UnityEngine;
 public class TranslateMeshVertices : SingleTask
 {
 	// Input
+	private bool visualize;
 
 	// Inputs from previous task
 	private Func<TerrainMesh> getTerrainMesh;
@@ -16,9 +17,11 @@ public class TranslateMeshVertices : SingleTask
 	// Output
 
 
-	public TranslateMeshVertices(Func<TerrainMesh> getTerrainMesh)
+	public TranslateMeshVertices(bool visualize, Func<TerrainMesh> getTerrainMesh)
 	{
 		Name = "Translate Mesh Vertices";
+
+		this.visualize = visualize;
 		this.getTerrainMesh = getTerrainMesh;
 	}
 
@@ -30,18 +33,20 @@ public class TranslateMeshVertices : SingleTask
 
 	protected override void ExecuteStep()
 	{
-		terrainMesh.UpdateVerticesPositions(0.01f);
+		terrainMesh.UpdateVerticesPositions(0.01f, visualize);
 	}
 
 	protected override void GetInputFromPreviousStep()
 	{
 		terrainMesh = getTerrainMesh();
-		terrainMesh.SetTargetVerticesPositions();
+		terrainMesh.SetTargetVerticesPositions(visualize);
+
+		if (!visualize) terrainMesh.UpdateVerticesPositions(1f, visualize);
 	}
 
 	protected override void SetSteps()
 	{
-		TotalSteps = 100;
+		TotalSteps = visualize ? 100 : 0;
 		RemainingSteps = TotalSteps;
 	}
 }

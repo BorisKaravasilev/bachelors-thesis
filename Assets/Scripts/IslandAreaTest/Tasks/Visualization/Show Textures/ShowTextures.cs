@@ -8,6 +8,7 @@ using UnityEngine;
 public class ShowTextures : SingleTask
 {
 	// Inputs
+	private Material material;
 	private float sideLength;
 	private int resolution;
 	private Transform parent;
@@ -22,10 +23,11 @@ public class ShowTextures : SingleTask
 	// Internal
 	private const float initialElevation = 0.1f;
 
-	public ShowTextures(float sideLength, int resolution, Transform parent, Func<List<Color[]>> getTextures)
+	public ShowTextures(Material material, float sideLength, int resolution, Transform parent, Func<List<Color[]>> getTextures)
 	{
 		Name = "Show Textures";
 
+		this.material = material;
 		this.sideLength = sideLength;
 		this.resolution = resolution;
 		this.parent = parent;
@@ -43,7 +45,7 @@ public class ShowTextures : SingleTask
 	protected override void ExecuteStep()
 	{
 		int textureIndex = ExecutedSteps;
-		TexturePreview previewObject = new TexturePreview(parent);
+		TexturePreview previewObject = new TexturePreview(material, parent);
 		previewObject.SetName(Name);
 
 		Texture2D texture = new Texture2D(resolution, resolution);

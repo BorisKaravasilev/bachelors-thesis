@@ -34,7 +34,7 @@ MonoBehaviour:
   - Name: Grass
     Color: {r: 0.32696408, g: 0.735849, b: 0.12842648, a: 1}
     StartingHeight: 0.2
-    DominationProbability: 0.5
+    DominationProbability: 0
     NoiseParams:
       Scale: 0.04
       OffsetX: 0

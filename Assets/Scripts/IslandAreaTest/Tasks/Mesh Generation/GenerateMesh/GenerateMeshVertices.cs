@@ -45,13 +45,9 @@ public class GenerateMeshVertices : SingleTask
 	{
 		heightmap = getHeightmap();
 		terrainMesh = new TerrainMesh(parent, heightmap, resolution, dimensions, verticesCount);
-		terrainMesh.CreateVerticesParent();
 
-		Vector3 visualisationOrigin = new Vector3();
-		visualisationOrigin.x = -dimensions.x / 2;
-		visualisationOrigin.y = 0;
-		visualisationOrigin.z = -dimensions.z / 2;
-		terrainMesh.VerticesParent.transform.localPosition = visualisationOrigin;
+		Vector3 offset = new Vector3(-dimensions.x / 2, 0, -dimensions.z / 2);
+		terrainMesh.CreateVerticesParent(offset);
 	}
 
 	protected override void SetSteps()

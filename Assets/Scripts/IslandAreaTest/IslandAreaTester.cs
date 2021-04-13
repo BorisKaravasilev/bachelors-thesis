@@ -8,6 +8,10 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private SeaTileGrid seaTileGrid;
 
 	[Header("Island Grid")]
+	[SerializeField] private bool debugIslandAreas = false;
+	[SerializeField] private Material meshMaterial;
+	[SerializeField] private Material previewObjectMaterial;
+	[SerializeField] private Material previewTextureMaterial;
 	[SerializeField] private GridParams islandGridParams;
 	[SerializeField] private GridOffsetParams islandGridOffsetParams;
 
@@ -27,7 +31,9 @@ public class IslandAreaTester : MonoBehaviour
 
 	// Start is called before the first frame update
 	void Start()
-    {
+	{
+		CheckMaterialsAssigned();
+
 		// Islands grid
 		islandGrid = new ObjectGrid<IslandArea, PerlinNoise2D>(islandGridParams, islandGridOffsetParams, gameObject.transform);
 	}
@@ -68,7 +74,8 @@ public class IslandAreaTester : MonoBehaviour
 	{
 		if (!islandArea.Initialized)
 		{
-			islandArea.Init(previewProgress, visualStepTime, textureResolution, terrainNodesParams);
+			islandArea.Init(previewProgress, visualStepTime, textureResolution, terrainNodesParams, meshMaterial, previewObjectMaterial, previewTextureMaterial);
+			islandArea.DebugMode = debugIslandAreas;
 			return true;
 		}
 
@@ -93,5 +100,13 @@ public class IslandAreaTester : MonoBehaviour
 		}
 
 		return false;
+	}
+
+	private void CheckMaterialsAssigned()
+	{
+		if (meshMaterial == null || previewObjectMaterial == null || previewTextureMaterial == null)
+		{
+			Debug.LogError("All materials are not assigned to \"Island Area Tester\".");
+		}
 	}
 }

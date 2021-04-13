@@ -7,8 +7,6 @@ public class IslandArea : GridObject
 	private TaskList taskList;
 
 	private TextMesh progressText;
-	private MeshRenderer meshRenderer;
-	private MeshFilter meshFilter;
 
 	private string lastTaskName = "";
 	private float progress = 0f;
@@ -17,22 +15,24 @@ public class IslandArea : GridObject
 	
 	public bool Initialized { get; private set; }
 	public bool Finished => taskList?.Finished ?? false;
+	public bool DebugMode
+	{
+		get { return taskList.DebugMode; }
+		set { taskList.DebugMode = value; }
+	}
 
 	public IslandArea()
 	{
 		gameObject.name = DEFAULT_NAME;
 		taskList = new TaskList();
-		taskList.DebugMode = true;
+		taskList.DebugMode = false;
 		Initialized = false;
-
-		meshRenderer = gameObject.AddComponent<MeshRenderer>();
-		meshFilter = gameObject.AddComponent<MeshFilter>();
 	}
 
 	/// <summary>
 	/// Creates a list of tasks defining the creation process of the area.
 	/// </summary>
-	public void Init(bool previewProgress, float visualStepTime, int resolution, TerrainNodesParams terrainNodesParams)
+	public void Init(bool previewProgress, float visualStepTime, int resolution, TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial, Material texturePreviewMaterial)
 	{
 		if (previewProgress)
 		{
@@ -45,7 +45,7 @@ public class IslandArea : GridObject
 		float nodePreviewRadius = Radius / 10f;
 
 		Vector2Int resolution2D = new Vector2Int(resolution, resolution);
-		float maxTerrainHeight = 1f;
+		float maxTerrainHeight = 2f;
 		Vector3 dimensions = new Vector3(diameter, maxTerrainHeight, diameter);
 		Vector2Int verticesCount = new Vector2Int(20, 20);
 
@@ -59,7 +59,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(generateTerrainNodes);
 
 		// Show Terrain nodes
-		ShowTerrainNodes showTerrainNodes = new ShowTerrainNodes(nodePreviewRadius, parent, generateTerrainNodes.GetResult);
+		ShowTerrainNodes showTerrainNodes = new ShowTerrainNodes(previewObjectMaterial, nodePreviewRadius, parent, generateTerrainNodes.GetResult);
 		showTerrainNodes.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showTerrainNodes);
 
@@ -68,7 +68,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(generateNodesGradients);
 
 		// Show Gradients
-		ShowTextures showGradients = new ShowTextures(diameter, resolution, parent, generateNodesGradients.GetResult);
+		ShowTextures showGradients = new ShowTextures(texturePreviewMaterial, diameter, resolution, parent, generateNodesGradients.GetResult);
 		showGradients.SetParams(1, previewProgress, visualStepTime);
 		showGradients.Name = "Show Node Gradients";
 		taskList.AddTask(showGradients);
@@ -84,7 +84,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(generateNodesNoises);
 
 		// Show Nodes Noises
-		ShowTextures showNodesNoises = new ShowTextures(diameter, resolution, parent, generateNodesNoises.GetResult);
+		ShowTextures showNodesNoises = new ShowTextures(previewObjectMaterial, diameter, resolution, parent, generateNodesNoises.GetResult);
 		showNodesNoises.SetParams(1, previewProgress, visualStepTime);
 		showNodesNoises.Name = "Show Nodes Noises";
 		taskList.AddTask(showNodesNoises);
@@ -101,7 +101,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(multiplyGradientsAndNoises);
 
 		// Show Gradients and Noises Multiplication Result
-		ShowTextures showMultiplicationResult = new ShowTextures(diameter, resolution, parent, multiplyGradientsAndNoises.GetResult);
+		ShowTextures showMultiplicationResult = new ShowTextures(texturePreviewMaterial, diameter, resolution, parent, multiplyGradientsAndNoises.GetResult);
 		showMultiplicationResult.SetParams(1, previewProgress, visualStepTime);
 		showMultiplicationResult.Name = "Show Gradients and Noises Multiplication Result";
 		taskList.AddTask(showMultiplicationResult);
@@ -118,7 +118,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(addMultiplicationResults);
 
 		// Show Addition Result
-		ShowTexture showGradientNoisesAddition = new ShowTexture(diameter, resolution, parent, addMultiplicationResults.GetResult);
+		ShowTexture showGradientNoisesAddition = new ShowTexture(texturePreviewMaterial, diameter, resolution, parent, addMultiplicationResults.GetResult);
 		showGradientNoisesAddition.Name = "Show Addition Result";
 		showGradientNoisesAddition.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showGradientNoisesAddition);
@@ -134,7 +134,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(generateTexture);
 
 		// Show Island Area Texture
-		ShowTexture showIslandAreaTexture = new ShowTexture(diameter, resolution, parent, generateTexture.GetResult);
+		ShowTexture showIslandAreaTexture = new ShowTexture(texturePreviewMaterial, diameter, resolution, parent, generateTexture.GetResult);
 		showIslandAreaTexture.Name = "Show Island Area Texture";
 		showIslandAreaTexture.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showIslandAreaTexture);
@@ -145,13 +145,19 @@ public class IslandArea : GridObject
 		taskList.AddTask(generateMeshVertices);
 
 		// Translate Vertices
-		TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(generateMeshVertices.GetResult);
-		translateMeshVertices.SetParams(1, true, visualStepTime / 20);
+		TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(previewProgress, generateMeshVertices.GetResult);
+		translateMeshVertices.SetParams(10, true, previewProgress ? visualStepTime / 20 : 0f);
 		taskList.AddTask(translateMeshVertices);
 
+		// Hide Island Area Texture
+		HidePreviewObjects<TexturePreview> hideIslandAreaTexture = new HidePreviewObjects<TexturePreview>(showIslandAreaTexture.GetResultInList);
+		hideIslandAreaTexture.SetParams(1, previewProgress);
+		hideIslandAreaTexture.Name = "Hide Island Area Texture";
+		taskList.AddTask(hideIslandAreaTexture);
+
 		// Generate Mesh
-		GenerateMesh generateMesh = new GenerateMesh(meshFilter, meshRenderer, translateMeshVertices.GetResult, generateTexture.GetResult);
-		generateMesh.SetParams(1, true, visualStepTime / 20);
+		GenerateMesh generateMesh = new GenerateMesh(meshMaterial, translateMeshVertices.GetResult, generateTexture.GetResult);
+		generateMesh.SetParams(40, true, previewProgress ? visualStepTime : 0f);
 		taskList.AddTask(generateMesh);
 
 		Initialized = true;
