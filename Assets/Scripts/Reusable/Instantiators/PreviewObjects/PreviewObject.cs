@@ -70,8 +70,6 @@ public class PreviewObject : IHideable
 		gameObject = GameObject.CreatePrimitive(objectType);
 		SetParent(parent);
 
-		gameObject.GetComponent<Renderer>().material.SetFloat("_Smoothness", 0f);
-
 		return gameObject;
 	}
 }
