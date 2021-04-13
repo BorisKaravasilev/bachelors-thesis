@@ -32,6 +32,12 @@ public class ShowTerrainNodes : SingleTask
 		previews = new List<PreviewObject>();
 	}
 
+	public List<PreviewObject> GetResult()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		return previews;
+	}
+
 	protected override void ExecuteStep()
 	{
 		int currentNodeIndex = TotalSteps - RemainingSteps;

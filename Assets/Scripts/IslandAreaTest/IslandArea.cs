@@ -51,8 +51,6 @@ public class IslandArea : GridObject
 
 		Transform parent = gameObject.transform;
 		GridObjectParams gridObjectParams = base.GetParams();
-		
-		// TODO: Calculate and assign round transparent mask
 
 		// Generate Terrain nodes
 		GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(terrainNodesParams, gridObjectParams, maxNodes);
@@ -138,6 +136,12 @@ public class IslandArea : GridObject
 		showIslandAreaTexture.Name = "Show Island Area Texture";
 		showIslandAreaTexture.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showIslandAreaTexture);
+
+		// Hide Terrain Nodes
+		HidePreviewObjects<PreviewObject> hideTerrainNodes = new HidePreviewObjects<PreviewObject>(showTerrainNodes.GetResult);
+		hideTerrainNodes.SetParams(1, previewProgress);
+		hideTerrainNodes.Name = "Hide Terrain Nodes";
+		taskList.AddTask(hideTerrainNodes);
 
 		// Generate Mesh Vertices
 		GenerateMeshVertices generateMeshVertices = new GenerateMeshVertices(previewProgress, gameObject.transform, resolution2D, dimensions, verticesCount, addMultiplicationResults.GetResult);

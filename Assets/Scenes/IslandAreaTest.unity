@@ -166,26 +166,26 @@ MonoBehaviour:
     maxOffset: 0
     threshold: 0
     xOffsetParams:
-      Scale: 0
+      Scale: 1.34
       OffsetX: 0
       OffsetY: 0
       Type: 0
     zOffsetParams:
-      Scale: 0
+      Scale: 0.67
       OffsetX: 0
       OffsetY: 0
       Type: 0
     thresholdParams:
-      Scale: 0
+      Scale: 0.876
       OffsetX: 0
       OffsetY: 0
       Type: 0
   textureResolution: 100
   terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
-  previewProgress: 1
+  previewProgress: 0
   generateSequentially: 1
   generateInSteps: 1
-  visualStepTime: 0.1
+  visualStepTime: 0
 --- !u!4 &28307291
 Transform:
   m_ObjectHideFlags: 0
@@ -560,7 +560,7 @@ MonoBehaviour:
     xTiles: 1
     zTiles: 1
     destroyFarTiles: 1
-  seaLevel: 1
+  seaLevel: 0.2
   previewMode: 1
 --- !u!1 &1598694475
 GameObject:
