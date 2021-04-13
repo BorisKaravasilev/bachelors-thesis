@@ -3,7 +3,7 @@
 [System.Serializable]
 public class GridOffsetParams
 {
-	[Range(0f, 10f)]
+	[Range(0f, 20f)]
 	public float maxOffset;
 
 	[Range(0f, 1f)]

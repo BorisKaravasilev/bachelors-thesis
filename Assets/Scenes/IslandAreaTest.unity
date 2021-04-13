@@ -180,7 +180,7 @@ MonoBehaviour:
       OffsetX: 0
       OffsetY: 0
       Type: 0
-  textureResolution: 100
+  textureResolution: 10
   terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
   previewProgress: 0
   generateSequentially: 1

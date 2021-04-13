@@ -32,7 +32,7 @@ public class IslandArea : GridObject
 	/// <summary>
 	/// Creates a list of tasks defining the creation process of the area.
 	/// </summary>
-	public void Init(bool previewProgress, float visualStepTime, int resolution, TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial, Material texturePreviewMaterial)
+	public void Init(bool previewProgress, float visualStepTime, int pixelsPerUnit, TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial, Material texturePreviewMaterial)
 	{
 		if (previewProgress)
 		{
@@ -44,6 +44,7 @@ public class IslandArea : GridObject
 		int maxNodes = terrainNodesParams.MaxNodes;
 		float nodePreviewRadius = Radius / 10f;
 
+		int resolution = (int) (diameter * pixelsPerUnit);
 		Vector2Int resolution2D = new Vector2Int(resolution, resolution);
 		float maxTerrainHeight = 2f;
 		Vector3 dimensions = new Vector3(diameter, maxTerrainHeight, diameter);

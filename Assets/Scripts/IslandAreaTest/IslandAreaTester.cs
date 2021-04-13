@@ -16,8 +16,8 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private GridOffsetParams islandGridOffsetParams;
 
 	[Header("Generation Steps Parameters")]
-	[Range(100, 1000)]
-	[SerializeField] private int textureResolution = 100;
+	[Range(10, 100)]
+	[SerializeField] private int texturePixelsPerUnit = 10;
 	[SerializeField] private TerrainNodesParams terrainNodesParams;
 	[SerializeField] private bool previewProgress = true;
 	[SerializeField] private bool generateSequentially = true;
@@ -74,7 +74,7 @@ public class IslandAreaTester : MonoBehaviour
 	{
 		if (!islandArea.Initialized)
 		{
-			islandArea.Init(previewProgress, visualStepTime, textureResolution, terrainNodesParams, meshMaterial, previewObjectMaterial, previewTextureMaterial);
+			islandArea.Init(previewProgress, visualStepTime, texturePixelsPerUnit, terrainNodesParams, meshMaterial, previewObjectMaterial, previewTextureMaterial);
 			islandArea.DebugMode = debugIslandAreas;
 			return true;
 		}

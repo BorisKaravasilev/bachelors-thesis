@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -101,21 +102,21 @@ public class ObjectGrid<TObject, TNoise2D>
 
 		Vector3 BottomLeftGridPoint = FindBottomLeftGridPointInBounds(boundingBox);
 
-		int objectMinX = (int)BottomLeftGridPoint.x;
-		int objectMinZ = (int)BottomLeftGridPoint.z;
+		int minX = (int)BottomLeftGridPoint.x;
+		int minZ = (int)BottomLeftGridPoint.z;
 
-		int objectMaxX = Mathf.FloorToInt(boundingBox.TopRight.x);
-		int objectMaxZ = Mathf.FloorToInt(boundingBox.TopRight.z);
+		int maxX = Mathf.FloorToInt(boundingBox.TopRight.x);
+		int maxZ = Mathf.FloorToInt(boundingBox.TopRight.z);
 
-		for (int z = objectMinZ; z <= objectMaxZ; z += gridParams.spacing)
+		for (int z = minZ; z <= maxZ; z += gridParams.spacing)
 		{
-			for (int x = objectMinX; x <= objectMaxX; x += gridParams.spacing)
+			for (int x = minX; x <= maxX; x += gridParams.spacing)
 			{
 				if (ObjectCountLimitReached()) return newlyInstantiated;
 
-				Vector3 objectPosition = new Vector3(x, gameObject.transform.position.y, z);
-				objectPosition = OffsetPositionByNoise(objectPosition);
-				TObject newObject = InstantiateNewObject(objectPosition);
+				Vector3 onGridPosition = new Vector3(x, gameObject.transform.position.y, z);
+				Vector3 offsetPosition = OffsetPositionByNoise(onGridPosition);
+				TObject newObject = InstantiateNewObject(onGridPosition, offsetPosition);
 
 				if (newObject != null)
 				{
@@ -128,12 +129,13 @@ public class ObjectGrid<TObject, TNoise2D>
 		return newlyInstantiated;
 	}
 
-	private TObject InstantiateNewObject(Vector3 position)
+	private TObject InstantiateNewObject(Vector3 onGridPosition, Vector3 offsetPosition)
 	{
-		if (!IsObjectGenerated(position) && IsObjectAboveThreshold(position))
+		if (!IsObjectGenerated(offsetPosition) && IsObjectAboveThreshold(offsetPosition))
 		{
 			TObject newObject = new TObject();
-			GridObjectParams newObjectParams = new GridObjectParams(position, GetObjectRadius());
+			float radius = GetObjectRadius(onGridPosition, offsetPosition);
+			GridObjectParams newObjectParams = new GridObjectParams(offsetPosition, radius);
 
 			newObject.Init(newObjectParams, gameObject.transform);
 			return newObject;
@@ -155,9 +157,11 @@ public class ObjectGrid<TObject, TNoise2D>
 		}
 	}
 
-	private float GetObjectRadius()
+	private float GetObjectRadius(Vector3 onGridPosition, Vector3 offsetPosition)
 	{
-		float radius = gridParams.spacing / 2f; // TODO: Consider max. offset of the node
+		float offsetAmount = Vector3.Distance(onGridPosition, offsetPosition);
+
+		float radius = gridParams.spacing / 2f - offsetAmount;
 		if (radius > gridParams.maxObjectRadius) radius = gridParams.maxObjectRadius;
 
 		return radius;
@@ -230,8 +234,15 @@ public class ObjectGrid<TObject, TNoise2D>
 		// - subtracting 0.5 from it shifts the range -0.5 - 0.5
 		// - multiplying by 2 extends the range to -1 - 1
 		// - multiplying by max. offset shifts the value to the range of -maxObjectOffset - maxObjectOffset
-		float offsetX = (xOffsetNoise.GetValue(noiseCoordinates) - 0.5f) * 2f * gridOffsetParams.maxOffset;
-		float offsetZ = (zOffsetNoise.GetValue(noiseCoordinates) - 0.5f) * 2f * gridOffsetParams.maxOffset;
+		float limitedMaxOffset = gridOffsetParams.maxOffset;
+
+		if (limitedMaxOffset > gridParams.spacing * 0.4f)
+		{
+			limitedMaxOffset = gridParams.spacing * 0.4f;
+		}
+
+		float offsetX = (xOffsetNoise.GetValue(noiseCoordinates) - 0.5f) * 2f * limitedMaxOffset;
+		float offsetZ = (zOffsetNoise.GetValue(noiseCoordinates) - 0.5f) * 2f * limitedMaxOffset;
 
 		Vector3 newPosition = new Vector3();
 
