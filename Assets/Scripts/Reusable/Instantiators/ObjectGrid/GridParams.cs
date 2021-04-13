@@ -3,13 +3,13 @@
 [System.Serializable]
 public class GridParams
 {
-	[Range(1, 40)]
+	[Range(10, 40)]
 	public int spacing = 15;
 
-	[Range(0.5f, 20f)]
+	[Range(5f, 20f)]
 	public float maxObjectRadius = 5;
 
-	[Range(1, 1000)]
+	[Range(1, 300)]
 	public int objectCountLimit = 500;
 
 	public bool destroyFarObjects = true;
