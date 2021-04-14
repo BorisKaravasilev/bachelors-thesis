@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class IslandArea : GridObject
 {
 	private TaskList taskList;
 
+	private TextMesh name;
 	private TextMesh progressText;
 
 	private string lastTaskName = "";
@@ -32,8 +34,12 @@ public class IslandArea : GridObject
 	/// <summary>
 	/// Creates a list of tasks defining the creation process of the area.
 	/// </summary>
-	public void Init(bool previewProgress, float visualStepTime, int pixelsPerUnit, TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial, Material texturePreviewMaterial)
+	public void Init(bool previewProgress, float visualStepTime, int pixelsPerUnit,
+		TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial,
+		Material texturePreviewMaterial, TextAsset islandNames)
 	{
+		InstantiateNameText(GetNameFromPosition(Position, islandNames));
+
 		if (previewProgress)
 		{
 			InstantiateProgressText();
@@ -168,9 +174,16 @@ public class IslandArea : GridObject
 		Initialized = true;
 	}
 
+	private string GetNameFromPosition(Vector3 position, TextAsset namesAsset)
+	{
+		string[] allNames = namesAsset.text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+		int nameIndex = RandomFromSeed.Range(position, 0, allNames.Length);
+		return allNames[nameIndex];
+	}
+
 	private GameObject InstantiateProgressText()
 	{
-		GameObject progressTextObject = new GameObject("Progress text");
+		GameObject progressTextObject = new GameObject("Progress Text");
 		progressTextObject.transform.SetParent(gameObject.transform);
 		progressTextObject.transform.eulerAngles = new Vector3(90f, 0f, 0f);
 		progressTextObject.transform.localPosition = new Vector3(-Radius, 0f, -Radius - 0.5f);
@@ -188,6 +201,22 @@ public class IslandArea : GridObject
 		{
 			progressText.text = $"{currentTaskName}\n{totalProgress:P}";
 		}
+	}
+
+	private GameObject InstantiateNameText(string islandAreaName = "Island Area Name")
+	{
+		GameObject nameTextObject = new GameObject("Island Area Name");
+		nameTextObject.transform.SetParent(gameObject.transform);
+		nameTextObject.transform.eulerAngles = new Vector3(90f, 0f, 0f);
+		nameTextObject.transform.localPosition = new Vector3(-Radius, 0f, Radius + 1f);
+		nameTextObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+		name = nameTextObject.AddComponent<TextMesh>();
+		name.fontSize = 20;
+
+		name.text = islandAreaName;
+
+		return nameTextObject;
 	}
 
 	public GameObject Generate()

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class IslandAreaTester : MonoBehaviour
 {
 	[SerializeField] private SeaTileGrid seaTileGrid;
+	[SerializeField] private TextAsset islandNames;
 
 	[Header("Island Grid")]
 	[SerializeField] private bool debugIslandAreas = false;
@@ -74,7 +73,7 @@ public class IslandAreaTester : MonoBehaviour
 	{
 		if (!islandArea.Initialized)
 		{
-			islandArea.Init(previewProgress, visualStepTime, texturePixelsPerUnit, terrainNodesParams, meshMaterial, previewObjectMaterial, previewTextureMaterial);
+			islandArea.Init(previewProgress, visualStepTime, texturePixelsPerUnit, terrainNodesParams, meshMaterial, previewObjectMaterial, previewTextureMaterial, islandNames);
 			islandArea.DebugMode = debugIslandAreas;
 			return true;
 		}
