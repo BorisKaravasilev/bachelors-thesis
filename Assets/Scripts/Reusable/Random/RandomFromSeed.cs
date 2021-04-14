@@ -1,14 +1,25 @@
-﻿using UnityEngine;
+﻿using System.Text;
+using UnityEngine;
+using xxHashSharp;
 
 public static class RandomFromSeed
 {
+	public static uint PositionToHash(Vector3 position)
+	{
+		string stringCoords = position.x.ToString() + position.z.ToString();
+		byte[] input = Encoding.UTF8.GetBytes(stringCoords);
+		uint hash = xxHash.CalculateHash(input);
+		return hash;
+	}
+
 	/// <summary>
 	/// Return a random point between center [inclusive] and center +- radius [inclusive] in X and Z axis.
 	/// Y coordinate is same as center.
 	/// </summary>
 	public static Vector3 RandomPointInRadius(Vector3 seedPosition, Vector3 center, float radius)
 	{
-		//Random.InitState(PositionToIntSeed(seedPosition));
+		Random.InitState((int) PositionToHash(seedPosition));
+
 		Vector3 randomPoint = new Vector3();
 		do
 		{
@@ -25,7 +36,7 @@ public static class RandomFromSeed
 	/// </summary>
 	public static int Range(Vector3 seedPosition, int min, int max)
 	{
-		//Random.InitState(PositionToIntSeed(seedPosition));
+		Random.InitState((int)PositionToHash(seedPosition));
 		return Random.Range(min, max);
 	}
 
@@ -34,12 +45,7 @@ public static class RandomFromSeed
 	/// </summary>
 	public static float UniformValue(Vector3 seedPosition)
 	{
-		//Random.InitState(PositionToIntSeed(seedPosition));
+		Random.InitState((int)PositionToHash(seedPosition));
 		return Random.value;
-	}
-
-	private static int PositionToIntSeed(Vector3 seedPosition)
-	{
-		return (int) seedPosition.x + (int)seedPosition.z;
 	}
 }

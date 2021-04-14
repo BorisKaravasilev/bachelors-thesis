@@ -49,7 +49,7 @@ MonoBehaviour:
       OffsetX: 0
       OffsetY: 0
       Type: 0
-  MinNodes: 2
-  MaxNodes: 3
+  MinNodes: 3
+  MaxNodes: 4
   MaxDistanceMultiplier: 0.7
   BlendingDistance: 0.05

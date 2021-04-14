@@ -38,8 +38,6 @@ public class IslandArea : GridObject
 		TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial,
 		Material texturePreviewMaterial, TextAsset islandNames)
 	{
-		InstantiateNameText(GetNameFromPosition(Position, islandNames));
-
 		if (previewProgress)
 		{
 			InstantiateProgressText();
@@ -55,6 +53,8 @@ public class IslandArea : GridObject
 		float maxTerrainHeight = 2f;
 		Vector3 dimensions = new Vector3(diameter, maxTerrainHeight, diameter);
 		Vector2Int verticesCount = new Vector2Int(20, 20);
+
+		InstantiateNameText(maxTerrainHeight, GetNameFromPosition(Position, islandNames));
 
 		Transform parent = gameObject.transform;
 		GridObjectParams gridObjectParams = base.GetParams();
@@ -203,12 +203,12 @@ public class IslandArea : GridObject
 		}
 	}
 
-	private GameObject InstantiateNameText(string islandAreaName = "Island Area Name")
+	private GameObject InstantiateNameText(float height, string islandAreaName = "Island Area Name")
 	{
 		GameObject nameTextObject = new GameObject("Island Area Name");
 		nameTextObject.transform.SetParent(gameObject.transform);
 		nameTextObject.transform.eulerAngles = new Vector3(90f, 0f, 0f);
-		nameTextObject.transform.localPosition = new Vector3(-Radius, 0f, Radius + 1f);
+		nameTextObject.transform.localPosition = new Vector3(-Radius, height, 1f);
 		nameTextObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
 		name = nameTextObject.AddComponent<TextMesh>();
