@@ -14,6 +14,8 @@ public class IslandArea : GridObject
 	private float progress = 0f;
 
 	private const string DEFAULT_NAME = "IslandArea";
+
+	private RandomFromPosition random;
 	
 	public bool Initialized { get; private set; }
 	public bool Finished => taskList?.Finished ?? false;
@@ -38,6 +40,8 @@ public class IslandArea : GridObject
 		TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial,
 		Material texturePreviewMaterial, TextAsset islandNames)
 	{
+		random = new RandomFromPosition(Position);
+
 		if (previewProgress)
 		{
 			InstantiateProgressText();
@@ -177,7 +181,7 @@ public class IslandArea : GridObject
 	private string GetNameFromPosition(Vector3 position, TextAsset namesAsset)
 	{
 		string[] allNames = namesAsset.text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-		int nameIndex = RandomFromSeed.Range(position, 0, allNames.Length);
+		int nameIndex = random.Next(0, allNames.Length);
 		return allNames[nameIndex];
 	}
 

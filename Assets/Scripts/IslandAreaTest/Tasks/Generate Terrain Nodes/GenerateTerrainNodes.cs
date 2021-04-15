@@ -16,6 +16,10 @@ public class GenerateTerrainNodes : SingleTask
 	// Outputs
 	private List<TerrainNode> terrainNodes;
 
+	// Internal
+	private RandomFromPosition random;
+	private int nodesToGenerate;
+
 	/// <summary>
 	/// Initializes the task's parameters.
 	/// </summary>
@@ -33,6 +37,9 @@ public class GenerateTerrainNodes : SingleTask
 
 		terrainTypes = nodesParams.TerrainTypes;
 		terrainNodes = new List<TerrainNode>();
+
+		random = new RandomFromPosition(seedPosition, Name);
+		nodesToGenerate = random.Next(minNodes, maxNodes + 1);
 	}
 
 	public List<TerrainNode> GetResult()
@@ -45,19 +52,22 @@ public class GenerateTerrainNodes : SingleTask
 
 	protected override void SetSteps()
 	{
-		TotalSteps = RandomFromSeed.Range(seedPosition, minNodes, maxNodes + 1);
+		TotalSteps = nodesToGenerate;
 		RemainingSteps = TotalSteps;
 	}
 
 	protected override void ExecuteStep()
 	{
 		float maxNodeDistance = objectRadius * maxDistanceMultiplier; // From center
-		Vector3 randPosition = RandomFromSeed.RandomPointInRadius(seedPosition, Vector3.zero, maxNodeDistance);
-		int randTypeIndex = RandomFromSeed.Range(seedPosition, 0, terrainTypes.Count);
-		float maxRadius = objectRadius - Vector3.Distance(randPosition, Vector3.zero);
-		bool isDominant = RandomFromSeed.UniformValue(seedPosition) <= terrainTypes[randTypeIndex].DominationProbability;
+		Vector2 node2DPosition = random.Point2DInRadius(Vector2.zero, maxNodeDistance);
+		Vector3 nodePosition = new Vector3(node2DPosition.x, 0f, node2DPosition.y);
 
-		TerrainNode randomNode = new TerrainNode(randPosition, terrainTypes[randTypeIndex], maxRadius, isDominant);
+		int randTypeIndex = random.Next(0, terrainTypes.Count);
+		float nodeRadius = objectRadius - Vector3.Distance(nodePosition, Vector3.zero);
+		float dominantProbability = terrainTypes[randTypeIndex].DominationProbability;
+		bool isDominant = random.NextBool(dominantProbability);
+
+		TerrainNode randomNode = new TerrainNode(nodePosition, terrainTypes[randTypeIndex], nodeRadius, isDominant);
 		terrainNodes.Add(randomNode);
 	}
 }

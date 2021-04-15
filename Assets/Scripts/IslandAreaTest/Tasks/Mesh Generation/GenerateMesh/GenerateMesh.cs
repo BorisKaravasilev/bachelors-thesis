@@ -38,7 +38,6 @@ public class GenerateMesh : SingleTask
 	protected override void ExecuteStep()
 	{
 		terrainMesh.GenerateMeshStep(1);
-		Debug.Log($"Triangles total: {terrainMesh.TotalTrianglesToGenerate}      Generated: {terrainMesh.GeneratedTriangles}");
 
 		if (RemainingSteps == 1)
 		{

@@ -1,51 +1,58 @@
 ﻿using System.Text;
 using UnityEngine;
 using xxHashSharp;
+using Random = System.Random;
 
-public static class RandomFromSeed
+public class RandomFromPosition
 {
-	public static uint PositionToHash(Vector3 position)
+	private Random random;
+
+	public RandomFromPosition(Vector3 seedPosition, string seedString = "")
 	{
-		string stringCoords = position.x.ToString() + position.z.ToString();
-		byte[] input = Encoding.UTF8.GetBytes(stringCoords);
-		uint hash = xxHash.CalculateHash(input);
+		seedString += seedPosition.ToString("F3");
+		int seed = (int) StringToHash(seedString);
+		random = new System.Random(seed);
+	}
+
+	private uint StringToHash(string str)
+	{
+		byte[] stringBytes = Encoding.UTF8.GetBytes(str);
+		uint hash = xxHash.CalculateHash(stringBytes);
 		return hash;
 	}
 
 	/// <summary>
-	/// Return a random point between center [inclusive] and center +- radius [inclusive] in X and Z axis.
-	/// Y coordinate is same as center.
+	/// Return a random point between center [inclusive] and center +- radius [exclusive].
 	/// </summary>
-	public static Vector3 RandomPointInRadius(Vector3 seedPosition, Vector3 center, float radius)
+	public Vector2 Point2DInRadius(Vector2 center, float radius)
 	{
-		Random.InitState((int) PositionToHash(seedPosition));
+		Vector2 randomPoint = new Vector3();
 
-		Vector3 randomPoint = new Vector3();
-		do
-		{
-			randomPoint.x = center.x + Random.Range(-radius, radius);
-			randomPoint.y = center.y;
-			randomPoint.z = center.z + Random.Range(-radius, radius);
-		} while (Vector3.Distance(randomPoint, center) > radius);
+		float randRadius = NextFloat() * radius;
+		Vector2 randDirection = new Vector2(NextFloat() - 0.5f, NextFloat() - 0.5f);
+		randomPoint = randDirection.normalized * randRadius;
 
 		return randomPoint;
 	}
 
 	/// <summary>
-	/// Return a random integer between min [inclusive] and max [exclusive].
+	/// Returns a random floating point number that is greater or equal to 0.0, and smaller than 1.0.
 	/// </summary>
-	public static int Range(Vector3 seedPosition, int min, int max)
+	public float NextFloat()
 	{
-		Random.InitState((int)PositionToHash(seedPosition));
-		return Random.Range(min, max);
+		return (float) random.NextDouble();
 	}
 
 	/// <summary>
-	/// Return a random float between 0.0f [inclusive] and 1.0f [inclusive].
+	/// Return a random integer between min [inclusive] and max [exclusive].
 	/// </summary>
-	public static float UniformValue(Vector3 seedPosition)
+	public int Next(int min, int max)
 	{
-		Random.InitState((int)PositionToHash(seedPosition));
-		return Random.value;
+		return random.Next(min, max);
+	}
+
+	public bool NextBool(float trueProbability = 0.5f)
+	{
+		return NextFloat() < trueProbability;
 	}
 }
