@@ -69,11 +69,8 @@ public class GenerateIslandAreaTexture : SingleTask
 		dominantNodesBoundingBoxes = GetNodesPixelBoundingBoxes(dominantNodes);
 
 		orderedTerrainTypes = OrderTerrainTypes(terrainNodesParams.TerrainTypes);
-		terrainTypesAroundDominantNodes = TerrainTypesAroundDominantNodes(orderedTerrainTypes);
 
 		blendingRegions = FindBlendingRegions(orderedTerrainTypes, terrainNodesParams.BlendingDistance);
-		blendingRegionsAroundDominantNodes =
-			FindBlendingRegions(terrainTypesAroundDominantNodes, terrainNodesParams.BlendingDistance);
 
 		heightmap = getHeightmap();
 		texture = new Color[heightmap.Length];
@@ -119,9 +116,16 @@ public class GenerateIslandAreaTexture : SingleTask
 	private Color GetPixelColor(float pixelHeight, int pixelIndex)
 	{
 		Color pixelColor;
+
+		List<TerrainNode> dominantNodesInRange = DominantNodesInRange(pixelIndex);
+
+		terrainTypesAroundDominantNodes = TerrainTypesAroundDominantNodes(dominantNodesInRange, orderedTerrainTypes);
+
+		blendingRegionsAroundDominantNodes =
+			FindBlendingRegions(terrainTypesAroundDominantNodes, terrainNodesParams.BlendingDistance);
+
 		BlendingRegion enclosingBlendingRegion = GetBlendingRegion(pixelHeight, blendingRegions);
 		BlendingRegion enclosingDominantBlendingRegion = GetBlendingRegion(pixelHeight, blendingRegionsAroundDominantNodes);
-		List<TerrainNode> dominantNodesInRange = DominantNodesInRange(pixelIndex);
 
 		Color normalColor = GetHeightColor(pixelHeight, orderedTerrainTypes);
 		Color dominantColor = GetHeightColor(pixelHeight, terrainTypesAroundDominantNodes);
@@ -177,7 +181,7 @@ public class GenerateIslandAreaTexture : SingleTask
 	/// Removes terrain types directly below a dominant type.
 	/// For example if types are {dark sand, sand, grass} and grass is dominant, this function will return {dark sand, grass}.
 	/// </summary>
-	private List<TerrainType> TerrainTypesAroundDominantNodes(List<TerrainType> ascendingHeightTypes)
+	private List<TerrainType> TerrainTypesAroundDominantNodes(List<TerrainNode> dominantNodesInRange, List<TerrainType> ascendingHeightTypes)
 	{
 		List<TerrainType> terrainTypes = new List<TerrainType>();
 
@@ -190,13 +194,12 @@ public class GenerateIslandAreaTexture : SingleTask
 			{
 				TerrainType typeAbove = ascendingHeightTypes[i + 1];
 
-				if (typeAbove.DominationProbability > 0f)
+				if (TypeInNodes(dominantNodesInRange, typeAbove))
 				{
 					// The dominant type's starting height is lowered to the dominated type.
 					TerrainType loweredDominantType = typeAbove.DeepCopy();
 					loweredDominantType.StartingHeight = currentType.StartingHeight;
 					terrainTypes.Add(loweredDominantType);
-					i++;
 				}
 				else
 				{
@@ -210,6 +213,16 @@ public class GenerateIslandAreaTexture : SingleTask
 		}
 
 		return terrainTypes;
+	}
+
+	private bool TypeInNodes(List<TerrainNode> nodes, TerrainType type)
+	{
+		foreach (TerrainNode node in nodes)
+		{
+			if (node.Type == type) return true;
+		}
+
+		return false;
 	}
 
 	private Color GetColorInDominantNodeRange(TerrainNode dominantNode)
