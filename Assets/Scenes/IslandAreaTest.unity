@@ -152,20 +152,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eade1bd70a2b1a41846be3dbb2772f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1598694479}
   seaTileGrid: {fileID: 832104319}
   islandNames: {fileID: 4900000, guid: a670ed85c8eedaf4989ebf1d5997306b, type: 3}
-  debugIslandAreas: 0
+  debugIslandAreas: 1
   meshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
   previewObjectMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
   previewTextureMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
   islandGridParams:
-    spacing: 16
-    maxObjectRadius: 5
+    spacing: 20
+    maxObjectRadius: 6
     objectCountLimit: 500
     destroyFarObjects: 1
   islandGridOffsetParams:
-    maxOffset: 0
-    threshold: 0
+    maxOffset: 12
+    threshold: 0.5
     xOffsetParams:
       Scale: 1.34
       OffsetX: 0
@@ -184,7 +185,7 @@ MonoBehaviour:
   texturePixelsPerUnit: 10
   terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
   previewProgress: 0
-  generateSequentially: 0
+  generateSequentially: 1
   generateInSteps: 1
   visualStepTime: 0
 --- !u!4 &28307291
@@ -269,7 +270,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 46.4
+  field of view: 50
   orthographic: 0
   orthographic size: 20.6
   m_Depth: 0
@@ -557,12 +558,12 @@ MonoBehaviour:
   seaMaterial: {fileID: 2100000, guid: 9e3114b079ae86a449435e0378423e9f, type: 2}
   seaBedMaterial: {fileID: 2100000, guid: 7904f68233bd1f84c9844bf9d8f67753, type: 2}
   seaTileGridParams:
-    tileSize: 25
-    xTiles: 1
-    zTiles: 1
+    tileSize: 20
+    xTiles: 3
+    zTiles: 2
     destroyFarTiles: 1
   seaLevel: 0.2
-  previewMode: 1
+  previewMode: 0
 --- !u!1 &1160388208
 GameObject:
   m_ObjectHideFlags: 0
