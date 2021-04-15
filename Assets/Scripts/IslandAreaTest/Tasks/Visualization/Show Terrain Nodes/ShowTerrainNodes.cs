@@ -67,6 +67,9 @@ public class ShowTerrainNodes : SingleTask
 		newPreview.SetLocalPosition(node.Position);
 
 		float diameter = nodePreviewRadius * 2f;
+
+		if (node.IsDominant) diameter = diameter * 1.5f;
+
 		Vector3 dimensions = new Vector3(diameter, diameter, diameter);
 		newPreview.SetDimensions(dimensions);
 
