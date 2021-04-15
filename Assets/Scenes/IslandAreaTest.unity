@@ -183,10 +183,10 @@ MonoBehaviour:
       Type: 0
   texturePixelsPerUnit: 10
   terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
-  previewProgress: 1
-  generateSequentially: 1
+  previewProgress: 0
+  generateSequentially: 0
   generateInSteps: 1
-  visualStepTime: 0.1
+  visualStepTime: 0
 --- !u!4 &28307291
 Transform:
   m_ObjectHideFlags: 0
