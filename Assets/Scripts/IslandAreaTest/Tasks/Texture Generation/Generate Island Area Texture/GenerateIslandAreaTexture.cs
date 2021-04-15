@@ -8,8 +8,6 @@ using UnityEngine;
 public class GenerateIslandAreaTexture : SingleTask
 {
 	// Inputs
-	private int resolution;
-	private float areaRadius;
 	private TerrainNodesParams terrainNodesParams;
 
 	// Inputs from previous task
@@ -26,24 +24,18 @@ public class GenerateIslandAreaTexture : SingleTask
 	private Color[] texture;
 
 	// Internal
-	private List<TerrainType> terrainTypesAroundDominantNodes;
-
-	private List<TerrainNode> dominantNodes;
-	private List<PixelBoundingBox> dominantNodesBoundingBoxes;
 	private List<TerrainType> orderedTerrainTypes; // by starting height
-	private List<BlendingRegion> blendingRegions;  // where two terrain types meet (blending based on height)
-	private List<BlendingRegion> blendingRegionsAroundDominantNodes;
 
-	public GenerateIslandAreaTexture(int resolution, float areaRadius, TerrainNodesParams terrainNodesParams, Func<List<TerrainNode>> getTerrainNodes, Func<Color[]> getHeightmap, Func<List<Color[]>> getMultipliedGradientsAndNoises)
+	private List<BlendingRegion> blendingRegions;  // where two terrain types meet (blending based on height)
+	private List<BlendingRegion> dominatedBlendingRegions;
+
+	public GenerateIslandAreaTexture(TerrainNodesParams terrainNodesParams, Func<List<TerrainNode>> getTerrainNodes, Func<Color[]> getHeightmap, Func<List<Color[]>> getMultipliedGradientsAndNoises)
 	{
 		Name = "Generate Island Area Texture";
 
-		this.resolution = resolution;
-		this.areaRadius = areaRadius;
 		this.terrainNodesParams = terrainNodesParams;
 		this.getTerrainNodes = getTerrainNodes;
 		this.getHeightmap = getHeightmap;
-
 		this.getMultipliedGradientsAndNoises = getMultipliedGradientsAndNoises;
 	}
 
@@ -65,17 +57,13 @@ public class GenerateIslandAreaTexture : SingleTask
 	protected override void GetInputFromPreviousStep()
 	{
 		terrainNodes = getTerrainNodes();
-		dominantNodes = GetDominantTerrainNodes();
-		dominantNodesBoundingBoxes = GetNodesPixelBoundingBoxes(dominantNodes);
+		heightmap = getHeightmap();
+		multipliedGradientsAndNoises = getMultipliedGradientsAndNoises();
 
 		orderedTerrainTypes = OrderTerrainTypes(terrainNodesParams.TerrainTypes);
+		blendingRegions = CreateBlendingRegions(orderedTerrainTypes, terrainNodesParams.BlendingDistance);
 
-		blendingRegions = FindBlendingRegions(orderedTerrainTypes, terrainNodesParams.BlendingDistance);
-
-		heightmap = getHeightmap();
 		texture = new Color[heightmap.Length];
-
-		multipliedGradientsAndNoises = getMultipliedGradientsAndNoises();
 	}
 
 	protected override void SetSteps()
@@ -93,128 +81,94 @@ public class GenerateIslandAreaTexture : SingleTask
 		return orderedTerrainTypes;
 	}
 
-	/// <summary>
-	/// Get terrain types contained in the terrain nodes without repetition.
-	/// </summary>
-	private List<TerrainType> GetUniqueTerrainTypes(List<TerrainNode> terrainNodes)
-	{
-		List<TerrainType> terrainTypes = new List<TerrainType>();
-
-		foreach (TerrainNode node in terrainNodes)
-		{
-			bool typeAdded = terrainTypes.Contains(node.Type);
-
-			if (!typeAdded)
-			{
-				terrainTypes.Add(node.Type);
-			}
-		}
-
-		return terrainTypes;
-	}
-
 	private Color GetPixelColor(float pixelHeight, int pixelIndex)
 	{
-		Color pixelColor;
-
 		List<TerrainNode> dominantNodesInRange = DominantNodesInRange(pixelIndex);
+		List<TerrainType> dominatedTerrainTypes = DominateTerrainTypes(dominantNodesInRange, orderedTerrainTypes);
 
-		terrainTypesAroundDominantNodes = TerrainTypesAroundDominantNodes(dominantNodesInRange, orderedTerrainTypes);
+		dominatedBlendingRegions = CreateBlendingRegions(dominatedTerrainTypes, terrainNodesParams.BlendingDistance);
 
-		blendingRegionsAroundDominantNodes =
-			FindBlendingRegions(terrainTypesAroundDominantNodes, terrainNodesParams.BlendingDistance);
+		BlendingRegion blendingRegion = GetBlendingRegion(pixelHeight, blendingRegions);
+		BlendingRegion dominantBlendingRegion = GetBlendingRegion(pixelHeight, dominatedBlendingRegions);
 
-		BlendingRegion enclosingBlendingRegion = GetBlendingRegion(pixelHeight, blendingRegions);
-		BlendingRegion enclosingDominantBlendingRegion = GetBlendingRegion(pixelHeight, blendingRegionsAroundDominantNodes);
-
-		Color normalColor = GetHeightColor(pixelHeight, orderedTerrainTypes);
-		Color dominantColor = GetHeightColor(pixelHeight, terrainTypesAroundDominantNodes);
-
-		if (enclosingBlendingRegion != null) normalColor = enclosingBlendingRegion.GetColor(pixelHeight);
-
-		if (enclosingDominantBlendingRegion != null)
-			dominantColor = enclosingDominantBlendingRegion.GetColor(pixelHeight);
+		Color normalColor = GetNormalColor(blendingRegion, pixelHeight);
+		Color dominantColor = GetDominantColor(dominantBlendingRegion, pixelHeight, dominatedTerrainTypes);
 
 		if (dominantNodesInRange.Count > 0)
 		{
-			pixelColor = GetHeightColorAroundDominantNode(pixelIndex, dominantNodesInRange, normalColor, dominantColor);
+			return BlendDominantColor(pixelIndex, dominantNodesInRange, normalColor, dominantColor);
 		}
-		else
+
+		return normalColor;
+	}
+
+	private Color GetNormalColor(BlendingRegion blendingRegion, float pixelHeight)
+	{
+		if (blendingRegion != null)
 		{
-			pixelColor = normalColor;
+			return blendingRegion.GetColor(pixelHeight);
 		}
 
-		//pixelColor = GetHeightColor(pixelHeight, orderedTerrainTypes);
+		return GetHeightColor(pixelHeight, orderedTerrainTypes);
+	}
 
-		//if (dominantNodeInRange != null)
-		//{
-		//	int dominantNodeIndex = terrainNodes.IndexOf(dominantNodeInRange);
-		//	pixelColor = GetHeightColorAroundDominantNode(pixelIndex, dominantNodeIndex, pixelHeight);
-		//	//pixelColor = GetHeightColor(pixelHeight, terrainTypesAroundDominantNodes);
-		//}
-		////else if (enclosingBlendingRegion != null)
-		////{
-		////	pixelColor = enclosingBlendingRegion.GetColor(pixelHeight);
-		////}
-		//else
-		//{
-		//	pixelColor = GetHeightColor(pixelHeight, orderedTerrainTypes);
-		//}
+	private Color GetDominantColor(BlendingRegion dominantBlendingRegion, float pixelHeight, List<TerrainType> dominatedTerrainTypes)
+	{
+		if (dominantBlendingRegion != null)
+		{
+			return dominantBlendingRegion.GetColor(pixelHeight);
+		}
 
-		//if (dominantNodeInRange != null)
-		//{
-		//	pixelColor = GetColorInDominantNodeRange(dominantNodeInRange);
-		//}
-		//else if (enclosingBlendingRegion != null)
-		//{
-		//	pixelColor = enclosingBlendingRegion.GetColor(pixelHeight);
-		//}
-		//else
-		//{
-		//	pixelColor = GetHeightColor(pixelHeight, orderedTerrainTypes);
-		//}
-
-		return pixelColor;
+		return GetHeightColor(pixelHeight, dominatedTerrainTypes);
 	}
 
 	/// <summary>
-	/// Removes terrain types directly below a dominant type.
-	/// For example if types are {dark sand, sand, grass} and grass is dominant, this function will return {dark sand, grass}.
+	/// Creates a list of terrain types with shifted starting height. Dominant types expand to types below them.
 	/// </summary>
-	private List<TerrainType> TerrainTypesAroundDominantNodes(List<TerrainNode> dominantNodesInRange, List<TerrainType> ascendingHeightTypes)
+	private List<TerrainType> DominateTerrainTypes(List<TerrainNode> dominantNodesInRange, List<TerrainType> ascendingHeightTypes)
 	{
-		List<TerrainType> terrainTypes = new List<TerrainType>();
+		List<TerrainType> dominatedTypes = new List<TerrainType>();
+		TerrainType typeToAdd;
 
 		for (int i = 0; i < ascendingHeightTypes.Count; i++)
 		{
 			TerrainType currentType = ascendingHeightTypes[i];
 			int lastIndex = ascendingHeightTypes.Count - 1;
+			typeToAdd = currentType;
 
 			if (i != lastIndex)
 			{
 				TerrainType typeAbove = ascendingHeightTypes[i + 1];
+				typeToAdd = DominateType(dominantNodesInRange, currentType, typeAbove);
+			}
 
-				if (TypeInNodes(dominantNodesInRange, typeAbove))
-				{
-					// The dominant type's starting height is lowered to the dominated type.
-					TerrainType loweredDominantType = typeAbove.DeepCopy();
-					loweredDominantType.StartingHeight = currentType.StartingHeight;
-					terrainTypes.Add(loweredDominantType);
-				}
-				else
-				{
-					terrainTypes.Add(currentType);
-				}
-			}
-			else
-			{
-				terrainTypes.Add(currentType);
-			}
+			dominatedTypes.Add(typeToAdd);
 		}
 
-		return terrainTypes;
+		return dominatedTypes;
 	}
 
+	/// <summary>
+	/// If the above type is dominant, its starting height is lowered to the type below. So it takes the below types place.
+	/// </summary>
+	private TerrainType DominateType(List<TerrainNode> dominantNodesInRange, TerrainType typeBelow, TerrainType typeAbove)
+	{
+		if (TypeInNodes(dominantNodesInRange, typeAbove))
+		{
+			// The dominant type's starting height is lowered to the dominated type.
+			TerrainType dominantType = typeAbove.DeepCopy();
+			dominantType.StartingHeight = typeBelow.StartingHeight;
+			return dominantType;
+		}
+		else
+		{
+			return typeBelow;
+		}
+	}
+
+	/// <summary>
+	/// Returns true if the list of terrain nodes contains a node of the given terrain type.
+	/// </summary>
 	private bool TypeInNodes(List<TerrainNode> nodes, TerrainType type)
 	{
 		foreach (TerrainNode node in nodes)
@@ -225,14 +179,8 @@ public class GenerateIslandAreaTexture : SingleTask
 		return false;
 	}
 
-	private Color GetColorInDominantNodeRange(TerrainNode dominantNode)
-	{
-		return dominantNode.Type.Color;
-	}
-
 	private List<TerrainNode> DominantNodesInRange(int pixelIndex)
 	{
-		Vector2Int pixelCoords = TextureFunctions.ArrayIndexToCoords(resolution, resolution, pixelIndex);
 		List<TerrainNode> dominantNodes = new List<TerrainNode>();
 
 		for (int i = 0; i < terrainNodes.Count; i++)
@@ -247,31 +195,10 @@ public class GenerateIslandAreaTexture : SingleTask
 		return dominantNodes;
 	}
 
-	private List<TerrainNode> GetDominantTerrainNodes()
-	{
-		List<TerrainNode> dominantNodes = new List<TerrainNode>();
-
-		foreach (TerrainNode terrainNode in terrainNodes)
-		{
-			if (terrainNode.IsDominant) dominantNodes.Add(terrainNode);
-		}
-
-		return dominantNodes;
-	}
-
-	private List<PixelBoundingBox> GetNodesPixelBoundingBoxes(List<TerrainNode> nodes)
-	{
-		List<PixelBoundingBox> boundingBoxes = new List<PixelBoundingBox>();
-
-		foreach (TerrainNode node in nodes)
-		{
-			boundingBoxes.Add(node.GetPixelBoundingBox(resolution, areaRadius));
-		}
-
-		return boundingBoxes;
-	}
-
-	private Color GetHeightColorAroundDominantNode(int pixelIndex, List<TerrainNode> dominantNodes, Color normalColor, Color dominantColor)
+	/// <summary>
+	/// Blends dominant and normal color depending on the height maps of the individual dominant nodes.
+	/// </summary>
+	private Color BlendDominantColor(int pixelIndex, List<TerrainNode> dominantNodes, Color normalColor, Color dominantColor)
 	{
 		float dominantHeightMapHeight = 0f;
 		float blendingEdge = terrainNodesParams.BlendingDistance;
@@ -282,15 +209,10 @@ public class GenerateIslandAreaTexture : SingleTask
 			dominantHeightMapHeight += multipliedGradientsAndNoises[nodeIndex][pixelIndex].r;
 		}
 
-		if (dominantHeightMapHeight > blendingEdge)
-		{
-			return dominantColor;
-		}
-		else
-		{
-			float blendInterpolator = dominantHeightMapHeight / blendingEdge;
-			return Color.Lerp(normalColor, dominantColor, blendInterpolator);
-		}
+		if (dominantHeightMapHeight > blendingEdge) return dominantColor;
+
+		float blendInterpolator = dominantHeightMapHeight / blendingEdge;
+		return Color.Lerp(normalColor, dominantColor, blendInterpolator);
 	}
 
 	private Color GetHeightColor(float pixelHeight, List<TerrainType> ascendingHeightTypes)
@@ -315,7 +237,7 @@ public class GenerateIslandAreaTexture : SingleTask
 		return pixelColor;
 	}
 
-	private List<BlendingRegion> FindBlendingRegions(List<TerrainType> ascendingHeightTypes, float blendingDistance)
+	private List<BlendingRegion> CreateBlendingRegions(List<TerrainType> ascendingHeightTypes, float blendingDistance)
 	{
 		List<BlendingRegion> foundRegions = new List<BlendingRegion>();
 
@@ -323,7 +245,7 @@ public class GenerateIslandAreaTexture : SingleTask
 		{
 			for (int i = 1; i < ascendingHeightTypes.Count; i++)
 			{
-				BlendingRegion newRegion = CalculateBlendingRegion(ascendingHeightTypes, blendingDistance, i);
+				BlendingRegion newRegion = CreateBlendingRegion(ascendingHeightTypes, blendingDistance, i);
 				foundRegions.Add(newRegion);
 			}
 		}
@@ -331,7 +253,7 @@ public class GenerateIslandAreaTexture : SingleTask
 		return foundRegions;
 	}
 
-	private BlendingRegion CalculateBlendingRegion(List<TerrainType> ascendingHeightTypes, float blendingDistance, int i)
+	private BlendingRegion CreateBlendingRegion(List<TerrainType> ascendingHeightTypes, float blendingDistance, int i)
 	{
 		float previousStartingHeight = ascendingHeightTypes[i - 1].StartingHeight;
 		float startingHeight = ascendingHeightTypes[i].StartingHeight;
@@ -350,6 +272,9 @@ public class GenerateIslandAreaTexture : SingleTask
 		return new BlendingRegion(bottomBorder, topBorder, bottomColor, topColor);
 	}
 
+	/// <summary>
+	/// Returns the blending region to which the pixel belongs to or null.
+	/// </summary>
 	private BlendingRegion GetBlendingRegion(float pixelHeight, List<BlendingRegion> regions)
 	{
 		BlendingRegion region = null;
