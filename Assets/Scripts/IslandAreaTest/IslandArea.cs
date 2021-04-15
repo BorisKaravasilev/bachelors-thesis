@@ -89,7 +89,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(hideGradients);
 
 		// Generate Nodes Noises
-		GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(resolution, generateTerrainNodes.GetResult, maxNodes);
+		GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(resolution, generateTerrainNodes.GetResult, 1);
 		taskList.AddTask(generateNodesNoises);
 
 		// Show Nodes Noises
@@ -105,7 +105,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(hideNodesNoises);
 
 		// Multiply Nodes Gradients and Noises
-		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, maxNodes);
+		MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, 1);
 		multiplyGradientsAndNoises.Name = "Multiply Node Gradients and Noises";
 		taskList.AddTask(multiplyGradientsAndNoises);
 
@@ -139,7 +139,7 @@ public class IslandArea : GridObject
 		taskList.AddTask(hideAdditionResult);
 
 		// Generate Island Area Texture
-		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult, multiplyGradientsAndNoises.GetResult);
+		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(resolution, terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult, multiplyGradientsAndNoises.GetResult, 10);
 		taskList.AddTask(generateTexture);
 
 		// Show Island Area Texture

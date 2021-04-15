@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class IslandAreaTester : MonoBehaviour
 {
+	[SerializeField] private Transform player;
 	[SerializeField] private SeaTileGrid seaTileGrid;
 	[SerializeField] private TextAsset islandNames;
 
@@ -57,11 +58,40 @@ public class IslandAreaTester : MonoBehaviour
 	/// </summary>
 	private void GenerateIslandAreas(List<IslandArea> islandAreas)
 	{
+		if (generateSequentially)
+		{
+			IslandArea closestIslandArea = GetClosestNotFinishedIslandArea(islandAreas);
+			if (closestIslandArea != null) InitOrGenerateArea(closestIslandArea);
+		}
+		else
+		{
+			foreach (IslandArea islandArea in islandAreas)
+			{
+				InitOrGenerateArea(islandArea);
+			}
+		}
+	}
+
+	private IslandArea GetClosestNotFinishedIslandArea(List<IslandArea> islandAreas)
+	{
+		float distanceToClosest = float.MaxValue;
+		IslandArea closestIslandArea = null;
+
 		foreach (IslandArea islandArea in islandAreas)
 		{
-			bool initializedOrGenerated = InitOrGenerateArea(islandArea);
-			if (initializedOrGenerated && generateSequentially) break;
+			if (!islandArea.Initialized || !islandArea.Finished)
+			{
+				float distanceToArea = Vector3.Distance(islandArea.Position, player.position);
+
+				if (distanceToArea < distanceToClosest)
+				{
+					distanceToClosest = distanceToArea;
+					closestIslandArea = islandArea;
+				}
+			}
 		}
+
+		return closestIslandArea;
 	}
 
 	/// <summary>

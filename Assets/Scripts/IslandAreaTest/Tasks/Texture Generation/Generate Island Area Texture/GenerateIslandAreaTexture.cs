@@ -6,6 +6,7 @@ using UnityEngine;
 public class GenerateIslandAreaTexture : SingleTask
 {
 	// Inputs
+	private int resolution;
 	private TerrainNodesParams terrainNodesParams;
 
 	// Inputs from previous task
@@ -27,10 +28,12 @@ public class GenerateIslandAreaTexture : SingleTask
 	private List<BlendingRegion> blendingRegions;  // where two terrain types meet (blending based on height)
 	private List<BlendingRegion> dominatedBlendingRegions;
 
-	public GenerateIslandAreaTexture(TerrainNodesParams terrainNodesParams, Func<List<TerrainNode>> getTerrainNodes, Func<Color[]> getHeightmap, Func<List<Color[]>> getMultipliedGradientsAndNoises)
+	public GenerateIslandAreaTexture(int resolution, TerrainNodesParams terrainNodesParams, Func<List<TerrainNode>> getTerrainNodes, Func<Color[]> getHeightmap, Func<List<Color[]>> getMultipliedGradientsAndNoises, int stepSize)
 	{
 		Name = "Generate Island Area Texture";
+		StepSize = stepSize;
 
+		this.resolution = resolution;
 		this.terrainNodesParams = terrainNodesParams;
 		this.getTerrainNodes = getTerrainNodes;
 		this.getHeightmap = getHeightmap;
@@ -45,7 +48,10 @@ public class GenerateIslandAreaTexture : SingleTask
 
 	protected override void ExecuteStep()
 	{
-		for (int pixelIndex = 0; pixelIndex < heightmap.Length; pixelIndex++)
+		int firstIndex = ExecutedSteps * resolution;
+		int lastIndex = firstIndex + resolution - 1;
+
+		for (int pixelIndex = firstIndex; pixelIndex < lastIndex; pixelIndex++)
 		{
 			float pixelHeight = heightmap[pixelIndex].r;    // All channels (r,g,b) should have the same value (gray scale image)
 			texture[pixelIndex] = GetPixelColor(pixelHeight, pixelIndex);
@@ -66,7 +72,7 @@ public class GenerateIslandAreaTexture : SingleTask
 
 	protected override void SetSteps()
 	{
-		TotalSteps = 1;
+		TotalSteps = heightmap.Length / resolution;
 		RemainingSteps = TotalSteps;
 	}
 
