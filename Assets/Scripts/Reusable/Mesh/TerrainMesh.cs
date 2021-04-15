@@ -53,7 +53,6 @@ public class TerrainMesh
 	private MeshRenderer meshRenderer;
 	private MeshFilter meshFilter;
 
-
 	public GameObject VerticesParent { get; private set; }
 	private const string VERTICES_PARENT_NAME = "VertexVisualizations";
 	public List<GameObject> VertexVisualizations { get; set; }
