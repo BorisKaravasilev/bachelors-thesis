@@ -89,7 +89,7 @@ public class IslandAreaTester : MonoBehaviour
 					closestIslandArea = islandArea;
 				}
 			}
-		}
+		} 
 
 		return closestIslandArea;
 	}

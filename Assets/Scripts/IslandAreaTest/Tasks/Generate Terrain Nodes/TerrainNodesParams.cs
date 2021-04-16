@@ -10,14 +10,14 @@ public class TerrainNodesParams : ScriptableObject
 	[Range(0f, 1f)]
 	public float MaxDistanceMultiplier = 1;
 	[Range(0f, 1f)]
-	public float BlendingDistance = 0.05f;
+	public float BlendingHeight = 0.05f;
 
-	public TerrainNodesParams(List<TerrainType> terrainTypes, int minNodes, int maxNodes, float maxDistanceMultiplier, float blendingDistance)
+	public TerrainNodesParams(List<TerrainType> terrainTypes, int minNodes, int maxNodes, float maxDistanceMultiplier, float blendingHeight)
 	{
 		TerrainTypes = terrainTypes;
 		MinNodes = minNodes;
 		MaxNodes = maxNodes;
 		MaxDistanceMultiplier = maxDistanceMultiplier;
-		BlendingDistance = blendingDistance;
+		BlendingHeight = blendingHeight;
 	}
 }
