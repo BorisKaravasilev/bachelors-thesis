@@ -21,8 +21,8 @@ public class TerrainBlend
 		float addedAmount = amount;
 
 		if (addedAmount > availableCapacity) addedAmount = availableCapacity;
-		TerrainTypeFraction typeFraction = new TerrainTypeFraction(type, addedAmount);
-		terrainFractions.Add(typeFraction);
+		TerrainTypeFraction terrainFraction = new TerrainTypeFraction(type, addedAmount);
+		terrainFractions.Add(terrainFraction);
 		availableCapacity -= addedAmount;
 	}
 
@@ -33,6 +33,7 @@ public class TerrainBlend
 		for (int i = 0; i < terrainFractions.Count; i++)
 		{
 			Color colorToBlend = terrainFractions[i].Type.Color * terrainFractions[i].Amount;
+			colorToBlend.a = 1f;
 			blendedColors.Add(colorToBlend);
 		}
 
@@ -177,14 +178,15 @@ class TextureGenerator
 	private TerrainBlend GetTerrainTypeBlend(TerrainType below, TerrainType current, TerrainType above, float height)
 	{
 		TerrainBlend terrainBlend = new TerrainBlend();
+		float clampedBlendHeight = ClampTerrainBlendHeight(current, above, blendingHeight);
 
-		if (IsHeightInTopBlendRegion(above, height))
+		if (IsHeightInTopBlendRegion(above, height, clampedBlendHeight))
 		{
-			terrainBlend = GetTopTerrainBlend(current, above, height); // Top blending
+			terrainBlend = GetTopTerrainBlend(current, above, height, clampedBlendHeight); // Top blending
 		}
-		else if (IsHeightInBottomBlendRegion(below, current, height))
+		else if (IsHeightInBottomBlendRegion(below, current, height, clampedBlendHeight))
 		{
-			terrainBlend = GetBottomTerrainBlend(current, below, height); // Bottom blending
+			terrainBlend = GetBottomTerrainBlend(current, below, height, clampedBlendHeight); // Bottom blending
 		}
 		else
 		{
@@ -195,31 +197,40 @@ class TextureGenerator
 	}
 
 	/// <summary>
+	/// Clamps the terrain blend height to the height of the current terrain type.
+	/// </summary>
+	private float ClampTerrainBlendHeight(TerrainType current, TerrainType above, float blendHeight)
+	{
+		float currentTypeCeiling = above?.StartingHeight ?? 1f;
+		return Mathf.Clamp(blendHeight, 0f, currentTypeCeiling - current.StartingHeight);
+	}
+
+	/// <summary>
 	/// Returns true if the height is in the top part of a terrain type where it has to be blended with the neighbor above.
 	/// </summary>
-	private bool IsHeightInTopBlendRegion(TerrainType above, float height)
+	private bool IsHeightInTopBlendRegion(TerrainType above, float height, float blendHeight)
 	{
-		return above != null && height > (above.StartingHeight - blendingHeight / 2);
+		return above != null && height > (above.StartingHeight - blendHeight / 2);
 	}
 
 	/// <summary>
 	/// Returns true if the height is in the bottom part of a terrain type where it has to be blended with the neighbor below.
 	/// </summary>
-	private bool IsHeightInBottomBlendRegion(TerrainType below, TerrainType current, float height)
+	private bool IsHeightInBottomBlendRegion(TerrainType below, TerrainType current, float height, float blendHeight)
 	{
-		return below != null && height < (current.StartingHeight + blendingHeight / 2);
+		return below != null && height < (current.StartingHeight + blendHeight / 2);
 	}
 
 	/// <summary>
 	/// Blends terrain type with the neighbor type above it.
 	/// </summary>
-	private TerrainBlend GetTopTerrainBlend(TerrainType current, TerrainType above, float height)
+	private TerrainBlend GetTopTerrainBlend(TerrainType current, TerrainType above, float height, float blendHeight)
 	{
 		TerrainBlend terrainBlend = new TerrainBlend();
 
-		float topBlendStartingHeight = above.StartingHeight - blendingHeight / 2;
+		float topBlendStartingHeight = above.StartingHeight - blendHeight / 2;
 
-		float aboveTypeAmount = (height - topBlendStartingHeight) / (blendingHeight); // 0.0 to 0.5
+		float aboveTypeAmount = (height - topBlendStartingHeight) / (blendHeight); // 0.0 to 0.5
 		float currentTypeAmount = 1 - aboveTypeAmount;								  // 1.0 to 0.5
 
 		terrainBlend.AddTerrainType(above, aboveTypeAmount);
@@ -231,11 +242,11 @@ class TextureGenerator
 	/// <summary>
 	/// Blends terrain type with the neighbor type below it.
 	/// </summary>
-	private TerrainBlend GetBottomTerrainBlend(TerrainType current, TerrainType below, float height)
+	private TerrainBlend GetBottomTerrainBlend(TerrainType current, TerrainType below, float height, float blendHeight)
 	{
 		TerrainBlend terrainBlend = new TerrainBlend();
 
-		float blendInterpolation = (height - current.StartingHeight) / (blendingHeight / 2);
+		float blendInterpolation = (height - current.StartingHeight) / (blendHeight / 2);
 		float currentTypeAmount = 0.5f + blendInterpolation / 2; // 0.5 to 1.0
 		float belowTypeAmount = 0.5f - blendInterpolation / 2;   // 0.5 to 0.0
 
