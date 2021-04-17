@@ -21,7 +21,8 @@ public class GenerateIslandAreaTexture : SingleTask
 	private List<Color[]> terrainNodesHeightmaps;
 
 	// Outputs
-	private Color[] texture;
+	private Color[] texturePixels;
+	private TerrainBlend[] terrainTypesAtPixels;
 
 	// Internal
 	//private TerrainTextureGenerator textureGenerator;
@@ -45,7 +46,7 @@ public class GenerateIslandAreaTexture : SingleTask
 	public Color[] GetResult()
 	{
 		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-		return texture;
+		return texturePixels;
 	}
 
 	protected override void ExecuteStep()
@@ -57,7 +58,9 @@ public class GenerateIslandAreaTexture : SingleTask
 		{
 			// All channels (r,g,b) of the heightmap should have the same value
 			float pixelHeight = heightmap[pixelIndex].r;
-			texture[pixelIndex] = textureGenerator.GetPixelColor(pixelHeight, pixelIndex);
+
+			terrainTypesAtPixels[pixelIndex] = textureGenerator.GetPixelTerrainBlend(pixelHeight, pixelIndex);
+			texturePixels[pixelIndex] = terrainTypesAtPixels[pixelIndex].GetColor();
 		}
 	}
 
@@ -67,8 +70,8 @@ public class GenerateIslandAreaTexture : SingleTask
 		terrainNodesHeightmaps = getTerrainNodesHeightmaps();
 		heightmap = getHeightmap();
 
-		texture = new Color[heightmap.Length];
-		//textureGenerator = new TerrainTextureGenerator(terrainNodes, terrainNodesHeightmaps, terrainTypes, blendingHeight);
+		texturePixels = new Color[heightmap.Length];
+		terrainTypesAtPixels = new TerrainBlend[heightmap.Length];
 		textureGenerator = new TextureGenerator(terrainNodes, terrainNodesHeightmaps, terrainTypes, blendingHeight);
 	}
 

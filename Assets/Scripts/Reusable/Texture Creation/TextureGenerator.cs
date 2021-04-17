@@ -76,10 +76,10 @@ class TextureGenerator
 		orderedTerrainTypes = OrderTerrainTypes(terrainTypes);
 	}
 
-	public Color GetPixelColor(float pixelHeight, int pixelIndex)
+	public TerrainBlend GetPixelTerrainBlend(float pixelHeight, int pixelIndex)
 	{
 		TerrainBlend terrainBlendByHeight = GetTerrainBlendByHeight(pixelHeight, orderedTerrainTypes);
-		return terrainBlendByHeight.GetColor();
+		return terrainBlendByHeight;
 	}
 
 	/// <summary>
@@ -122,13 +122,6 @@ class TextureGenerator
 		if (currentPixelIntensity > 0f) return true;
 		return false;
 	}
-
-	//private Color GetPixelColorBlend(float pixelHeight, int pixelIndex)
-	//{
-	//	List<TerrainNode> dominantNodesInRange = DominantNodesInRange(pixelIndex);
-	//	return new Color();
-	//}
-
 
 	/// <summary>
 	/// Gets a blend of terrain types by height from an ordered list of terrain types by starting height.
