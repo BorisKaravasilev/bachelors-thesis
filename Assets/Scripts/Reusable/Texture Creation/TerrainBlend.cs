@@ -23,7 +23,7 @@ public class TerrainBlend
 
 		foreach (var fraction in TerrainFractions)
 		{
-			fractions += fraction.ToString() + ", ";
+			fractions += fraction + ", ";
 		}
 
 		return $"(Amount: {Amount}, Free Capacity: {FreeCapacity}, Terrain Fractions: {fractions})";

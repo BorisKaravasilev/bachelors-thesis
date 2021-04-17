@@ -25,8 +25,7 @@ public class GenerateIslandAreaTexture : SingleTask
 	private TerrainBlend[] terrainTypesAtPixels;
 
 	// Internal
-	//private TerrainTextureGenerator textureGenerator;
-	private TextureGenerator textureGenerator;
+	private TerrainTextureGenerator textureGenerator;
 
 	public GenerateIslandAreaTexture(int resolution, TerrainNodesParams terrainNodesParams, Func<List<TerrainNode>> getTerrainNodes, Func<Color[]> getHeightmap, Func<List<Color[]>> getTerrainNodesHeightmaps, int stepSize)
 	{
@@ -72,7 +71,7 @@ public class GenerateIslandAreaTexture : SingleTask
 
 		texturePixels = new Color[heightmap.Length];
 		terrainTypesAtPixels = new TerrainBlend[heightmap.Length];
-		textureGenerator = new TextureGenerator(terrainNodes, terrainNodesHeightmaps, terrainTypes, blendingHeight);
+		textureGenerator = new TerrainTextureGenerator(terrainNodes, terrainNodesHeightmaps, terrainTypes, blendingHeight);
 	}
 
 	protected override void SetSteps()

@@ -33,18 +33,7 @@ public class TerrainBlendList
 		for (int i = 0; i < List.Count; i++)
 		{
 			List<TerrainTypeFraction> multipliedFractions = List[i].GetFractionsMultipliedByAmount();
-
-			//string multipliedFraction = "";
-			//foreach (var terrainTypeFraction in multipliedFractions)
-			//{
-			//	multipliedFraction += terrainTypeFraction.ToString() + ", ";
-			//}
-
-			//Debug.Log($"After multiplication (fractions): {multipliedFraction}");
-
 			terrainBlend.AddFractions(multipliedFractions);
-
-			//Debug.Log($"After Addition: {terrainBlend}");
 		}
 
 		return terrainBlend;
