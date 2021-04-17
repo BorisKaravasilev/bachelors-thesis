@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class FollowPosition : MonoBehaviour
 {
 	public Transform target;
 	private Vector3 offset;
-	private Camera camera;
+	private Camera followingCamera;
 
     // Start is called before the first frame update
     void Start()
     {
 	    offset = transform.position - target.position;
-	    camera = GetComponent<Camera>();
+	    followingCamera = GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -21,6 +22,6 @@ public class FollowPosition : MonoBehaviour
 
     void OnGUI()
     {
-	    camera.fieldOfView -= Input.mouseScrollDelta.y;
+	    followingCamera.fieldOfView -= Input.mouseScrollDelta.y;
     }
 }
