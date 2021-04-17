@@ -3,62 +3,8 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Blend of multiple terrain types.
+/// Generates a terrain texture from terrain nodes, their heightmaps and a list of terrain types.
 /// </summary>
-public class TerrainBlend
-{
-	private float availableCapacity; // 0 to 1
-	private List<TerrainTypeFraction> terrainFractions;
-
-	public TerrainBlend()
-	{
-		availableCapacity = 1f;
-		terrainFractions = new List<TerrainTypeFraction>();
-	}
-
-	public void AddTerrainType(TerrainType type, float amount)
-	{
-		float addedAmount = amount;
-
-		if (addedAmount > availableCapacity) addedAmount = availableCapacity;
-		TerrainTypeFraction terrainFraction = new TerrainTypeFraction(type, addedAmount);
-		terrainFractions.Add(terrainFraction);
-		availableCapacity -= addedAmount;
-	}
-
-	public Color GetColor()
-	{
-		List<Color> blendedColors = new List<Color>();
-
-		for (int i = 0; i < terrainFractions.Count; i++)
-		{
-			Color colorToBlend = terrainFractions[i].Type.Color * terrainFractions[i].Amount;
-			colorToBlend.a = 1f;
-			blendedColors.Add(colorToBlend);
-		}
-
-		Color blendedColor = Color.black;
-
-		blendedColors.ForEach(colorToBlend => blendedColor += colorToBlend);
-		return blendedColor;
-	}
-}
-
-/// <summary>
-/// Terrain type with a specified amount used for blending.
-/// </summary>
-public class TerrainTypeFraction
-{
-	public TerrainType Type { get; private set; }
-	public float Amount { get; private set; } // 0 to 1
-
-	public TerrainTypeFraction(TerrainType type, float amount)
-	{
-		this.Type = type;
-		this.Amount = amount;
-	}
-}
-
 class TextureGenerator
 {
 	private List<TerrainNode> terrainNodes;
@@ -76,10 +22,131 @@ class TextureGenerator
 		orderedTerrainTypes = OrderTerrainTypes(terrainTypes);
 	}
 
+	/// <summary>
+	/// Returns the blend of terrain types at the given pixel.
+	/// </summary>
 	public TerrainBlend GetPixelTerrainBlend(float pixelHeight, int pixelIndex)
 	{
-		TerrainBlend terrainBlendByHeight = GetTerrainBlendByHeight(pixelHeight, orderedTerrainTypes);
-		return terrainBlendByHeight;
+		//TerrainBlendList terrainTypesBlends = GetDominantNodesBlend(pixelHeight, pixelIndex);
+
+		TerrainBlend nonDominatedTerrainBlend = GetTerrainBlendByHeight(pixelHeight, orderedTerrainTypes);
+		TerrainBlend mostDominantNodeBlend = GetMostDominantNodeTerrainBlend(pixelHeight, pixelIndex);
+		//terrainTypesBlends.Add(nonDominatedTerrainBlend);
+
+		TerrainBlendList terrainBlendList = new TerrainBlendList();
+
+		if (mostDominantNodeBlend != null)
+			terrainBlendList.Add(mostDominantNodeBlend);
+
+		terrainBlendList.Add(nonDominatedTerrainBlend);
+
+		return terrainBlendList.Blend();
+	}
+
+	/// <summary>
+	/// Blends terrain type blends enforced by dominant nodes in range of pixel.
+	/// </summary>
+	private TerrainBlendList GetDominantNodesBlend(float pixelHeight, int pixelIndex)
+	{
+		TerrainBlendList blendList = new TerrainBlendList();
+		List<TerrainNode> dominantNodesInRange = DominantNodesInRange(pixelIndex);
+
+		foreach (TerrainNode currentNode in dominantNodesInRange)
+		{
+			List<TerrainType> typesDominatedByNode = DominateTerrainTypes(currentNode, orderedTerrainTypes);
+
+			TerrainBlend terrainBlend = GetTerrainBlendByHeight(pixelHeight, typesDominatedByNode);
+			terrainBlend.Amount = GetNodeStrength(currentNode, pixelIndex) / dominantNodesInRange.Count;
+			//Debug.Log($"Amount: {terrainBlend.Amount}");
+			//Debug.Log($"Before blending: {terrainBlend}");
+
+			blendList.Add(terrainBlend);
+		}
+
+		return blendList;
+	}
+
+	private TerrainBlend GetMostDominantNodeTerrainBlend(float pixelHeight, int pixelIndex)
+	{
+		TerrainNode mostDominantNode = null;
+		List<TerrainNode> dominantNodesInRange = DominantNodesInRange(pixelIndex);
+
+		for (int i = 0; i < dominantNodesInRange.Count; i++)
+		{
+			TerrainNode currentNode = dominantNodesInRange[i];
+
+			if (i == 0)
+			{
+				mostDominantNode = currentNode;
+				continue;
+			}
+
+			if (currentNode.Type.StartingHeight > mostDominantNode?.Type.StartingHeight)
+			{
+				mostDominantNode = currentNode;
+			}
+		}
+
+		if (mostDominantNode != null)
+		{
+			List<TerrainType> dominatedTerrainTypes = DominateTerrainTypes(mostDominantNode, orderedTerrainTypes);
+			TerrainBlend terrainBlend = GetTerrainBlendByHeight(pixelHeight, dominatedTerrainTypes);
+			terrainBlend.Amount = GetNodeStrength(mostDominantNode, pixelIndex);
+			return terrainBlend;
+		}
+
+		return null;
+
+		//TerrainNode mostDominantNode = null;
+		//List<TerrainType> typesDominatedByMostDominantNode = new List<TerrainType>();
+		//TerrainType typeAtHeightAroundMostDominant = null;
+		//List<TerrainNode> dominantNodesInRange = DominantNodesInRange(pixelIndex);
+
+		//foreach (TerrainNode currentNode in dominantNodesInRange)
+		//{
+		//	List<TerrainType> typesDominatedByCurrentNode = DominateTerrainTypes(currentNode, orderedTerrainTypes);
+		//	TerrainType typeAtHeightAroundCurrent = FindTerrainTypeByHeight(pixelHeight, typesDominatedByMostDominantNode);
+
+		//	if (mostDominantNode == null)
+		//	{
+		//		mostDominantNode = currentNode;
+		//		typesDominatedByMostDominantNode = typesDominatedByCurrentNode;
+		//		typeAtHeightAroundMostDominant = typeAtHeightAroundCurrent;
+		//		continue;
+		//	}
+
+		//	if (typeAtHeightAroundCurrent.StartingHeight > typeAtHeightAroundMostDominant.StartingHeight)
+		//	{
+		//		mostDominantNode = currentNode;
+		//		typesDominatedByMostDominantNode = typesDominatedByCurrentNode;
+		//		typeAtHeightAroundMostDominant = typeAtHeightAroundCurrent;
+		//	}
+		//}
+
+		//return mostDominantNode == null ? null : GetTerrainBlendByHeight(pixelHeight, typesDominatedByMostDominantNode);
+	}
+
+	//private TerrainType GetTerrainTypeAroundNode(TerrainNode node, float height)
+	//{
+	//	List<TerrainType> typesDominatedByNode = DominateTerrainTypes(node, orderedTerrainTypes);
+	//	return FindTerrainTypeByHeight(height, typesDominatedByNode);
+	//}
+
+	/// <summary>
+	/// Returns terrain nodes strength based on its heightmap and blending height.
+	/// </summary>
+	/// <returns></returns>
+	private float GetNodeStrength(TerrainNode node, int pixelIndex)
+	{
+		int nodeIndex = terrainNodes.IndexOf(node);
+		float pixelHeight = terrainNodesHeightMaps[nodeIndex][pixelIndex].r;
+
+		if (blendingHeight > 0f)
+		{
+			return Mathf.Clamp01(pixelHeight / blendingHeight);
+		}
+
+		return 1f;
 	}
 
 	/// <summary>
@@ -89,38 +156,6 @@ class TextureGenerator
 	{
 		List<TerrainType> ascendingTerrainType = terrainTypes.OrderBy(terrainType => terrainType.StartingHeight).ToList();
 		return ascendingTerrainType;
-	}
-
-	/// <summary>
-	/// Returns a list of dominant terrain nodes that the given pixel is in range of.
-	/// </summary>
-	private List<TerrainNode> DominantNodesInRange(int pixelIndex)
-	{
-		List<TerrainNode> dominantNodes = new List<TerrainNode>();
-
-		for (int nodeIndex = 0; nodeIndex < terrainNodes.Count; nodeIndex++)
-		{
-			TerrainNode currentNode = terrainNodes[nodeIndex];
-
-			bool inRange = NodeInRange(nodeIndex, pixelIndex);
-			bool isDominant = currentNode.IsDominant;
-
-			if (inRange && isDominant) dominantNodes.Add(currentNode);
-		}
-
-		return dominantNodes;
-	}
-
-	/// <summary>
-	/// Returns true if pixel's intensity is higher than zero in the height map of the specified node.
-	/// </summary>
-	private bool NodeInRange(int nodeIndex, int pixelIndex)
-	{
-		TerrainNode checkedNode = terrainNodes[nodeIndex];
-		float currentPixelIntensity = terrainNodesHeightMaps[nodeIndex][pixelIndex].r;
-
-		if (currentPixelIntensity > 0f) return true;
-		return false;
 	}
 
 	/// <summary>
@@ -249,8 +284,36 @@ class TextureGenerator
 		return terrainBlend;
 	}
 
+	/// <summary>
+	/// Returns a list of dominant terrain nodes that the given pixel is in range of.
+	/// </summary>
+	private List<TerrainNode> DominantNodesInRange(int pixelIndex)
+	{
+		List<TerrainNode> dominantNodes = new List<TerrainNode>();
 
+		for (int nodeIndex = 0; nodeIndex < terrainNodes.Count; nodeIndex++)
+		{
+			TerrainNode currentNode = terrainNodes[nodeIndex];
 
+			bool inRange = NodeInRange(nodeIndex, pixelIndex);
+			bool isDominant = currentNode.IsDominant;
+
+			if (inRange && isDominant) dominantNodes.Add(currentNode);
+		}
+
+		return dominantNodes;
+	}
+
+	/// <summary>
+	/// Returns true if pixel's intensity is higher than zero in the height map of the specified node.
+	/// </summary>
+	private bool NodeInRange(int nodeIndex, int pixelIndex)
+	{
+		float currentPixelIntensity = terrainNodesHeightMaps[nodeIndex][pixelIndex].r;
+
+		if (currentPixelIntensity > 0f) return true;
+		return false;
+	}
 
 	/// <summary>
 	/// Creates a list of terrain types with shifted starting height. Dominant types expand to types below them.

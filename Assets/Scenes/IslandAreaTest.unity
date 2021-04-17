@@ -155,13 +155,13 @@ MonoBehaviour:
   player: {fileID: 1598694479}
   seaTileGrid: {fileID: 832104319}
   islandNames: {fileID: 4900000, guid: a670ed85c8eedaf4989ebf1d5997306b, type: 3}
-  debugIslandAreas: 1
+  debugIslandAreas: 0
   meshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
   previewObjectMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
   previewTextureMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
   islandGridParams:
     spacing: 20
-    maxObjectRadius: 6
+    maxObjectRadius: 7
     objectCountLimit: 500
     destroyFarObjects: 1
   islandGridOffsetParams:
@@ -184,7 +184,7 @@ MonoBehaviour:
       Type: 0
   texturePixelsPerUnit: 10
   terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
-  previewProgress: 0
+  previewProgress: 1
   generateSequentially: 1
   generateInSteps: 1
   visualStepTime: 0
@@ -559,11 +559,11 @@ MonoBehaviour:
   seaBedMaterial: {fileID: 2100000, guid: 7904f68233bd1f84c9844bf9d8f67753, type: 2}
   seaTileGridParams:
     tileSize: 20
-    xTiles: 3
-    zTiles: 2
+    xTiles: 4
+    zTiles: 3
     destroyFarTiles: 1
   seaLevel: 0.2
-  previewMode: 0
+  previewMode: 1
 --- !u!1 &1160388208
 GameObject:
   m_ObjectHideFlags: 0

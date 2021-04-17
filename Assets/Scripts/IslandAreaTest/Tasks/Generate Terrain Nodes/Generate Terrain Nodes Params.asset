@@ -34,7 +34,7 @@ MonoBehaviour:
   - Name: Grass
     Color: {r: 0.32696408, g: 0.735849, b: 0.12842648, a: 1}
     StartingHeight: 0.2
-    DominationProbability: 0.3
+    DominationProbability: 1
     NoiseParams:
       Scale: 0.04
       OffsetX: 0
@@ -43,7 +43,7 @@ MonoBehaviour:
   - Name: Rock
     Color: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 1}
     StartingHeight: 0.5
-    DominationProbability: 0.2
+    DominationProbability: 1
     NoiseParams:
       Scale: 0.05
       OffsetX: 0
@@ -52,4 +52,4 @@ MonoBehaviour:
   MinNodes: 2
   MaxNodes: 3
   MaxDistanceMultiplier: 0.7
-  BlendingDistance: 0.05
+  BlendingHeight: 0.1
