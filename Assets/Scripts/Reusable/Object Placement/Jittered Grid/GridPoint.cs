@@ -7,7 +7,7 @@ namespace ObjectPlacement.JitteredGrid
 	/// </summary>
 	public class GridPoint
 	{
-		public Vector3 Position { get; }
+		public Vector3 Position { get; set; }
 		public float MaxRadius { get; }
 
 		public GridPoint(Vector3 position, float maxRadius)

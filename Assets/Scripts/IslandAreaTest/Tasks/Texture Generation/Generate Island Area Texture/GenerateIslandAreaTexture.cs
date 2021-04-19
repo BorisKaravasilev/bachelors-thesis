@@ -48,6 +48,12 @@ public class GenerateIslandAreaTexture : SingleTask
 		return texturePixels;
 	}
 
+	public TerrainBlend[] GetTerrainTypesAtPixels()
+	{
+		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+		return terrainTypesAtPixels;
+	}
+
 	protected override void ExecuteStep()
 	{
 		int firstIndex = ExecutedSteps * resolution;
