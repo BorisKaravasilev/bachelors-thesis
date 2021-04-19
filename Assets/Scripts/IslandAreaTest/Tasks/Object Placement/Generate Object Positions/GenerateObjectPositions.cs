@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateObjects : SingleTask
+public class GenerateObjectPositions : SingleTask
 {
 	// Inputs
 
-	public GenerateObjects()
+	public GenerateObjectPositions()
 	{
 
 	}

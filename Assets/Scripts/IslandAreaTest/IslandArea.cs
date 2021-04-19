@@ -148,6 +148,20 @@ public class IslandArea : GridObject
 		showIslandAreaTexture.SetParams(1, previewProgress, visualStepTime);
 		taskList.AddTask(showIslandAreaTexture);
 
+
+
+
+		// Generate Tree Positions
+
+		// Instantiate Trees at zero height
+
+		// Hide Trees
+
+		// Move Trees to real height, show trees
+
+
+
+
 		// Hide Terrain Nodes
 		HidePreviewObjects<PreviewObject> hideTerrainNodes = new HidePreviewObjects<PreviewObject>(showTerrainNodes.GetResult);
 		hideTerrainNodes.SetParams(1, previewProgress);
