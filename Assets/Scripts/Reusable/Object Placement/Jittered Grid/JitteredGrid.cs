@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Noise;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -8,15 +9,14 @@ namespace ObjectPlacement.JitteredGrid
 	/// <summary>
 	/// Generates points on a square grid and offsets them by noise.
 	/// </summary>
-	public class JitteredGrid<TNoise2D>
-		where TNoise2D : Noise2D, new()
+	public class JitteredGrid
 	{
 		private GridParams gridParams;
 		private OffsetParams offsetParams;
 
-		TNoise2D xOffsetNoise;
-		TNoise2D zOffsetNoise;
-		TNoise2D thresholdNoise;
+		INoise2D xOffsetNoise;
+		INoise2D zOffsetNoise;
+		INoise2D thresholdNoise;
 
 		private List<GridPoint> points;
 
@@ -32,13 +32,9 @@ namespace ObjectPlacement.JitteredGrid
 
 			points = new List<GridPoint>();
 
-			xOffsetNoise = new TNoise2D();
-			zOffsetNoise = new TNoise2D();
-			thresholdNoise = new TNoise2D();
-
-			xOffsetNoise.SetParameters(offsetParams.XOffsetParams);
-			zOffsetNoise.SetParameters(offsetParams.ZOffsetParams);
-			thresholdNoise.SetParameters(offsetParams.ThresholdParams);
+			xOffsetNoise = offsetParams.XOffsetNoise;
+			zOffsetNoise = offsetParams.ZOffsetNoise;
+			thresholdNoise = offsetParams.ThresholdNoise;
 		}
 
 		/// <summary>

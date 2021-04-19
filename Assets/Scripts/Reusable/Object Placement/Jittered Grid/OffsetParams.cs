@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Noise;
+using UnityEngine;
 
 namespace ObjectPlacement.JitteredGrid
 {
@@ -13,14 +14,14 @@ namespace ObjectPlacement.JitteredGrid
 		private float threshold = 0f;
 		public float Threshold => threshold;
 
-		private Noise2DParams xOffsetParams;
-		public Noise2DParams XOffsetParams => CheckInitialized(xOffsetParams);
+		private INoise2D xOffsetNoise;
+		public INoise2D XOffsetNoise => CheckInitialized(xOffsetNoise);
 
-		private Noise2DParams zOffsetParams;
-		public Noise2DParams ZOffsetParams => CheckInitialized(zOffsetParams);
+		private INoise2D zOffsetNoise;
+		public INoise2D ZOffsetNoise => CheckInitialized(zOffsetNoise);
 
-		private Noise2DParams thresholdParams;
-		public Noise2DParams ThresholdParams => CheckInitialized(thresholdParams);
+		private INoise2D thresholdNoise;
+		public INoise2D ThresholdNoise => CheckInitialized(thresholdNoise);
 
 		public OffsetParams(float maxOffset, float threshold)
 		{
@@ -28,24 +29,24 @@ namespace ObjectPlacement.JitteredGrid
 			this.threshold = threshold;
 		}
 
-		public void SetNoiseParams(Noise2DParams xOffsetParams, Noise2DParams zOffsetParams, Noise2DParams thresholdParams)
+		public void SetNoises(INoise2D xOffsetNoise, INoise2D zOffsetNoise, INoise2D thresholdNoise)
 		{
-			this.xOffsetParams = xOffsetParams;
-			this.zOffsetParams = zOffsetParams;
-			this.thresholdParams = thresholdParams;
+			this.xOffsetNoise = xOffsetNoise;
+			this.zOffsetNoise = zOffsetNoise;
+			this.thresholdNoise = thresholdNoise;
 		}
 
 		/// <summary>
-		/// Prints error if noise parameters are not initialized.
+		/// Prints error if noise is not initialized.
 		/// </summary>
-		private Noise2DParams CheckInitialized(Noise2DParams noiseParams)
+		private INoise2D CheckInitialized(INoise2D noise)
 		{
-			if (noiseParams == null)
+			if (noise == null)
 			{
-				Debug.LogError("Trying to get not initialized \"Noise2DParams\" from \"OffsetParams\"");
+				Debug.LogError("Trying to get not initialized \"INoise2D\" from \"OffsetNoise\"");
 			}
 
-			return noiseParams;
+			return noise;
 		}
 	}
 }

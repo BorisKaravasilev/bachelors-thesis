@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Noise;
+using UnityEngine;
 
-public abstract class Noise2D
+public abstract class Noise2D : INoise2D
 {
 	protected Noise2DParams parameters;
 
