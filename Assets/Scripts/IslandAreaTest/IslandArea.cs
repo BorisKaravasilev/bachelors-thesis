@@ -1,7 +1,6 @@
 ﻿using System;
-using UnityEditor;
+using Instantiators.ObjectGrid;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class IslandArea : GridObject
 {

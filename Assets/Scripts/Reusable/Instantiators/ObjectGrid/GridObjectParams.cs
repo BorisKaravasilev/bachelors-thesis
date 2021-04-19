@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 
-public class GridObjectParams
+namespace Instantiators.ObjectGrid
 {
-	public Vector3 Position { get; }
-	public float Radius { get; }
-
-	public GridObjectParams(Vector3 position, float radius)
+	public class GridObjectParams
 	{
-		Position = position;
-		Radius = radius;
+		public Vector3 Position { get; }
+		public float Radius { get; }
+
+		public GridObjectParams(Vector3 position, float radius)
+		{
+			Position = position;
+			Radius = radius;
+		}
 	}
 }

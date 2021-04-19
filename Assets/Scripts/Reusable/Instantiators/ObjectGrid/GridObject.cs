@@ -1,59 +1,62 @@
 ﻿using UnityEngine;
 
-public class GridObject
+namespace Instantiators.ObjectGrid
 {
-	public Vector3 Position { get; private set; }
-	public float Radius { get; private set; }
-
-	protected GameObject gameObject;
-
-	private const string DEFAULT_NAME = "GridObject";
-
-	public GridObject()
+	public class GridObject
 	{
-		gameObject = new GameObject(DEFAULT_NAME);
+		public Vector3 Position { get; private set; }
+		public float Radius { get; private set; }
 
-		Position = Vector3.zero;
-		Radius = 1f;
-	}
+		protected GameObject gameObject;
 
-	public GameObject Init(GridObjectParams parameters, Transform parent)
-	{
-		Position = parameters.Position;
-		Radius = parameters.Radius;
+		private const string DEFAULT_NAME = "GridObject";
 
-		SetParent(parent);
-		SetPosition(Position);
+		public GridObject()
+		{
+			gameObject = new GameObject(DEFAULT_NAME);
 
-		return gameObject;
-	}
+			Position = Vector3.zero;
+			Radius = 1f;
+		}
 
-	/// <summary>
-	/// All descendents must call "base.Destroy()" in the end of the overriden method.
-	/// </summary>
-	public virtual void Destroy()
-	{
-		Object.Destroy(gameObject);
-	}
+		public GameObject Init(GridObjectParams parameters, Transform parent)
+		{
+			Position = parameters.Position;
+			Radius = parameters.Radius;
 
-	public void SetParent(Transform parent)
-	{
-		gameObject.transform.SetParent(parent);
-	}
+			SetParent(parent);
+			SetPosition(Position);
 
-	public void SetPosition(Vector3 position)
-	{
-		Transform transform = gameObject.transform;
-		transform.position = position;
-	}
+			return gameObject;
+		}
 
-	public Vector3 GetPosition()
-	{
-		return gameObject.transform.position;
-	}
+		/// <summary>
+		/// All descendents must call "base.Destroy()" in the end of the overriden method.
+		/// </summary>
+		public virtual void Destroy()
+		{
+			Object.Destroy(gameObject);
+		}
 
-	public GridObjectParams GetParams()
-	{
-		return new GridObjectParams(Position, Radius);
+		public void SetParent(Transform parent)
+		{
+			gameObject.transform.SetParent(parent);
+		}
+
+		public void SetPosition(Vector3 position)
+		{
+			Transform transform = gameObject.transform;
+			transform.position = position;
+		}
+
+		public Vector3 GetPosition()
+		{
+			return gameObject.transform.position;
+		}
+
+		public GridObjectParams GetParams()
+		{
+			return new GridObjectParams(Position, Radius);
+		}
 	}
 }

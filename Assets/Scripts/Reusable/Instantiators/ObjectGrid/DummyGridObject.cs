@@ -1,32 +1,35 @@
 ﻿using UnityEngine;
 
-public class DummyGridObject : GridObject
+namespace Instantiators.ObjectGrid
 {
-	private const string DEFAULT_NAME = "DummyGridObject";
-	private GameObject preview;
-
-	public DummyGridObject()
+	public class DummyGridObject : GridObject
 	{
-		gameObject.name = DEFAULT_NAME;
-		GeneratePreview();
-	}
+		private const string DEFAULT_NAME = "DummyGridObject";
+		private GameObject preview;
 
-	public GameObject GeneratePreview()
-	{
-		preview = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		preview.name = "Preview";
+		public DummyGridObject()
+		{
+			gameObject.name = DEFAULT_NAME;
+			GeneratePreview();
+		}
 
-		Transform pTransform = preview.transform;
-		pTransform.SetParent(gameObject.transform);
-		pTransform.localPosition = new Vector3(0, 0, 0);
-		pTransform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
+		public GameObject GeneratePreview()
+		{
+			preview = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+			preview.name = "Preview";
 
-		return preview;
-	}
+			Transform pTransform = preview.transform;
+			pTransform.SetParent(gameObject.transform);
+			pTransform.localPosition = new Vector3(0, 0, 0);
+			pTransform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
 
-	public override void Destroy()
-	{
-		Object.Destroy(preview);
-		Object.Destroy(gameObject);
+			return preview;
+		}
+
+		public override void Destroy()
+		{
+			Object.Destroy(preview);
+			Object.Destroy(gameObject);
+		}
 	}
 }

@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 
-[System.Serializable]
-public class GridParams
+namespace Instantiators.ObjectGrid
 {
-	[Range(10, 40)]
-	public int spacing = 15;
+	[System.Serializable]
+	public class GridParams
+	{
+		[Range(10, 40)] public int spacing = 15;
 
-	[Range(5f, 20f)]
-	public float maxObjectRadius = 5;
+		[Range(5f, 20f)] public float maxObjectRadius = 5;
 
-	[Range(1, 300)]
-	public int objectCountLimit = 500;
+		[Range(1, 300)] public int objectCountLimit = 500;
 
-	public bool destroyFarObjects = true;
+		public bool destroyFarObjects = true;
+	}
 }
