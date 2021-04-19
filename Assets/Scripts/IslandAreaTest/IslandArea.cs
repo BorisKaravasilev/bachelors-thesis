@@ -151,6 +151,7 @@ public class IslandArea : GridObject
 
 
 		// Generate Tree Positions
+		//GenerateObjectPositions generateObjectPositions = new GenerateObjectPositions();
 
 		// Instantiate Trees at zero height
 

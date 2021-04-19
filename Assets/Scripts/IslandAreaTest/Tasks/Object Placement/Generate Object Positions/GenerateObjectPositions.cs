@@ -88,7 +88,7 @@ public class GenerateObjectPositions : SingleTask
 		Vector2Int pixelCoords = TextureFunctions.LocalPositionToPixel(position.Position, resolution, radius);
 		int pixelIndex = TextureFunctions.CoordsToArrayIndex(resolution, resolution, pixelCoords);
 
-		return !HeightOk(pixelIndex) || !TerrainTypeOk(pixelIndex));
+		return !HeightOk(pixelIndex) || !TerrainTypeOk(pixelIndex);
 	}
 
 	private bool HeightOk(int pixelIndex)
