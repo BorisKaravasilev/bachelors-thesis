@@ -20,8 +20,6 @@ namespace ObjectPlacement.JitteredGrid
 
 		private List<GridPoint> points;
 
-		private BoundingBox3D lastBoundingBox;
-
 		/// <summary>
 		/// Initialization from settings.
 		/// </summary>
@@ -44,7 +42,6 @@ namespace ObjectPlacement.JitteredGrid
 		public List<GridPoint> GetPointsInBoundingBox(BoundingBox3D boundingBox)
 		{
 			List<GridPoint> newlyGenerated = GeneratePoints(boundingBox);
-			lastBoundingBox = boundingBox;
 			return newlyGenerated;
 		}
 

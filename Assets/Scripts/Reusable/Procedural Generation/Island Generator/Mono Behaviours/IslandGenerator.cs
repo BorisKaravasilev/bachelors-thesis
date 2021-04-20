@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Instantiators.ObjectGrid;
 using ObjectPlacement.JitteredGrid;
 using UnityEngine;
 
@@ -7,22 +8,22 @@ namespace ProceduralGeneration.IslandArea
 	public class IslandGenerator : MonoBehaviour
 	{
 		[SerializeField] private BoundingBox3DVariable generatedArea;
-		[SerializeField] private GridParams gridParams;
-		[SerializeField] private OffsetParams offsetParams;
+		[SerializeField] private JitteredGridParams gridParams;
 		[SerializeField] private List<IslandType> islandTypes;
 
-		private JitteredGrid islandGrid;
+		private ObjectGrid<IslandAreaOld> islandGrid;
 
 		void Start()
 		{
-			//islandGrid = new JitteredGrid(gridParams, offsetParams);
+			islandGrid = new ObjectGrid<IslandAreaOld>(gridParams.parameters, gridParams.offsetParams, gameObject.transform);
 		}
 
 		void Update()
 		{
-			//islandGrid.GetPointsInBoundingBox(generatedArea.Value);
-			//List<GridPoint> islandPositions = islandGrid.GetPoints();
-			//GenerateIslands(islandPositions);
+			islandGrid.InstantiateInBoundingBox(generatedArea.Value);
+			List<IslandAreaOld> islandAreas = islandGrid.GetObjects();
+
+			//GenerateIslandAreas(islandAreas);
 		}
 
 		void OnValidate()
@@ -32,7 +33,7 @@ namespace ProceduralGeneration.IslandArea
 
 		public void UpdateParams()
 		{
-			islandGrid?.UpdateParameters(gridParams, offsetParams);
+			islandGrid?.UpdateParameters(gridParams.parameters, gridParams.offsetParams);
 		}
 
 		/// <summary>
