@@ -11,12 +11,12 @@ namespace ObjectPlacement.JitteredGrid
 	/// </summary>
 	public class JitteredGrid
 	{
-		private GridParams gridParams;
-		private OffsetParams offsetParams;
+		public GridParams GridParams { get; private set; }
+		public OffsetParams OffsetParams { get; private set; }
 
-		INoise2D xOffsetNoise;
-		INoise2D zOffsetNoise;
-		INoise2D thresholdNoise;
+		Noise2D xOffsetNoise;
+		Noise2D zOffsetNoise;
+		Noise2D thresholdNoise;
 
 		private List<GridPoint> points;
 
@@ -27,24 +27,23 @@ namespace ObjectPlacement.JitteredGrid
 		/// </summary>
 		public JitteredGrid(GridParams gridParams, OffsetParams offsetParams)
 		{
-			this.gridParams = gridParams;
-			this.offsetParams = offsetParams;
+			GridParams = gridParams;
+			OffsetParams = offsetParams;
 
 			points = new List<GridPoint>();
 
-			xOffsetNoise = offsetParams.XOffsetNoise;
-			zOffsetNoise = offsetParams.ZOffsetNoise;
-			thresholdNoise = offsetParams.ThresholdNoise;
+			xOffsetNoise = Noise2DFactory.GetNoise(offsetParams.XOffsetParams);
+			zOffsetNoise = Noise2DFactory.GetNoise(offsetParams.ZOffsetParams);
+			thresholdNoise = Noise2DFactory.GetNoise(offsetParams.ThresholdParams);
 		}
 
 		/// <summary>
-		/// Generates points within the bounding box, may remove the points outside of it depending on the settings.
+		/// Returns newly emerged points within the bounding box.
 		/// </summary>
 		/// <returns>Newly generated points.</returns>
 		public List<GridPoint> GetPointsInBoundingBox(BoundingBox3D boundingBox)
 		{
 			List<GridPoint> newlyGenerated = GeneratePoints(boundingBox);
-			if (gridParams.DestroyFarPoints) RemovePointsOutOfRange(boundingBox);
 			lastBoundingBox = boundingBox;
 			return newlyGenerated;
 		}
@@ -54,8 +53,8 @@ namespace ObjectPlacement.JitteredGrid
 		/// </summary>
 		public void UpdateParameters(GridParams newGridParams, OffsetParams newOffsetParams)
 		{
-			gridParams = newGridParams;
-			offsetParams = newOffsetParams;
+			GridParams = newGridParams;
+			OffsetParams = newOffsetParams;
 
 			points.Clear();
 		}
@@ -68,7 +67,35 @@ namespace ObjectPlacement.JitteredGrid
 			return points;
 		}
 
+		/// <summary>
+		/// Returns a list of the removed grid points outside of the given bounding box.
+		/// </summary>
+		public List<GridPoint> RemovePointsOutOfRange(BoundingBox3D boundingBox)
+		{
+			List<GridPoint> pointsToRemove = new List<GridPoint>();
+
+			foreach (GridPoint point in points)
+			{
+				if (!boundingBox.EnclosesInXZ(point.Position))
+				{
+					pointsToRemove.Add(point);
+				}
+			}
+
+			return RemovePointsFromList(pointsToRemove);
+		}
+
 		#region Private Methods
+
+		private List<GridPoint> RemovePointsFromList(List<GridPoint> pointsToRemove)
+		{
+			foreach (GridPoint point in pointsToRemove)
+			{
+				points.Remove(point);
+			}
+
+			return pointsToRemove;
+		}
 
 		/// <summary>
 		/// Generates points on a grid and returns the newly instantiated ones.
@@ -85,9 +112,9 @@ namespace ObjectPlacement.JitteredGrid
 			int maxX = Mathf.FloorToInt(boundingBox.TopRight.x);
 			int maxZ = Mathf.FloorToInt(boundingBox.TopRight.z);
 
-			for (int z = minZ; z <= maxZ; z += gridParams.Spacing)
+			for (int z = minZ; z <= maxZ; z += GridParams.Spacing)
 			{
-				for (int x = minX; x <= maxX; x += gridParams.Spacing)
+				for (int x = minX; x <= maxX; x += GridParams.Spacing)
 				{
 					if (PointCountLimitReached()) return newlyInstantiated;
 
@@ -125,9 +152,9 @@ namespace ObjectPlacement.JitteredGrid
 		/// </summary>
 		private bool PointCountLimitReached()
 		{
-			if (points.Count >= gridParams.PointCountLimit)
+			if (points.Count >= GridParams.PointCountLimit)
 			{
-				Debug.LogWarning("Reached limit of " + gridParams.PointCountLimit + " generated grid points.");
+				Debug.LogWarning("Reached limit of " + GridParams.PointCountLimit + " generated grid points.");
 				return true;
 			}
 			else
@@ -142,35 +169,9 @@ namespace ObjectPlacement.JitteredGrid
 		private float GetPointMaxRadius(Vector3 onGridPosition, Vector3 offsetPosition)
 		{
 			float offsetAmount = Vector3.Distance(onGridPosition, offsetPosition);
-			float maxRadius = gridParams.Spacing / 2f - offsetAmount;
+			float maxRadius = GridParams.Spacing / 2f - offsetAmount;
 
 			return maxRadius;
-		}
-
-		/// <summary>
-		/// Removes the points outside of the bounding box.
-		/// </summary>
-		private void RemovePointsOutOfRange(BoundingBox3D boundingBox)
-		{
-			List<GridPoint> pointsToRemove = new List<GridPoint>();
-
-			foreach (GridPoint point in points)
-			{
-				if (!boundingBox.EnclosesInXZ(point.Position))
-				{
-					pointsToRemove.Add(point);
-				}
-			}
-
-			RemovePointsFromList(pointsToRemove);
-		}
-
-		private void RemovePointsFromList(List<GridPoint> pointsToRemove)
-		{
-			foreach (GridPoint point in pointsToRemove)
-			{
-				points.Remove(point);
-			}
 		}
 
 		/// <summary>
@@ -181,10 +182,10 @@ namespace ObjectPlacement.JitteredGrid
 			int pointMinX = Mathf.CeilToInt(boundingBox.BottomLeft.x);
 			int pointMinZ = Mathf.CeilToInt(boundingBox.BottomLeft.z);
 
-			int xDistanceToGridPoint = pointMinX % gridParams.Spacing;
+			int xDistanceToGridPoint = pointMinX % GridParams.Spacing;
 			int mostLeftXOnGridInBounds = pointMinX - xDistanceToGridPoint;
 
-			int zDistanceToGridPoint = pointMinZ % gridParams.Spacing;
+			int zDistanceToGridPoint = pointMinZ % GridParams.Spacing;
 			int lowestZOnGridInBounds = pointMinZ - zDistanceToGridPoint;
 
 			return new Vector3(mostLeftXOnGridInBounds, 0f, lowestZOnGridInBounds);
@@ -220,11 +221,11 @@ namespace ObjectPlacement.JitteredGrid
 			// - subtracting 0.5 from it shifts the range -0.5 - 0.5
 			// - multiplying by 2 extends the range to -1 - 1
 			// - multiplying by max. offset shifts the value to the range of -maxObjectOffset - maxObjectOffset
-			float limitedMaxOffset = offsetParams.MaxOffset;
+			float limitedMaxOffset = OffsetParams.MaxOffset;
 
-			if (limitedMaxOffset > gridParams.Spacing * 0.4f)
+			if (limitedMaxOffset > GridParams.Spacing * 0.4f)
 			{
-				limitedMaxOffset = gridParams.Spacing * 0.4f;
+				limitedMaxOffset = GridParams.Spacing * 0.4f;
 			}
 
 			float offsetX = (xOffsetNoise.GetValue(noiseCoordinates) - 0.5f) * 2f * limitedMaxOffset;
@@ -245,7 +246,7 @@ namespace ObjectPlacement.JitteredGrid
 		private bool IsPointAboveThreshold(Vector3 position)
 		{
 			Vector2 noiseCoordinates = new Vector2(position.x, position.z);
-			return thresholdNoise.GetValue(noiseCoordinates) >= offsetParams.Threshold;
+			return thresholdNoise.GetValue(noiseCoordinates) >= OffsetParams.Threshold;
 		}
 
 		#endregion

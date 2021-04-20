@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Instantiators.ObjectGrid;
+using ObjectPlacement.JitteredGrid;
 using UnityEngine;
 
 public class IslandAreaTester : MonoBehaviour
@@ -14,7 +15,7 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private Material previewObjectMaterial;
 	[SerializeField] private Material previewTextureMaterial;
 	[SerializeField] private GridParams islandGridParams;
-	[SerializeField] private GridOffsetParams islandGridOffsetParams;
+	[SerializeField] private OffsetParams offsetParams;
 
 	[Header("Generation Steps Parameters")]
 	[Range(10, 100)]
@@ -28,7 +29,7 @@ public class IslandAreaTester : MonoBehaviour
 
 	//private TileGrid seaTileGrid;
 	private BoundingBox3D generatedWorldArea;
-	private ObjectGrid<IslandAreaOld, PerlinNoise2D> islandGrid;
+	private ObjectGrid<IslandAreaOld> islandGrid;
 
 	// Start is called before the first frame update
 	void Start()
@@ -36,14 +37,14 @@ public class IslandAreaTester : MonoBehaviour
 		CheckMaterialsAssigned();
 
 		// Islands grid
-		islandGrid = new ObjectGrid<IslandAreaOld, PerlinNoise2D>(islandGridParams, islandGridOffsetParams, gameObject.transform);
+		islandGrid = new ObjectGrid<IslandAreaOld>(islandGridParams, offsetParams, gameObject.transform);
 	}
 
     // Update is called once per frame
     void Update()
     {
 	    generatedWorldArea = seaTileGrid.GetBoundingBox();
-		List<IslandAreaOld> newIslandAreas = islandGrid.InstantiateInBoundingBox(generatedWorldArea);
+		islandGrid.InstantiateInBoundingBox(generatedWorldArea);
 		List<IslandAreaOld> islandAreas = islandGrid.GetObjects();
 
 		GenerateIslandAreas(islandAreas);
@@ -51,7 +52,7 @@ public class IslandAreaTester : MonoBehaviour
 
     void OnValidate()
     {
-		islandGrid?.UpdateParameters(islandGridParams, islandGridOffsetParams);
+		islandGrid?.UpdateParameters(islandGridParams, offsetParams);
     }
 
 	/// <summary>

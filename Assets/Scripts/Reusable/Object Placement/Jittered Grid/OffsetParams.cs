@@ -1,4 +1,5 @@
 ﻿using Noise;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace ObjectPlacement.JitteredGrid
@@ -7,21 +8,33 @@ namespace ObjectPlacement.JitteredGrid
 	public class OffsetParams
 	{
 		[Range(0f, 20f)]
-		private float maxOffset = 0f;
+		[SerializeField] private float maxOffset = 0f;
 		public float MaxOffset => maxOffset;
 
 		[Range(0f, 1f)]
-		private float threshold = 0f;
+		[SerializeField] private float threshold = 0f;
 		public float Threshold => threshold;
 
-		private INoise2D xOffsetNoise;
-		public INoise2D XOffsetNoise => CheckInitialized(xOffsetNoise);
+		[SerializeField] private Noise2DParams xOffsetParams;
+		public Noise2DParams XOffsetParams
+		{
+			get => CheckInitialized(xOffsetParams);
+			private set => xOffsetParams = value;
+		}
 
-		private INoise2D zOffsetNoise;
-		public INoise2D ZOffsetNoise => CheckInitialized(zOffsetNoise);
+		[SerializeField] private Noise2DParams zOffsetParams;
+		public Noise2DParams ZOffsetParams
+		{
+			get => CheckInitialized(zOffsetParams);
+			private set => zOffsetParams = value;
+		}
 
-		private INoise2D thresholdNoise;
-		public INoise2D ThresholdNoise => CheckInitialized(thresholdNoise);
+		[SerializeField] private Noise2DParams thresholdParams;
+		public Noise2DParams ThresholdParams
+		{
+			get => CheckInitialized(thresholdParams);
+			private set => thresholdParams = value;
+		}
 
 		public OffsetParams(float maxOffset, float threshold)
 		{
@@ -29,24 +42,24 @@ namespace ObjectPlacement.JitteredGrid
 			this.threshold = threshold;
 		}
 
-		public void SetNoises(INoise2D xOffsetNoise, INoise2D zOffsetNoise, INoise2D thresholdNoise)
+		public void SetNoiseParams(Noise2DParams xOffsetParams, Noise2DParams zOffsetParams, Noise2DParams thresholdParams)
 		{
-			this.xOffsetNoise = xOffsetNoise;
-			this.zOffsetNoise = zOffsetNoise;
-			this.thresholdNoise = thresholdNoise;
+			this.xOffsetParams = xOffsetParams;
+			this.zOffsetParams = zOffsetParams;
+			this.thresholdParams = thresholdParams;
 		}
 
 		/// <summary>
-		/// Prints error if noise is not initialized.
+		/// Prints error if noise parameters are not initialized.
 		/// </summary>
-		private INoise2D CheckInitialized(INoise2D noise)
+		private Noise2DParams CheckInitialized(Noise2DParams noiseParams)
 		{
-			if (noise == null)
+			if (noiseParams == null)
 			{
-				Debug.LogError("Trying to get not initialized \"INoise2D\" from \"OffsetNoise\"");
+				Debug.LogError("Trying to get not initialized \"Noise2DParams\" from \"OffsetParams\".");
 			}
 
-			return noise;
+			return noiseParams;
 		}
 	}
 }

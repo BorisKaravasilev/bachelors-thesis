@@ -6,7 +6,7 @@ namespace ObjectPlacement.JitteredGrid
 	public class GridParams
 	{
 		[Range(10, 40)]
-		private int spacing = 15;
+		[SerializeField] private int spacing;
 		public int Spacing
 		{
 			get => spacing;
@@ -14,18 +14,25 @@ namespace ObjectPlacement.JitteredGrid
 		}
 
 		[Range(1, 500)]
-		private int pointCountLimit = 500;
+		[SerializeField] private int pointCountLimit;
 		public int PointCountLimit
 		{
 			get => pointCountLimit;
 			set => pointCountLimit = value;
 		}
 
-		private bool destroyFarPoints = true;
+		[SerializeField] private bool destroyFarPoints;
 		public bool DestroyFarPoints
 		{
 			get => destroyFarPoints;
 			set => destroyFarPoints = value;
+		}
+
+		public GridParams()
+		{
+			this.spacing = 15;
+			this.pointCountLimit = 500;
+			this.destroyFarPoints = true;
 		}
 
 		public GridParams(int spacing, int pointCountLimit, bool destroyFarPoints)

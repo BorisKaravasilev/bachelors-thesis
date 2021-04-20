@@ -15,13 +15,13 @@ namespace ProceduralGeneration.IslandArea
 
 		void Start()
 		{
-			islandGrid = new JitteredGrid(gridParams, offsetParams);
+			//islandGrid = new JitteredGrid(gridParams, offsetParams);
 		}
 
 		void Update()
 		{
-			islandGrid.GetPointsInBoundingBox(generatedArea.Value);
-			List<GridPoint> islandPositions = islandGrid.GetPoints();
+			//islandGrid.GetPointsInBoundingBox(generatedArea.Value);
+			//List<GridPoint> islandPositions = islandGrid.GetPoints();
 			//GenerateIslands(islandPositions);
 		}
 
