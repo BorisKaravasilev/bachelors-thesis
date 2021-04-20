@@ -28,7 +28,7 @@ public class IslandAreaTester : MonoBehaviour
 
 	//private TileGrid seaTileGrid;
 	private BoundingBox3D generatedWorldArea;
-	private ObjectGrid<IslandArea, PerlinNoise2D> islandGrid;
+	private ObjectGrid<IslandAreaOld, PerlinNoise2D> islandGrid;
 
 	// Start is called before the first frame update
 	void Start()
@@ -36,15 +36,15 @@ public class IslandAreaTester : MonoBehaviour
 		CheckMaterialsAssigned();
 
 		// Islands grid
-		islandGrid = new ObjectGrid<IslandArea, PerlinNoise2D>(islandGridParams, islandGridOffsetParams, gameObject.transform);
+		islandGrid = new ObjectGrid<IslandAreaOld, PerlinNoise2D>(islandGridParams, islandGridOffsetParams, gameObject.transform);
 	}
 
     // Update is called once per frame
     void Update()
     {
 	    generatedWorldArea = seaTileGrid.GetBoundingBox();
-		List<IslandArea> newIslandAreas = islandGrid.InstantiateInBoundingBox(generatedWorldArea);
-		List<IslandArea> islandAreas = islandGrid.GetObjects();
+		List<IslandAreaOld> newIslandAreas = islandGrid.InstantiateInBoundingBox(generatedWorldArea);
+		List<IslandAreaOld> islandAreas = islandGrid.GetObjects();
 
 		GenerateIslandAreas(islandAreas);
     }
@@ -57,28 +57,28 @@ public class IslandAreaTester : MonoBehaviour
 	/// <summary>
 	/// Generates or initializes one or all island areas depending on "generateSequentially".
 	/// </summary>
-	private void GenerateIslandAreas(List<IslandArea> islandAreas)
+	private void GenerateIslandAreas(List<IslandAreaOld> islandAreas)
 	{
 		if (generateSequentially)
 		{
-			IslandArea closestIslandArea = GetClosestNotFinishedIslandArea(islandAreas);
+			IslandAreaOld closestIslandArea = GetClosestNotFinishedIslandArea(islandAreas);
 			if (closestIslandArea != null) InitOrGenerateArea(closestIslandArea);
 		}
 		else
 		{
-			foreach (IslandArea islandArea in islandAreas)
+			foreach (IslandAreaOld islandArea in islandAreas)
 			{
 				InitOrGenerateArea(islandArea);
 			}
 		}
 	}
 
-	private IslandArea GetClosestNotFinishedIslandArea(List<IslandArea> islandAreas)
+	private IslandAreaOld GetClosestNotFinishedIslandArea(List<IslandAreaOld> islandAreas)
 	{
 		float distanceToClosest = float.MaxValue;
-		IslandArea closestIslandArea = null;
+		IslandAreaOld closestIslandArea = null;
 
-		foreach (IslandArea islandArea in islandAreas)
+		foreach (IslandAreaOld islandArea in islandAreas)
 		{
 			if (!islandArea.Initialized || !islandArea.Finished)
 			{
@@ -100,7 +100,7 @@ public class IslandAreaTester : MonoBehaviour
 	/// </summary>
 	/// <param name="islandArea"></param>
 	/// <returns></returns>
-	private bool InitOrGenerateArea(IslandArea islandArea)
+	private bool InitOrGenerateArea(IslandAreaOld islandArea)
 	{
 		if (!islandArea.Initialized)
 		{
@@ -115,7 +115,7 @@ public class IslandAreaTester : MonoBehaviour
 	/// <summary>
 	/// Returns true if the given island area was not finished and generation step got executed.
 	/// </summary>
-	private bool GenerateIslandArea(IslandArea islandArea)
+	private bool GenerateIslandArea(IslandAreaOld islandArea)
 	{
 		if (!islandArea.Finished)
 		{

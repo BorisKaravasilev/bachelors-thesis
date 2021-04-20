@@ -2,7 +2,7 @@
 using Instantiators.ObjectGrid;
 using UnityEngine;
 
-public class IslandArea : GridObject
+public class IslandAreaOld : GridObject
 {
 	private TaskList taskList;
 
@@ -24,7 +24,7 @@ public class IslandArea : GridObject
 		set { taskList.DebugMode = value; }
 	}
 
-	public IslandArea()
+	public IslandAreaOld()
 	{
 		gameObject.name = DEFAULT_NAME;
 		taskList = new TaskList();
