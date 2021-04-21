@@ -70,6 +70,12 @@ namespace ProceduralGeneration.IslandGenerator
 			HideObjects<IHideable> hideGradients = AddHideObjectsTask("Hide Node Gradients", showGradients.GetResult);
 			GenerateNodesNoises generateNodesNoises = AddGenerateNodesNoisesTask(generateTerrainNodes);
 			ShowTextures showNodesNoises = AddShowTexturesTask("Show Nodes Noises", generateNodesNoises.GetResult);
+			HideObjects<IHideable> hideNodesNoises = AddHideObjectsTask("Hide Nodes Noises", showNodesNoises.GetResult);
+
+			// Multiply Nodes Gradients and Noises TODO: This
+			//MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, 1);
+			//multiplyGradientsAndNoises.Name = "Multiply Node Gradients and Noises";
+			//taskList.AddTask(multiplyGradientsAndNoises);
 
 			Initialized = true;
 		}
