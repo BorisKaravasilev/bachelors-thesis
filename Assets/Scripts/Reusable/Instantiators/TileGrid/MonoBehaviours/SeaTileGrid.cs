@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +14,9 @@ public class SeaTileGrid : MonoBehaviour
 	[SerializeField] private TileGridParams seaTileGridParams;
 	[SerializeField] private float seaLevel = 1f;
 	[SerializeField] private bool previewMode = false;
+
+	[Header("Output")]
+	[SerializeField] private BoundingBox3DVariable boundingBox3D;
 
 	private TileGrid<SeaTile> seaTileGrid;
 
@@ -33,6 +36,8 @@ public class SeaTileGrid : MonoBehaviour
 		    newSeaTiles?.ForEach(tile => tile.GeneratePreview());
 		else
 		    newSeaTiles?.ForEach(tile => tile.Generate(seaLevel));
+
+		UpdateBoundingBox(newSeaTiles);
 	}
 
     void OnValidate()
@@ -40,8 +45,11 @@ public class SeaTileGrid : MonoBehaviour
 	    seaTileGrid?.UpdateParameters(seaTileGridParams);
     }
 
-    public BoundingBox3D GetBoundingBox()
+    private void UpdateBoundingBox(List<SeaTile> newSeaTiles)
     {
-	    return seaTileGrid.GetBoundingBox();
-    }
+	    if (newSeaTiles?.Count > 0)
+	    {
+		    boundingBox3D.Value = seaTileGrid.GetBoundingBox();
+		}
+	}
 }

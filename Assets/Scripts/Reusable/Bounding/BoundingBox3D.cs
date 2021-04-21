@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[System.Serializable]
 public struct BoundingBox3D
 {
 	public BoundingBox3D(Vector3 bottomLeft, Vector3 topRight)

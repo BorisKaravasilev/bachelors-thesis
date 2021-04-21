@@ -9,7 +9,7 @@ namespace ProceduralGeneration.IslandGenerator
 	{
 		[SerializeField] private BoundingBox3DVariable generatedArea;
 		[SerializeField] private JitteredGridParams gridParams;
-		[SerializeField] private List<IslandType> islandTypes;
+		[SerializeField] private IslandGenerationParams islandGenerationParams;
 
 		private ObjectGrid<IslandArea> islandGrid;
 
@@ -89,7 +89,7 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			if (!islandArea.Initialized)
 			{
-				//islandArea.Init(new List<IslandType>()); // List<IslandType>, GenerationParams TODO: Fix
+				islandArea.Init(islandGenerationParams);
 				return true;
 			}
 

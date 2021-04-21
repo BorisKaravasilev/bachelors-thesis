@@ -3,11 +3,12 @@ using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
 {
+	[System.Serializable]
 	public class IslandGenerationParams
 	{
-		public List<IslandType> IslandTypes { get; set; }
-		public bool PreviewProgress { get; set; }
-		public float VisualStepTime { get; set; }
-		public Material PreviewsMaterial { get; set; }
+		public List<IslandType> IslandTypes;
+		public bool PreviewProgress;
+		public float VisualStepTime;
+		public Material PreviewsMaterial;
 	}
 }

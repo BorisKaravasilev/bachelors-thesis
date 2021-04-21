@@ -7,7 +7,7 @@ using IslandAreaTest;
 public class IslandAreaTester : MonoBehaviour
 {
 	[SerializeField] private Transform player;
-	[SerializeField] private SeaTileGrid seaTileGrid;
+	[SerializeField] private BoundingBox3DVariable generatedArea;
 	[SerializeField] private TextAsset islandNames;
 
 	[Header("Island Grid")]
@@ -29,7 +29,6 @@ public class IslandAreaTester : MonoBehaviour
 	[SerializeField] private float visualStepTime = 0f;
 
 	//private TileGrid seaTileGrid;
-	private BoundingBox3D generatedWorldArea;
 	private ObjectGrid<IslandAreaOld> islandGrid;
 
 	// Start is called before the first frame update
@@ -44,8 +43,7 @@ public class IslandAreaTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-	    generatedWorldArea = seaTileGrid.GetBoundingBox(); 
-		islandGrid.InstantiateInBoundingBox(generatedWorldArea);
+		islandGrid.InstantiateInBoundingBox(generatedArea.Value);
 		List<IslandAreaOld> islandAreas = islandGrid.GetObjects();
 
 		GenerateIslandAreas(islandAreas);
