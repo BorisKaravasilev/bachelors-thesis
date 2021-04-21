@@ -21,7 +21,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private List<Color[]> textures;
 
 		// Outputs
-		private List<TexturePreview> previewObjects;
+		private List<IHideable> previewObjects;
 
 		// Internal
 		private const float initialElevation = 0.1f;
@@ -36,10 +36,10 @@ namespace ProceduralGeneration.IslandGenerator
 			parent = parameters.Parent;
 			getTextures = parameters.GetTextures;
 
-			previewObjects = new List<TexturePreview>();
+			previewObjects = new List<IHideable>();
 		}
 
-		public List<TexturePreview> GetResult()
+		public List<IHideable> GetResult()
 		{
 			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
 			return previewObjects;

@@ -1,4 +1,4 @@
-﻿interface IHideable
+﻿public interface IHideable
 {
 	void Hide();
 }

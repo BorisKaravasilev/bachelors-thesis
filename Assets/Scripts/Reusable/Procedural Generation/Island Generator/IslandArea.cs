@@ -64,9 +64,10 @@ namespace ProceduralGeneration.IslandGenerator
 
 			// Add generation tasks to the task list
 			GenerateTerrainNodes generateTerrainNodes = AddGenerateNodesTask();
-			ShowTerrainNodes showTerrainNodes = AddShowTerrainNodesTask(generateTerrainNodes);
+			var showTerrainNodes = AddShowTerrainNodesTask(generateTerrainNodes);
 			GenerateNodesGradients generateNodesGradients = AddGenerateNodesGradientsTask(generateTerrainNodes);
-			ShowTextures showGradients = AddShowGradientsTask(generateNodesGradients);
+			ShowTextures showGradients = AddShowTexturesTask("Show Node Gradients", generateNodesGradients.GetResult);
+			var hideGradients = AddHideObjectsTask("Hide Node Gradients", showGradients.GetResult);
 
 			Initialized = true;
 		}
@@ -117,26 +118,39 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		/// <summary>
-		/// Initializes and adds to task list the "Show Gradients" task.
+		/// Initializes and adds to task list any "Show Textures" task.
 		/// </summary>
-		private ShowTextures AddShowGradientsTask(GenerateNodesGradients generateNodesGradients)
+		private ShowTextures AddShowTexturesTask(string name, Func<List<Color[]>> getTextures)
 		{
 			// Show Gradients
 			ShowTexturesParams parameters = new ShowTexturesParams
 			{
 				Resolution = GetResolution(),
-				GetTextures = generateNodesGradients.GetResult,
+				GetTextures = getTextures,
 				Parent = gameObject.transform,
 				SideLength = Radius * 2,
 				TexturePreviewMaterial = generationParams.TexturePreviewMaterial
 			};
 
-			ShowTextures showGradients = new ShowTextures(parameters);
-			showGradients.SetParams(1, generationParams.PreviewProgress, generationParams.VisualStepTime);
-			showGradients.Name = "Show Node Gradients";
-			taskList.AddTask(showGradients);
+			ShowTextures showTextures = new ShowTextures(parameters);
+			showTextures.SetParams(1, generationParams.PreviewProgress, generationParams.VisualStepTime);
+			showTextures.Name = name;
+			taskList.AddTask(showTextures);
 
-			return showGradients;
+			return showTextures;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list any "Hide Objects" task.
+		/// </summary>
+		private HideObjects<IHideable> AddHideObjectsTask(string name, Func<List<IHideable>> getPreviewObjects)
+		{
+			HideObjects<IHideable> hideObjects = new HideObjects<IHideable>(getPreviewObjects);
+			hideObjects.SetParams(1, generationParams.PreviewProgress);
+			hideObjects.Name = name;
+			taskList.AddTask(hideObjects);
+
+			return hideObjects;
 		}
 
 		#endregion
