@@ -3,60 +3,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateMesh : SingleTask
+namespace IslandAreaTest
 {
-	// Input
-	private Material material;
-
-	// Inputs from previous task
-	private Func<TerrainMesh> getTerrainMesh;
-	private TerrainMesh terrainMesh;
-
-	private Func<Color[]> getTexturePixels;
-	private Color[] texturePixels;
-
-	// Internal
-
-	// Output
-
-
-	public GenerateMesh(Material material, Func<TerrainMesh> getTerrainMesh, Func<Color[]> getTexturePixels)
+	public class GenerateMesh : SingleTask
 	{
-		Name = "Generate Mesh";
+		// Input
+		private Material material;
 
-		this.material = material;
-		this.getTerrainMesh = getTerrainMesh;
-		this.getTexturePixels = getTexturePixels;
-	}
+		// Inputs from previous task
+		private Func<TerrainMesh> getTerrainMesh;
+		private TerrainMesh terrainMesh;
 
-	public TerrainMesh GetResult()
-	{
-		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-		return terrainMesh;
-	}
+		private Func<Color[]> getTexturePixels;
+		private Color[] texturePixels;
 
-	protected override void ExecuteStep()
-	{
-		terrainMesh.GenerateMeshStep(1);
+		// Internal
 
-		if (RemainingSteps == 1)
+		// Output
+
+
+		public GenerateMesh(Material material, Func<TerrainMesh> getTerrainMesh, Func<Color[]> getTexturePixels)
 		{
-			terrainMesh.HideVertexVisualizations();
+			Name = "Generate Mesh";
+
+			this.material = material;
+			this.getTerrainMesh = getTerrainMesh;
+			this.getTexturePixels = getTexturePixels;
 		}
-	}
 
-	protected override void GetInputFromPreviousStep()
-	{
-		terrainMesh = getTerrainMesh();
-		texturePixels = getTexturePixels();
+		public TerrainMesh GetResult()
+		{
+			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+			return terrainMesh;
+		}
 
-		Vector3 offset = new Vector3(-terrainMesh.Dimensions.x / 2, 0, -terrainMesh.Dimensions.z / 2);
-		terrainMesh.CreateMeshGameObject(texturePixels, offset, material);
-	}
+		protected override void ExecuteStep()
+		{
+			terrainMesh.GenerateMeshStep(1);
 
-	protected override void SetSteps()
-	{
-		TotalSteps = terrainMesh.TotalTrianglesToGenerate / 2; // Each step generates two triangles
-		RemainingSteps = TotalSteps;
+			if (RemainingSteps == 1)
+			{
+				terrainMesh.HideVertexVisualizations();
+			}
+		}
+
+		protected override void GetInputFromPreviousStep()
+		{
+			terrainMesh = getTerrainMesh();
+			texturePixels = getTexturePixels();
+
+			Vector3 offset = new Vector3(-terrainMesh.Dimensions.x / 2, 0, -terrainMesh.Dimensions.z / 2);
+			terrainMesh.CreateMeshGameObject(texturePixels, offset, material);
+		}
+
+		protected override void SetSteps()
+		{
+			TotalSteps = terrainMesh.TotalTrianglesToGenerate / 2; // Each step generates two triangles
+			RemainingSteps = TotalSteps;
+		}
 	}
 }

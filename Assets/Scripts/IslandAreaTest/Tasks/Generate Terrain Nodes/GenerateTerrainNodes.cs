@@ -2,73 +2,76 @@
 using Instantiators.ObjectGrid;
 using UnityEngine;
 
-public class GenerateTerrainNodes : SingleTask
+namespace IslandAreaTest
 {
-	// Inputs
-	private Vector3 seedPosition;
-	private float objectRadius;
-
-	private int minNodes;
-	private int maxNodes;
-	private float maxDistanceMultiplier;
-
-	private List<TerrainType> terrainTypes;
-
-	// Outputs
-	private List<TerrainNode> terrainNodes;
-
-	// Internal
-	private RandomFromPosition random;
-	private int nodesToGenerate;
-
-	/// <summary>
-	/// Initializes the task's parameters.
-	/// </summary>
-	public GenerateTerrainNodes(TerrainNodesParams nodesParams, GridObjectParams objectParams, int stepSize = 1)
+	public class GenerateTerrainNodes : SingleTask
 	{
-		Name = "Generate Terrain Nodes";
-		StepSize = stepSize;
+		// Inputs
+		private Vector3 seedPosition;
+		private float objectRadius;
 
-		seedPosition = objectParams.Position;
-		objectRadius = objectParams.Radius;
+		private int minNodes;
+		private int maxNodes;
+		private float maxDistanceMultiplier;
 
-		minNodes = nodesParams.MinNodes;
-		maxNodes = nodesParams.MaxNodes;
-		maxDistanceMultiplier = nodesParams.MaxDistanceMultiplier;
+		private List<TerrainType> terrainTypes;
 
-		terrainTypes = nodesParams.TerrainTypes;
-		terrainNodes = new List<TerrainNode>();
+		// Outputs
+		private List<TerrainNode> terrainNodes;
 
-		random = new RandomFromPosition(seedPosition, Name);
-		nodesToGenerate = random.Next(minNodes, maxNodes + 1);
-	}
+		// Internal
+		private RandomFromPosition random;
+		private int nodesToGenerate;
 
-	public List<TerrainNode> GetResult()
-	{
-		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-		return terrainNodes;
-	}
+		/// <summary>
+		/// Initializes the task's parameters.
+		/// </summary>
+		public GenerateTerrainNodes(TerrainNodesParams nodesParams, GridObjectParams objectParams, int stepSize = 1)
+		{
+			Name = "Generate Terrain Nodes";
+			StepSize = stepSize;
 
-	protected override void GetInputFromPreviousStep() { /* Not used */ }
+			seedPosition = objectParams.Position;
+			objectRadius = objectParams.Radius;
 
-	protected override void SetSteps()
-	{
-		TotalSteps = nodesToGenerate;
-		RemainingSteps = TotalSteps;
-	}
+			minNodes = nodesParams.MinNodes;
+			maxNodes = nodesParams.MaxNodes;
+			maxDistanceMultiplier = nodesParams.MaxDistanceMultiplier;
 
-	protected override void ExecuteStep()
-	{
-		float maxNodeDistance = objectRadius * maxDistanceMultiplier; // From center
-		Vector2 node2DPosition = random.Point2DInRadius(Vector2.zero, maxNodeDistance);
-		Vector3 nodePosition = new Vector3(node2DPosition.x, 0f, node2DPosition.y);
+			terrainTypes = nodesParams.TerrainTypes;
+			terrainNodes = new List<TerrainNode>();
 
-		int randTypeIndex = random.Next(0, terrainTypes.Count);
-		float nodeRadius = objectRadius - Vector3.Distance(nodePosition, Vector3.zero);
-		float dominantProbability = terrainTypes[randTypeIndex].DominationProbability;
-		bool isDominant = random.NextBool(dominantProbability);
+			random = new RandomFromPosition(seedPosition, Name);
+			nodesToGenerate = random.Next(minNodes, maxNodes + 1);
+		}
 
-		TerrainNode randomNode = new TerrainNode(nodePosition, terrainTypes[randTypeIndex], nodeRadius, isDominant);
-		terrainNodes.Add(randomNode);
+		public List<TerrainNode> GetResult()
+		{
+			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+			return terrainNodes;
+		}
+
+		protected override void GetInputFromPreviousStep() { /* Not used */ }
+
+		protected override void SetSteps()
+		{
+			TotalSteps = nodesToGenerate;
+			RemainingSteps = TotalSteps;
+		}
+
+		protected override void ExecuteStep()
+		{
+			float maxNodeDistance = objectRadius * maxDistanceMultiplier; // From center
+			Vector2 node2DPosition = random.Point2DInRadius(Vector2.zero, maxNodeDistance);
+			Vector3 nodePosition = new Vector3(node2DPosition.x, 0f, node2DPosition.y);
+
+			int randTypeIndex = random.Next(0, terrainTypes.Count);
+			float nodeRadius = objectRadius - Vector3.Distance(nodePosition, Vector3.zero);
+			float dominantProbability = terrainTypes[randTypeIndex].DominationProbability;
+			bool isDominant = random.NextBool(dominantProbability);
+
+			TerrainNode randomNode = new TerrainNode(nodePosition, terrainTypes[randTypeIndex], nodeRadius, isDominant);
+			terrainNodes.Add(randomNode);
+		}
 	}
 }

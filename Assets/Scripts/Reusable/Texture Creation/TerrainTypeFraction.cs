@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using IslandAreaTest;
+
+/// <summary>
 /// Terrain type with a specified amount used for blending.
 /// </summary>
 public class TerrainTypeFraction

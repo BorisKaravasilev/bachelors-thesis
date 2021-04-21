@@ -2,6 +2,7 @@
 using Instantiators.ObjectGrid;
 using ObjectPlacement.JitteredGrid;
 using UnityEngine;
+using IslandAreaTest;
 
 public class IslandAreaTester : MonoBehaviour
 {
@@ -43,7 +44,7 @@ public class IslandAreaTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-	    generatedWorldArea = seaTileGrid.GetBoundingBox();
+	    generatedWorldArea = seaTileGrid.GetBoundingBox(); 
 		islandGrid.InstantiateInBoundingBox(generatedWorldArea);
 		List<IslandAreaOld> islandAreas = islandGrid.GetObjects();
 

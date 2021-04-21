@@ -162,7 +162,6 @@ MonoBehaviour:
   islandGridParams:
     spacing: 30
     pointCountLimit: 500
-    destroyFarPoints: 1
   offsetParams:
     maxOffset: 15
     threshold: 0.6
@@ -364,7 +363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &496581466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,28 +377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generatedArea: {fileID: 0}
-  gridParams:
-    spacing: 15
-    pointCountLimit: 500
-    destroyFarPoints: 1
-  offsetParams:
-    maxOffset: 0
-    threshold: 0
-    xOffsetParams:
-      Scale: 0
-      OffsetX: 0
-      OffsetY: 0
-      Type: 0
-    zOffsetParams:
-      Scale: 0
-      OffsetX: 0
-      OffsetY: 0
-      Type: 0
-    thresholdParams:
-      Scale: 0
-      OffsetX: 0
-      OffsetY: 0
-      Type: 0
+  gridParams: {fileID: 0}
   islandTypes: []
 --- !u!4 &496581467
 Transform:

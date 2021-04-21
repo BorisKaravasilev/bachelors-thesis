@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using IslandAreaTest;
 
 /// <summary>
 /// Generates a terrain texture from terrain nodes, their heightmaps and a list of terrain types.

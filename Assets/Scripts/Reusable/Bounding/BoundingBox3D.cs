@@ -10,6 +10,7 @@ public struct BoundingBox3D
 
 	public Vector3 BottomLeft;
 	public Vector3 TopRight;
+	public Vector3 Center => (BottomLeft + TopRight) / 2;
 
 	public override string ToString() => $"({BottomLeft.x}, {BottomLeft.y}, {BottomLeft.z}), ({TopRight.x}, {TopRight.y}, {TopRight.z})";
 

@@ -3,7 +3,7 @@ using Instantiators.ObjectGrid;
 using ObjectPlacement.JitteredGrid;
 using UnityEngine;
 
-namespace ProceduralGeneration.IslandArea
+namespace ProceduralGeneration.IslandGenerator
 {
 	public class IslandGenerator : MonoBehaviour
 	{
@@ -11,19 +11,18 @@ namespace ProceduralGeneration.IslandArea
 		[SerializeField] private JitteredGridParams gridParams;
 		[SerializeField] private List<IslandType> islandTypes;
 
-		private ObjectGrid<IslandAreaOld> islandGrid;
+		private ObjectGrid<IslandArea> islandGrid;
 
 		void Start()
 		{
-			islandGrid = new ObjectGrid<IslandAreaOld>(gridParams.parameters, gridParams.offsetParams, gameObject.transform);
+			islandGrid = new ObjectGrid<IslandArea>(gridParams.parameters, gridParams.offsetParams, gameObject.transform);
 		}
 
 		void Update()
 		{
 			islandGrid.InstantiateInBoundingBox(generatedArea.Value);
-			List<IslandAreaOld> islandAreas = islandGrid.GetObjects();
-
-			//GenerateIslandAreas(islandAreas);
+			List<IslandArea> islandAreas = islandGrid.GetObjects();
+			GenerateClosestIsland(islandAreas, generatedArea.Value.Center);
 		}
 
 		void OnValidate()
@@ -31,18 +30,84 @@ namespace ProceduralGeneration.IslandArea
 			UpdateParams();
 		}
 
+		/// <summary>
+		/// Updates the parameters of the island grid and destroys already generated islands.
+		/// </summary>
 		public void UpdateParams()
 		{
 			islandGrid?.UpdateParameters(gridParams.parameters, gridParams.offsetParams);
 		}
 
 		/// <summary>
-		/// 
+		/// Generates an island area closest to the given point.
 		/// </summary>
-		//private void GenerateIsland(List<GridPoint> islandPositions)
-		//{
-		//	IslandAreaOld closestIslandArea = GetClosestNotFinishedIslandArea(islandAreas);
-		//	if (closestIslandArea != null) InitOrGenerateArea(closestIslandArea);
-		//}
+		private void GenerateClosestIsland(List<IslandArea> islandAreas, Vector3 point)
+		{
+			IslandArea closestIslandArea = GetClosestNotFinishedIslandArea(islandAreas, point);
+			if (closestIslandArea != null) InitOrGenerateArea(closestIslandArea);
+		}
+
+		/// <summary>
+		/// Returns the closest not finished island area to the given point or null.
+		/// </summary>
+		private IslandArea GetClosestNotFinishedIslandArea(List<IslandArea> islandAreas, Vector3 point)
+		{
+			float distanceToClosest = float.MaxValue;
+			IslandArea closestIslandArea = null;
+
+			foreach (IslandArea islandArea in islandAreas)
+			{
+				float distance = GetIslandDistanceToPoint(islandArea, point);
+
+				if (distance > 0f && distance < distanceToClosest)
+				{
+					distanceToClosest = distance;
+					closestIslandArea = islandArea;
+				}
+			}
+
+			return closestIslandArea;
+		}
+
+		/// <summary>
+		/// Returns the distance to a point or -1f if island area not initialized.
+		/// </summary>
+		private float GetIslandDistanceToPoint(IslandArea islandArea, Vector3 point)
+		{
+			if (!islandArea.Initialized || !islandArea.Finished)
+			{
+				return Vector3.Distance(islandArea.Position, point);
+			}
+
+			return -1f;
+		}
+
+		/// <summary>
+		/// Returns  true if area got initialized or generated.
+		/// </summary>
+		private bool InitOrGenerateArea(IslandArea islandArea)
+		{
+			if (!islandArea.Initialized)
+			{
+				islandArea.Init(); // List<IslandType>, GenerationParams
+				return true;
+			}
+
+			return GenerateIslandArea(islandArea);
+		}
+
+		/// <summary>
+		/// Returns true if generation step got executed.
+		/// </summary>
+		private bool GenerateIslandArea(IslandArea islandArea)
+		{
+			if (!islandArea.Finished)
+			{
+				islandArea.GenerateStep();
+				return true;
+			}
+
+			return false;
+		}
 	}
 }

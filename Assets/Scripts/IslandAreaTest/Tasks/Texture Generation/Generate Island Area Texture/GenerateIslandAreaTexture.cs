@@ -3,86 +3,92 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GenerateIslandAreaTexture : SingleTask
+namespace IslandAreaTest
 {
-	// Inputs
-	private int resolution;
-	private List<TerrainType> terrainTypes;
-	private float blendingHeight;
-
-	// Inputs from previous task
-	private Func<List<TerrainNode>> getTerrainNodes;
-	private List<TerrainNode> terrainNodes;
-
-	private Func<Color[]> getHeightmap;
-	private Color[] heightmap;
-
-	private Func<List<Color[]>> getTerrainNodesHeightmaps;
-	private List<Color[]> terrainNodesHeightmaps;
-
-	// Outputs
-	private Color[] texturePixels;
-	private TerrainBlend[] terrainTypesAtPixels;
-
-	// Internal
-	private TerrainTextureGenerator textureGenerator;
-
-	public GenerateIslandAreaTexture(int resolution, TerrainNodesParams terrainNodesParams, Func<List<TerrainNode>> getTerrainNodes, Func<Color[]> getHeightmap, Func<List<Color[]>> getTerrainNodesHeightmaps, int stepSize)
+	public class GenerateIslandAreaTexture : SingleTask
 	{
-		Name = "Generate Island Area Texture";
-		StepSize = stepSize;
+		// Inputs
+		private int resolution;
+		private List<TerrainType> terrainTypes;
+		private float blendingHeight;
 
-		this.resolution = resolution;
+		// Inputs from previous task
+		private Func<List<TerrainNode>> getTerrainNodes;
+		private List<TerrainNode> terrainNodes;
 
-		terrainTypes = terrainNodesParams.TerrainTypes;
-		blendingHeight = terrainNodesParams.BlendingHeight;
+		private Func<Color[]> getHeightmap;
+		private Color[] heightmap;
 
-		this.getTerrainNodes = getTerrainNodes;
-		this.getHeightmap = getHeightmap;
-		this.getTerrainNodesHeightmaps = getTerrainNodesHeightmaps;
-	}
+		private Func<List<Color[]>> getTerrainNodesHeightmaps;
+		private List<Color[]> terrainNodesHeightmaps;
 
-	public Color[] GetResult()
-	{
-		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-		return texturePixels;
-	}
+		// Outputs
+		private Color[] texturePixels;
+		private TerrainBlend[] terrainTypesAtPixels;
 
-	public TerrainBlend[] GetTerrainTypesAtPixels()
-	{
-		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-		return terrainTypesAtPixels;
-	}
+		// Internal
+		private TerrainTextureGenerator textureGenerator;
 
-	protected override void ExecuteStep()
-	{
-		int firstIndex = ExecutedSteps * resolution;
-		int lastIndex = firstIndex + resolution - 1;
-
-		for (int pixelIndex = firstIndex; pixelIndex < lastIndex; pixelIndex++)
+		public GenerateIslandAreaTexture(int resolution, TerrainNodesParams terrainNodesParams,
+			Func<List<TerrainNode>> getTerrainNodes, Func<Color[]> getHeightmap,
+			Func<List<Color[]>> getTerrainNodesHeightmaps, int stepSize)
 		{
-			// All channels (r,g,b) of the heightmap should have the same value
-			float pixelHeight = heightmap[pixelIndex].r;
+			Name = "Generate Island Area Texture";
+			StepSize = stepSize;
 
-			terrainTypesAtPixels[pixelIndex] = textureGenerator.GetPixelTerrainBlend(pixelHeight, pixelIndex);
-			texturePixels[pixelIndex] = terrainTypesAtPixels[pixelIndex].GetColor();
+			this.resolution = resolution;
+
+			terrainTypes = terrainNodesParams.TerrainTypes;
+			blendingHeight = terrainNodesParams.BlendingHeight;
+
+			this.getTerrainNodes = getTerrainNodes;
+			this.getHeightmap = getHeightmap;
+			this.getTerrainNodesHeightmaps = getTerrainNodesHeightmaps;
 		}
-	}
 
-	protected override void GetInputFromPreviousStep()
-	{
-		terrainNodes = getTerrainNodes();
-		terrainNodesHeightmaps = getTerrainNodesHeightmaps();
-		heightmap = getHeightmap();
+		public Color[] GetResult()
+		{
+			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+			return texturePixels;
+		}
 
-		texturePixels = new Color[heightmap.Length];
-		terrainTypesAtPixels = new TerrainBlend[heightmap.Length];
-		textureGenerator = new TerrainTextureGenerator(terrainNodes, terrainNodesHeightmaps, terrainTypes, blendingHeight);
-	}
+		public TerrainBlend[] GetTerrainTypesAtPixels()
+		{
+			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+			return terrainTypesAtPixels;
+		}
 
-	protected override void SetSteps()
-	{
-		TotalSteps = heightmap.Length / resolution;
-		RemainingSteps = TotalSteps;
+		protected override void ExecuteStep()
+		{
+			int firstIndex = ExecutedSteps * resolution;
+			int lastIndex = firstIndex + resolution - 1;
+
+			for (int pixelIndex = firstIndex; pixelIndex < lastIndex; pixelIndex++)
+			{
+				// All channels (r,g,b) of the heightmap should have the same value
+				float pixelHeight = heightmap[pixelIndex].r;
+
+				terrainTypesAtPixels[pixelIndex] = textureGenerator.GetPixelTerrainBlend(pixelHeight, pixelIndex);
+				texturePixels[pixelIndex] = terrainTypesAtPixels[pixelIndex].GetColor();
+			}
+		}
+
+		protected override void GetInputFromPreviousStep()
+		{
+			terrainNodes = getTerrainNodes();
+			terrainNodesHeightmaps = getTerrainNodesHeightmaps();
+			heightmap = getHeightmap();
+
+			texturePixels = new Color[heightmap.Length];
+			terrainTypesAtPixels = new TerrainBlend[heightmap.Length];
+			textureGenerator =
+				new TerrainTextureGenerator(terrainNodes, terrainNodesHeightmaps, terrainTypes, blendingHeight);
+		}
+
+		protected override void SetSteps()
+		{
+			TotalSteps = heightmap.Length / resolution;
+			RemainingSteps = TotalSteps;
+		}
 	}
 }

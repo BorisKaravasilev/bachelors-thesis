@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace ProceduralGeneration.IslandArea
+namespace ProceduralGeneration.IslandGenerator
 {
 	[CustomEditor(typeof(IslandGenerator))]
 	public class IslandGeneratorEditor : Editor

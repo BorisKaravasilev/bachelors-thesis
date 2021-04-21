@@ -3,68 +3,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateNodesNoises : SingleTask
+namespace IslandAreaTest
 {
-	// Inputs
-	private int resolution;
-
-	// Inputs from previous task
-	private Func<List<TerrainNode>> getTerrainNodes;
-	private List<TerrainNode> terrainNodes;
-
-	// Outputs
-	private List<Color[]> noises;
-
-	// Internal
-	private int texturePixelCount;
-
-	public GenerateNodesNoises(int resolution, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
+	public class GenerateNodesNoises : SingleTask
 	{
-		Name = "Generate Nodes Noises";
-		StepSize = stepSize;
+		// Inputs
+		private int resolution;
 
-		this.resolution = resolution;
-		this.getTerrainNodes = getTerrainNodes;
+		// Inputs from previous task
+		private Func<List<TerrainNode>> getTerrainNodes;
+		private List<TerrainNode> terrainNodes;
 
-		noises = new List<Color[]>();
-		texturePixelCount = resolution * resolution;
-	}
+		// Outputs
+		private List<Color[]> noises;
 
-	public List<Color[]> GetResult()
-	{
-		if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-		return noises;
-	}
+		// Internal
+		private int texturePixelCount;
 
-	protected override void ExecuteStep()
-	{
-		int nodeIndex = ExecutedSteps;
-		Color[] noise = new Color[texturePixelCount];
-
-		for (int pixelIndex = 0; pixelIndex < texturePixelCount; pixelIndex++)
+		public GenerateNodesNoises(int resolution, Func<List<TerrainNode>> getTerrainNodes, int stepSize = 1)
 		{
-			Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, resolution, pixelIndex);
+			Name = "Generate Nodes Noises";
+			StepSize = stepSize;
 
-			Noise2DParams nodeNoiseParams = terrainNodes[nodeIndex].Type.NoiseParams;
-			Noise2D nodeNoise = Noise2DFactory.GetNoise(nodeNoiseParams);
+			this.resolution = resolution;
+			this.getTerrainNodes = getTerrainNodes;
 
-			float intensity = nodeNoise.GetValue(pixel2DCoords);
-			Color pixelColor = new Color(intensity, intensity, intensity);
-
-			noise[pixelIndex] = pixelColor;
+			noises = new List<Color[]>();
+			texturePixelCount = resolution * resolution;
 		}
 
-		noises.Add(noise);
-	}
+		public List<Color[]> GetResult()
+		{
+			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
+			return noises;
+		}
 
-	protected override void GetInputFromPreviousStep()
-	{
-		terrainNodes = getTerrainNodes();
-	}
+		protected override void ExecuteStep()
+		{
+			int nodeIndex = ExecutedSteps;
+			Color[] noise = new Color[texturePixelCount];
 
-	protected override void SetSteps()
-	{
-		TotalSteps = terrainNodes.Count;
-		RemainingSteps = TotalSteps;
+			for (int pixelIndex = 0; pixelIndex < texturePixelCount; pixelIndex++)
+			{
+				Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, resolution, pixelIndex);
+
+				Noise2DParams nodeNoiseParams = terrainNodes[nodeIndex].Type.NoiseParams;
+				Noise2D nodeNoise = Noise2DFactory.GetNoise(nodeNoiseParams);
+
+				float intensity = nodeNoise.GetValue(pixel2DCoords);
+				Color pixelColor = new Color(intensity, intensity, intensity);
+
+				noise[pixelIndex] = pixelColor;
+			}
+
+			noises.Add(noise);
+		}
+
+		protected override void GetInputFromPreviousStep()
+		{
+			terrainNodes = getTerrainNodes();
+		}
+
+		protected override void SetSteps()
+		{
+			TotalSteps = terrainNodes.Count;
+			RemainingSteps = TotalSteps;
+		}
 	}
 }

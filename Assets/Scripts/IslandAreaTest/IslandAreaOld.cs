@@ -1,6 +1,7 @@
 ﻿using System;
 using Instantiators.ObjectGrid;
 using UnityEngine;
+using IslandAreaTest;
 
 public class IslandAreaOld : GridObject
 {
