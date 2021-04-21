@@ -1,11 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
 {
-	public class GenerateNodesNoises : SingleTask
+	public class GenerateNodesNoises : DividableTask
 	{
 		// Inputs
 		private int resolution;

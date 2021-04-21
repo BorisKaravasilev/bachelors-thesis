@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using TaskManagement;
 using UnityEngine;
 
-namespace IslandAreaTest
+namespace ProceduralGeneration.IslandGenerator
 {
+	/// <summary>
+	/// Generates terrain nodes defining properties of a terrain in a specified radius.
+	/// </summary>
 	public class GenerateTerrainNodes : DividableTask
 	{
 		// Inputs
@@ -25,13 +28,9 @@ namespace IslandAreaTest
 		private RandomFromSeed random;
 		private int nodesToGenerate;
 
-		/// <summary>
-		/// Initializes the task's parameters.
-		/// </summary>
-		public GenerateTerrainNodes(TerrainNodesParams nodesParams, GridObjectParams objectParams, int stepSize = 1)
+		public GenerateTerrainNodes(TerrainNodesParams nodesParams, GridObjectParams objectParams)
 		{
 			Name = "Generate Terrain Nodes";
-			StepSize = stepSize;
 
 			seedPosition = objectParams.Position;
 			objectRadius = objectParams.Radius;

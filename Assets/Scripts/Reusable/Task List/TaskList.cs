@@ -1,147 +1,151 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Manages a list of SingleTasks. Tasks that are not enabled are ignored.
-/// </summary>
-public class TaskList
+namespace TaskManagement
 {
-	public bool Finished => AreAllTasksFinished();
-
 	/// <summary>
-	/// In range of 0 to 1.
+	/// Manages a list of SingleTasks. Tasks that are not enabled are ignored.
 	/// </summary>
-	public float Progress => GetProgress();
-
-	public SingleTask CurrentTask => FindFirstUnfinishedTask();
-	public bool DebugMode { get; set; }
-	public int ExecutedTasks { get; private set; }
-
-	private List<SingleTask> taskList;
-
-	public TaskList()
+	public class TaskList
 	{
-		taskList = new List<SingleTask>();
-		DebugMode = false;
-		ExecutedTasks = 0;
-	}
+		public bool Finished => AreAllTasksFinished();
 
-	public void AddTask(SingleTask newTask)
-	{
-		taskList.Add(newTask);
-	}
+		/// <summary>
+		/// In range of 0 to 1.
+		/// </summary>
+		public float Progress => GetProgress();
 
-	/// <summary>
-	/// Executes all tasks at once and returns the number of steps that it took.
-	/// </summary>
-	public int Execute()
-	{
-		int executedSteps = 0;
-		SingleTask firstUnfinishedTask = FindFirstUnfinishedTask();
+		public DividableTask CurrentTask => FindFirstUnfinishedTask();
+		public bool DebugMode { get; set; }
+		public int ExecutedTasks { get; private set; }
 
-		while (firstUnfinishedTask != null)
+		private List<DividableTask> taskList;
+
+		public TaskList()
 		{
-			float timeBeforeExecution = 0;
-			if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
-
-			executedSteps += firstUnfinishedTask.Execute();
-			ExecutedTasks++;
-
-			LogExecutionStep(firstUnfinishedTask, executedSteps, timeBeforeExecution);
-			firstUnfinishedTask = FindFirstUnfinishedTask();
+			taskList = new List<DividableTask>();
+			DebugMode = false;
+			ExecutedTasks = 0;
 		}
 
-		return executedSteps;
-	}
-
-	/// <summary>
-	/// Executes the number of steps defined by "StepSize" in each sub-task and returns the number of steps executed.
-	/// </summary>
-	public int ExecuteStepSize()
-	{
-		int executedSteps = 0;
-		SingleTask firstUnfinishedTask = FindFirstUnfinishedTask();
-
-		if (firstUnfinishedTask != null)
+		public void AddTask(DividableTask newTask)
 		{
-			float timeBeforeExecution = 0;
-			if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
-
-			executedSteps = firstUnfinishedTask.ExecuteStepSize();
-			if (firstUnfinishedTask.Finished) ExecutedTasks++;
-
-			LogExecutionStep(firstUnfinishedTask, executedSteps, timeBeforeExecution);
+			taskList.Add(newTask);
 		}
 
-		return executedSteps;
-	}
-
-	/// <summary>
-	/// Returns the first enabled unfinished task in the "taskList" or null if none is found.
-	/// </summary>
-	private SingleTask FindFirstUnfinishedTask()
-	{
-		SingleTask firstUnfinishedTask = null;
-
-		foreach (SingleTask task in taskList)
+		/// <summary>
+		/// Executes all tasks at once and returns the number of steps that it took.
+		/// </summary>
+		public int Execute()
 		{
-			if (task.Enabled && !task.Finished)
+			int executedSteps = 0;
+			DividableTask firstUnfinishedTask = FindFirstUnfinishedTask();
+
+			while (firstUnfinishedTask != null)
 			{
-				firstUnfinishedTask = task;
-				break;
+				float timeBeforeExecution = 0;
+				if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
+
+				executedSteps += firstUnfinishedTask.Execute();
+				ExecutedTasks++;
+
+				LogExecutionStep(firstUnfinishedTask, executedSteps, timeBeforeExecution);
+				firstUnfinishedTask = FindFirstUnfinishedTask();
 			}
+
+			return executedSteps;
 		}
 
-		return firstUnfinishedTask;
-	}
-
-	private bool AreAllTasksFinished()
-	{
-		bool allTasksFinished = true;
-
-		taskList.ForEach(task =>
+		/// <summary>
+		/// Executes the number of steps defined by "StepSize" in each sub-task and returns the number of steps executed.
+		/// </summary>
+		public int ExecuteStepSize()
 		{
-			if (task.Enabled && task.Finished == false) allTasksFinished = false;
-		});
+			int executedSteps = 0;
+			DividableTask firstUnfinishedTask = FindFirstUnfinishedTask();
 
-		return allTasksFinished;
-	}
-
-	private float GetProgress()
-	{
-		float sumOfProgess = 0f;
-
-		taskList.ForEach(task =>
-		{
-			if (task.Enabled)
+			if (firstUnfinishedTask != null)
 			{
-				sumOfProgess += task.Progress;
+				float timeBeforeExecution = 0;
+				if (DebugMode) timeBeforeExecution = Time.realtimeSinceStartup;
+
+				executedSteps = firstUnfinishedTask.ExecuteStepSize();
+				if (firstUnfinishedTask.Finished) ExecutedTasks++;
+
+				LogExecutionStep(firstUnfinishedTask, executedSteps, timeBeforeExecution);
 			}
-		});
 
-		float averageProgress = sumOfProgess / GetEnabledTasksCount();
-		return averageProgress;
-	}
+			return executedSteps;
+		}
 
-	private int GetEnabledTasksCount()
-	{
-		int enabledTasks = 0;
-
-		taskList.ForEach(task =>
+		/// <summary>
+		/// Returns the first enabled unfinished task in the "taskList" or null if none is found.
+		/// </summary>
+		private DividableTask FindFirstUnfinishedTask()
 		{
-			if (task.Enabled) enabledTasks += 1;
-		});
+			DividableTask firstUnfinishedTask = null;
 
-		return enabledTasks;
-	}
+			foreach (DividableTask task in taskList)
+			{
+				if (task.Enabled && !task.Finished)
+				{
+					firstUnfinishedTask = task;
+					break;
+				}
+			}
 
-	private void LogExecutionStep(SingleTask task, int executedSteps, float timeBeforeExecution)
-	{
-		if (DebugMode)
+			return firstUnfinishedTask;
+		}
+
+		private bool AreAllTasksFinished()
 		{
-			float executionTimeMs = (Time.realtimeSinceStartup - timeBeforeExecution) * 1000;
-			Debug.Log($"                                     {task.Name} ({task.Progress:P0})                           " +
-				$"Executed steps: {executedSteps} (in {executionTimeMs:0.}ms)\n(Total: {Progress:P0})");
+			bool allTasksFinished = true;
+
+			taskList.ForEach(task =>
+			{
+				if (task.Enabled && task.Finished == false) allTasksFinished = false;
+			});
+
+			return allTasksFinished;
+		}
+
+		private float GetProgress()
+		{
+			float sumOfProgess = 0f;
+
+			taskList.ForEach(task =>
+			{
+				if (task.Enabled)
+				{
+					sumOfProgess += task.Progress;
+				}
+			});
+
+			float averageProgress = sumOfProgess / GetEnabledTasksCount();
+			return averageProgress;
+		}
+
+		private int GetEnabledTasksCount()
+		{
+			int enabledTasks = 0;
+
+			taskList.ForEach(task =>
+			{
+				if (task.Enabled) enabledTasks += 1;
+			});
+
+			return enabledTasks;
+		}
+
+		private void LogExecutionStep(DividableTask task, int executedSteps, float timeBeforeExecution)
+		{
+			if (DebugMode)
+			{
+				float executionTimeMs = (Time.realtimeSinceStartup - timeBeforeExecution) * 1000;
+				Debug.Log(
+					$"                                     {task.Name} ({task.Progress:P0})                           " +
+					$"Executed steps: {executedSteps} (in {executionTimeMs:0.}ms)\n(Total: {Progress:P0})");
+			}
 		}
 	}
 }

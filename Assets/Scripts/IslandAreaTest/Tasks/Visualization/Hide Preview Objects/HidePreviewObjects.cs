@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using TaskManagement;
 
 namespace IslandAreaTest
 {
-	class HidePreviewObjects<THideable> : SingleTask where THideable : IHideable
+	class HidePreviewObjects<THideable> : DividableTask where THideable : IHideable
 	{
 		// Inputs from previous steps
 		private List<THideable> previewObjects;

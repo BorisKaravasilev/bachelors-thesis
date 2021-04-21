@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
 {
-	public class GenerateIslandAreaTexture : SingleTask
+	public class GenerateIslandAreaTexture : DividableTask
 	{
 		// Inputs
 		private int resolution;

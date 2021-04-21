@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
 {
-	public class GenerateMesh : SingleTask
+	public class GenerateMesh : DividableTask
 	{
 		// Input
 		private Material material;

@@ -1,0 +1,6 @@
+﻿namespace TaskManagement
+{
+	class TaskParams
+	{
+	}
+}

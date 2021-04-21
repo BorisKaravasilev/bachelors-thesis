@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
 {
-	public class TranslateMeshVertices : SingleTask
+	public class TranslateMeshVertices : DividableTask
 	{
 		// Input
 		private bool visualize;

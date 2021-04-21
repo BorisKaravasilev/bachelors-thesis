@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
 {
-	public class MultiplyTextureLists : SingleTask
+	public class MultiplyTextureLists : DividableTask
 	{
 		// Inputs from previous tasks
 		private Func<List<Color[]>> getMultiplicandTextures;

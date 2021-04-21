@@ -3,35 +3,33 @@ using System.Collections.Generic;
 using TaskManagement;
 using UnityEngine;
 
-namespace IslandAreaTest
+namespace ProceduralGeneration.IslandGenerator
 {
+	/// <summary>
+	/// Generates game objects to show basic properties of terrain nodes as position, terrain type color etc.
+	/// </summary>
 	public class ShowTerrainNodes : DividableTask
 	{
 		// Inputs
 		private Material material;
 		private float nodePreviewRadius;
 		private Transform previewParent;
-		private Func<List<TerrainNode>> getTerrainNodes;
 
-		// Inputs from previous task
+		// Inputs from previous tasks
+		private Func<List<TerrainNode>> getTerrainNodes;
 		private List<TerrainNode> terrainNodes;
 
-		// Output
+		// Outputs
 		private List<PreviewObject> previews;
 
-		/// <summary>
-		/// Initializes the task's parameters.
-		/// </summary>
-		/// <param name="getTerrainNodes">Delegate function that collects the result from the previous task.</param>
-		public ShowTerrainNodes(Material material, float nodePreviewRadius, Transform previewParent,
-			Func<List<TerrainNode>> getTerrainNodes)
+		public ShowTerrainNodes(ShowTerrainNodesParams parameters)
 		{
 			Name = "Show Terrain Nodes Previews";
 
-			this.material = material;
-			this.nodePreviewRadius = nodePreviewRadius;
-			this.previewParent = previewParent;
-			this.getTerrainNodes = getTerrainNodes;
+			material = parameters.PreviewMaterial;
+			nodePreviewRadius = parameters.AreaRadius / 10f;
+			previewParent = parameters.Parent;
+			getTerrainNodes = parameters.GetTerrainNodes;
 
 			previews = new List<PreviewObject>();
 		}

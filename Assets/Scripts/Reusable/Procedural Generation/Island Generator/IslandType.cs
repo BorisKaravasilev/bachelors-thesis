@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyRandom;
 using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
 {
 	[System.Serializable]
-	public class IslandType : ScriptableObject
+	public class IslandType : ScriptableObject, IHasProbability
 	{
-
+		public string Name;
+		public float Probability { get; set; }
+		public TerrainNodesParams TerrainNodesParams;
 	}
 }

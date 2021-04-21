@@ -89,7 +89,7 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			if (!islandArea.Initialized)
 			{
-				islandArea.Init(); // List<IslandType>, GenerationParams
+				//islandArea.Init(new List<IslandType>()); // List<IslandType>, GenerationParams TODO: Fix
 				return true;
 			}
 

@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
 {
-	public class GenerateNoiseHeightmap : SingleTask
+	public class GenerateNoiseHeightmap : DividableTask
 	{
 		// Inputs
 		private int resolution;

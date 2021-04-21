@@ -1,7 +1,7 @@
+using ObjectPlacement.JitteredGrid;
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using ObjectPlacement.JitteredGrid;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
@@ -9,7 +9,7 @@ namespace IslandAreaTest
 	/// <summary>
 	/// Generates positions on an island area.
 	/// </summary>
-	public class GenerateObjectPositions : SingleTask
+	public class GenerateObjectPositions : DividableTask
 	{
 		// Inputs
 		private PlacedObjectParams placedObjectParams;

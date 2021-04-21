@@ -1,7 +1,9 @@
-﻿using System;
-using Instantiators.ObjectGrid;
-using UnityEngine;
+﻿using Instantiators.ObjectGrid;
 using IslandAreaTest;
+using MyRandom;
+using System;
+using TaskManagement;
+using UnityEngine;
 
 public class IslandAreaOld : GridObject
 {
@@ -15,7 +17,7 @@ public class IslandAreaOld : GridObject
 
 	private const string DEFAULT_NAME = "IslandArea";
 
-	private RandomFromPosition random;
+	private RandomFromSeed random;
 	
 	public bool Initialized { get; private set; }
 	public bool Finished => taskList?.Finished ?? false;
@@ -40,7 +42,7 @@ public class IslandAreaOld : GridObject
 		TerrainNodesParams terrainNodesParams, Material meshMaterial, Material previewObjectMaterial,
 		Material texturePreviewMaterial, TextAsset islandNames)
 	{
-		random = new RandomFromPosition(Position);
+		random = new RandomFromSeed(Position);
 
 		if (previewProgress)
 		{

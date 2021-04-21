@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
@@ -8,7 +9,7 @@ namespace IslandAreaTest
 	/// <summary>
 	/// Sums all given textures into one.
 	/// </summary>
-	public class AddTextures : SingleTask
+	public class AddTextures : DividableTask
 	{
 		// Inputs from previous task
 		private Func<List<Color[]>> getTextures;

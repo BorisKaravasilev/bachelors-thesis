@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using TaskManagement;
 
 namespace IslandAreaTest
 {
-	public class SobelFilterTexture : SingleTask
+	public class SobelFilterTexture : DividableTask
 	{
 		public SobelFilterTexture()
 		{

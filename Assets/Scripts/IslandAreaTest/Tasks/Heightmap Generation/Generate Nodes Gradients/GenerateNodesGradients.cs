@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using MiscUtil.Xml.Linq.Extensions;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
@@ -8,7 +8,7 @@ namespace IslandAreaTest
 	/// <summary>
 	/// Generates a list of heightmaps represented by flattened pixel arrays, one pixel array for each terrain node.
 	/// </summary>
-	public class GenerateNodesGradients : SingleTask
+	public class GenerateNodesGradients : DividableTask
 	{
 		// Inputs
 		private int resolution;

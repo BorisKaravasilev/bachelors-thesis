@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TaskManagement;
 using UnityEngine;
 
 namespace IslandAreaTest
@@ -7,7 +8,7 @@ namespace IslandAreaTest
 	/// <summary>
 	/// Generates a preview object for each texture pixels array.
 	/// </summary>
-	public class ShowTextures : SingleTask
+	public class ShowTextures : DividableTask
 	{
 		// Inputs
 		private Material material;
