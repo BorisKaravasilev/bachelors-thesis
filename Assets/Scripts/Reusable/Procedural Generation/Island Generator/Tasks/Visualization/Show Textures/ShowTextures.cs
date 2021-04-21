@@ -20,7 +20,7 @@ namespace ProceduralGeneration.IslandGenerator
 		// Inputs from previous steps
 		private List<Color[]> textures;
 
-		// Output
+		// Outputs
 		private List<TexturePreview> previewObjects;
 
 		// Internal

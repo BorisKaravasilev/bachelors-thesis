@@ -33,6 +33,10 @@ namespace ProceduralGeneration.IslandGenerator
 			Initialized = false;
 		}
 
+		/// <summary>
+		/// Executes a step of the generation process.
+		/// </summary>
+		/// <returns></returns>
 		public GameObject GenerateStep()
 		{
 			if (Initialized)
@@ -48,6 +52,9 @@ namespace ProceduralGeneration.IslandGenerator
 			return gameObject;
 		}
 
+		/// <summary>
+		/// Initializes all the partial tasks and adds them to a task list.
+		/// </summary>
 		public void Init(IslandGenerationParams generationParams)
 		{
 			this.generationParams = generationParams;
@@ -65,10 +72,12 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		#region Generation Tasks Setup
-		
+
+		/// <summary>
+		/// Initializes and adds to task list the "Generate Terrain Nodes" task.
+		/// </summary>
 		private GenerateTerrainNodes AddGenerateNodesTask()
 		{
-			// Generate Terrain nodes
 			GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(Type.TerrainNodesParams, GetParams());
 			generateTerrainNodes.SetParams(Type.TerrainNodesParams.MaxNodes);
 			taskList.AddTask(generateTerrainNodes);
@@ -76,9 +85,11 @@ namespace ProceduralGeneration.IslandGenerator
 			return generateTerrainNodes;
 		}
 
+		/// <summary>
+		/// Initializes and adds to task list the "Show Terrain nodes" task.
+		/// </summary>
 		private ShowTerrainNodes AddShowTerrainNodesTask(GenerateTerrainNodes generateTerrainNodes)
 		{
-			// Show Terrain nodes
 			ShowTerrainNodesParams parameters = new ShowTerrainNodesParams
 			{
 				AreaRadius = Radius,
@@ -94,15 +105,20 @@ namespace ProceduralGeneration.IslandGenerator
 			return showTerrainNodes;
 		}
 
+		/// <summary>
+		/// Initializes and adds to task list the "Generate Nodes Gradients" task.
+		/// </summary>
 		private GenerateNodesGradients AddGenerateNodesGradientsTask(GenerateTerrainNodes generateTerrainNodes)
 		{
-			// Generate Nodes Gradients
 			GenerateNodesGradients generateNodesGradients = new GenerateNodesGradients(GetResolution(), Radius, generateTerrainNodes.GetResult);
 			taskList.AddTask(generateNodesGradients);
 
 			return generateNodesGradients;
 		}
 
+		/// <summary>
+		/// Initializes and adds to task list the "Show Gradients" task.
+		/// </summary>
 		private ShowTextures AddShowGradientsTask(GenerateNodesGradients generateNodesGradients)
 		{
 			// Show Gradients
@@ -163,12 +179,18 @@ namespace ProceduralGeneration.IslandGenerator
 
 		#endregion
 
+		/// <summary>
+		/// Calculates the resolution of the textures for this area from the pixels per unit.
+		/// </summary>
 		private int GetResolution()
 		{
 			float diameter = Radius * 2;
 			return (int)(diameter * generationParams.PixelsPerUnit);
 		}
 
+		/// <summary>
+		/// Randomly chooses an island type for this island area.
+		/// </summary>
 		private IslandType DetermineIslandType(List<IslandType> islandTypes)
 		{
 			RandomFromSeed randomGenerator = new RandomFromSeed(Position, "IslandTypePicker");
@@ -178,6 +200,9 @@ namespace ProceduralGeneration.IslandGenerator
 			return islandTypes[randomIndex];
 		}
 
+		/// <summary>
+		/// Prints error message with hint.
+		/// </summary>
 		private void PrintErrorParamsNotAssigned(string assignmentFuncName)
 		{
 			Debug.LogError(
