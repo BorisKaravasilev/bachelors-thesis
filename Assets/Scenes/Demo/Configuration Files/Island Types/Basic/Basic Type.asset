@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea304cfdd438c56418e746b5b320b062, type: 3}
-  m_Name: Sea Tiles Bounding Box 3D
+  m_Script: {fileID: 11500000, guid: db82bc9c002353c43a014633bd0c6aec, type: 3}
+  m_Name: Basic Type
   m_EditorClassIdentifier: 
-  InitialValue:
-    BottomLeft: {x: 0, y: 0, z: 0}
-    TopRight: {x: 0, y: 0, z: 0}
+  Name: Basic
+  TerrainNodesParams: {fileID: 11400000, guid: ef1b8d9865ab36144b92ea948d7eadc7, type: 2}

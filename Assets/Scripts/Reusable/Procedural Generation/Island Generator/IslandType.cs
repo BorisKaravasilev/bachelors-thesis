@@ -3,11 +3,18 @@ using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
 {
-	[System.Serializable]
+	[CreateAssetMenu]
 	public class IslandType : ScriptableObject, IHasProbability
 	{
 		public string Name;
-		public float Probability { get; set; }
+
+		[SerializeField] private float probability = 1f;
+		public float Probability
+		{
+			get => probability;
+			set => probability = value;
+		}
+
 		public TerrainNodesParams TerrainNodesParams;
 	}
 }

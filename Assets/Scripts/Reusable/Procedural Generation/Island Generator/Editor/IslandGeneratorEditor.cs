@@ -12,7 +12,7 @@ namespace ProceduralGeneration.IslandGenerator
 			DrawDefaultInspector();
 			IslandGenerator islandGenerator = (IslandGenerator) target;
 
-			GUILayout.Space(15);
+			GUILayout.Space(10);
 			if (GUILayout.Button("Update Parameters"))
 			{
 				islandGenerator.UpdateParams();

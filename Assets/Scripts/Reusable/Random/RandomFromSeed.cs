@@ -61,22 +61,23 @@ namespace MyRandom
 		}
 
 		/// <summary>
-		/// Picks randomly an item from a list respecting items probabilities.
+		/// Picks randomly an item index from a list respecting items probabilities.
 		/// </summary>
-		public IHasProbability PickItem(List<IHasProbability> items)
+		public int PickItemIndex(List<IHasProbability> items)
 		{
 			float probabilitySum  = GetProbabilitySum(items);
 
 			float cumulativeProbability = 0f;
 			float randomNumber = NextFloat();
 
-			foreach (IHasProbability item in items)
+			for (int index = 0; index < items.Count; index++)
 			{
-				cumulativeProbability += item.Probability / probabilitySum; // Normalize by division
-				if (randomNumber <= cumulativeProbability) return item;
+				float normalizedProbability = items[index].Probability / probabilitySum;
+				cumulativeProbability += normalizedProbability;
+				if (randomNumber <= cumulativeProbability) return index;
 			}
 
-			return null;
+			return -1;
 		}
 
 		/// <summary>

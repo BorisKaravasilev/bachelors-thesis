@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &28307290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 808562768}
-  seaTileGrid: {fileID: 832104319}
+  generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
   islandNames: {fileID: 4900000, guid: a670ed85c8eedaf4989ebf1d5997306b, type: 3}
   debugIslandAreas: 0
   meshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
@@ -181,7 +181,7 @@ MonoBehaviour:
       OffsetY: 0
       Type: 0
   texturePixelsPerUnit: 10
-  terrainNodesParams: {fileID: 11400000, guid: 892c602829fdd9f4eadf7e7ece350363, type: 2}
+  terrainNodesParams: {fileID: 0}
   previewProgress: 0
   generateSequentially: 1
   generateInSteps: 1
@@ -376,9 +376,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df5769f9d2c3934da3af42d44235fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generatedArea: {fileID: 0}
-  gridParams: {fileID: 0}
-  islandTypes: []
+  generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
+  gridParams: {fileID: 11400000, guid: a007c8c82a1842c49b593f09519d61a6, type: 2}
+  islandGenerationParams:
+    PreviewProgress: 1
+    VisualStepTime: 0.2
+    PreviewsMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
+    TexturePreviewMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
+    PixelsPerUnit: 5
+    IslandTypes:
+    - {fileID: 11400000, guid: 40f71bae8944be640b305016dd161541, type: 2}
 --- !u!4 &496581467
 Transform:
   m_ObjectHideFlags: 0
@@ -517,6 +524,7 @@ MonoBehaviour:
     destroyFarTiles: 1
   seaLevel: 0.2
   previewMode: 0
+  boundingBox3D: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
 --- !u!850595691 &1601033968
 LightingSettings:
   m_ObjectHideFlags: 0
