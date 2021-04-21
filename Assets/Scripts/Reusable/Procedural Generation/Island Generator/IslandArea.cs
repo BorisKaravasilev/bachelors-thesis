@@ -64,10 +64,12 @@ namespace ProceduralGeneration.IslandGenerator
 
 			// Add generation tasks to the task list
 			GenerateTerrainNodes generateTerrainNodes = AddGenerateNodesTask();
-			var showTerrainNodes = AddShowTerrainNodesTask(generateTerrainNodes);
+			ShowTerrainNodes showTerrainNodes = AddShowTerrainNodesTask(generateTerrainNodes);
 			GenerateNodesGradients generateNodesGradients = AddGenerateNodesGradientsTask(generateTerrainNodes);
 			ShowTextures showGradients = AddShowTexturesTask("Show Node Gradients", generateNodesGradients.GetResult);
-			var hideGradients = AddHideObjectsTask("Hide Node Gradients", showGradients.GetResult);
+			HideObjects<IHideable> hideGradients = AddHideObjectsTask("Hide Node Gradients", showGradients.GetResult);
+			GenerateNodesNoises generateNodesNoises = AddGenerateNodesNoisesTask(generateTerrainNodes);
+			ShowTextures showNodesNoises = AddShowTexturesTask("Show Nodes Noises", generateNodesNoises.GetResult);
 
 			Initialized = true;
 		}
@@ -151,6 +153,16 @@ namespace ProceduralGeneration.IslandGenerator
 			taskList.AddTask(hideObjects);
 
 			return hideObjects;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list the "Generate Nodes Noises" task.
+		/// </summary>
+		private GenerateNodesNoises AddGenerateNodesNoisesTask(GenerateTerrainNodes generateTerrainNodes)
+		{
+			GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(Position, Radius, GetResolution(), generateTerrainNodes.GetResult);
+			taskList.AddTask(generateNodesNoises);
+			return generateNodesNoises;
 		}
 
 		#endregion

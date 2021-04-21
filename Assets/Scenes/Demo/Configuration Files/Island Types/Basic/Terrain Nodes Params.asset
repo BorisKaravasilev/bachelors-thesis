@@ -18,7 +18,7 @@ MonoBehaviour:
     StartingHeight: 0.1
     DominationProbability: 0
     NoiseParams:
-      Scale: 2.63
+      Scale: 4.85
       OffsetX: 0
       OffsetY: 0
       Type: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
     StartingHeight: 0.1
     DominationProbability: 0
     NoiseParams:
-      Scale: 2.63
+      Scale: 3.85
       OffsetX: 0
       OffsetY: 0
       Type: 0
