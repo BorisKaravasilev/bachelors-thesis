@@ -68,7 +68,7 @@ namespace ProceduralGeneration.IslandGenerator
 		protected override void ExecuteStep()
 		{
 			int firstIndex = ExecutedSteps * resolution;
-			int lastIndex = firstIndex + resolution - 1;
+			int lastIndex = firstIndex + resolution;
 
 			for (int pixelIndex = firstIndex; pixelIndex < lastIndex; pixelIndex++)
 			{
