@@ -123,83 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &28307289
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 28307291}
-  - component: {fileID: 28307290}
-  m_Layer: 0
-  m_Name: IslandAreas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &28307290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 28307289}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eade1bd70a2b1a41846be3dbb2772f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 808562768}
-  generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
-  islandNames: {fileID: 4900000, guid: a670ed85c8eedaf4989ebf1d5997306b, type: 3}
-  debugIslandAreas: 0
-  meshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
-  previewObjectMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
-  previewTextureMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
-  islandGridParams:
-    spacing: 30
-    pointCountLimit: 500
-  offsetParams:
-    maxOffset: 15
-    threshold: 0.6
-    xOffsetParams:
-      Scale: 3.28
-      OffsetX: 0
-      OffsetY: 0
-      Type: 0
-    zOffsetParams:
-      Scale: 1.71
-      OffsetX: 0
-      OffsetY: 0
-      Type: 0
-    thresholdParams:
-      Scale: 0.83
-      OffsetX: 0
-      OffsetY: 0
-      Type: 0
-  texturePixelsPerUnit: 10
-  terrainNodesParams: {fileID: 0}
-  previewProgress: 0
-  generateSequentially: 1
-  generateInSteps: 1
-  visualStepTime: 0
---- !u!4 &28307291
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 28307289}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.01, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &142699282
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,7 +302,8 @@ MonoBehaviour:
   generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
   gridParams: {fileID: 11400000, guid: a007c8c82a1842c49b593f09519d61a6, type: 2}
   islandGenerationParams:
-    PreviewProgress: 1
+    GenerateAllOnStart: 1
+    PreviewProgress: 0
     VisualStepTime: 0.2
     PreviewsMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
     TexturePreviewMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
@@ -399,7 +323,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &623333805
 GameObject:
@@ -501,7 +425,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &832104319
 MonoBehaviour:
@@ -788,7 +712,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_LocalPosition.x

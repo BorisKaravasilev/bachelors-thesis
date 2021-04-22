@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using Instantiators.ObjectGrid;
 using ObjectPlacement.JitteredGrid;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
 {
+	/// <summary>
+	/// Procedurally generates islands from specified parameters.
+	/// </summary>
 	public class IslandGenerator : MonoBehaviour
 	{
 		[SerializeField] private BoundingBox3DVariable generatedArea;
@@ -12,6 +16,7 @@ namespace ProceduralGeneration.IslandGenerator
 		[SerializeField] private IslandGenerationParams islandGenerationParams;
 
 		private ObjectGrid<IslandArea> islandGrid;
+		private bool InslandsOnStartGenerated = false;
 
 		void Start()
 		{
@@ -22,18 +27,36 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			islandGrid.InstantiateInBoundingBox(generatedArea.Value);
 			List<IslandArea> islandAreas = islandGrid.GetObjects();
-			GenerateClosestIsland(islandAreas, generatedArea.Value.Center);
+
+			Generate(islandAreas);
 		}
 
 		void OnValidate()
 		{
-			UpdateParams();
+			UpdateGridParameters();
+		}
+
+		/// <summary>
+		/// Generates all islands on startup at once, or generates islands sequentially.
+		/// </summary>
+		public void Generate(List<IslandArea> islandAreas)
+		{
+			bool generateAll = islandGenerationParams.GenerateAllOnStart && !InslandsOnStartGenerated;
+
+			if (generateAll)
+			{
+				GenerateIslands(islandAreas, false);
+				InslandsOnStartGenerated = true;
+				return;
+			}
+
+			GenerateClosestIsland(islandAreas, generatedArea.Value.Center);
 		}
 
 		/// <summary>
 		/// Updates the parameters of the island grid and destroys already generated islands.
 		/// </summary>
-		public void UpdateParams()
+		public void UpdateGridParameters()
 		{
 			islandGrid?.UpdateParameters(gridParams.parameters, gridParams.offsetParams);
 		}
@@ -44,7 +67,18 @@ namespace ProceduralGeneration.IslandGenerator
 		private void GenerateClosestIsland(List<IslandArea> islandAreas, Vector3 point)
 		{
 			IslandArea closestIslandArea = GetClosestNotFinishedIslandArea(islandAreas, point);
-			if (closestIslandArea != null) InitOrGenerateArea(closestIslandArea);
+			if (closestIslandArea != null) GenerateIslandArea(closestIslandArea, true);
+		}
+
+		/// <summary>
+		/// Generates all islands at once (May drop frame rate).
+		/// </summary>
+		private void GenerateIslands(List<IslandArea> islandsToGenerate, bool generateInSteps)
+		{
+			foreach (IslandArea islandArea in islandsToGenerate)
+			{
+				GenerateIslandArea(islandArea, generateInSteps);
+			}
 		}
 
 		/// <summary>
@@ -83,27 +117,44 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		/// <summary>
-		/// Returns  true if area got initialized or generated.
+		/// Returns true if at least one generation step got executed.
 		/// </summary>
-		private bool InitOrGenerateArea(IslandArea islandArea)
+		private bool GenerateIslandArea(IslandArea islandArea, bool generateInSteps)
+		{
+			InitIslandArea(islandArea);
+
+			if (!islandArea.Finished)
+			{
+				GenerateIslandStepOrAllSteps(islandArea, generateInSteps);
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Executes a single generation step or all of them.
+		/// </summary>
+		private void GenerateIslandStepOrAllSteps(IslandArea islandArea, bool generateInSteps)
+		{
+			if (generateInSteps)
+			{
+				islandArea.GenerateStep();
+			}
+			else
+			{
+				islandArea.Generate();
+			}
+		}
+
+		/// <summary>
+		/// Returns true if area got initialized.
+		/// </summary>
+		private bool InitIslandArea(IslandArea islandArea)
 		{
 			if (!islandArea.Initialized)
 			{
 				islandArea.Init(islandGenerationParams);
-				return true;
-			}
-
-			return GenerateIslandArea(islandArea);
-		}
-
-		/// <summary>
-		/// Returns true if generation step got executed.
-		/// </summary>
-		private bool GenerateIslandArea(IslandArea islandArea)
-		{
-			if (!islandArea.Finished)
-			{
-				islandArea.GenerateStep();
 				return true;
 			}
 

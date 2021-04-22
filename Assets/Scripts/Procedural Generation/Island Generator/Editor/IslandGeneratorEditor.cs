@@ -15,7 +15,7 @@ namespace ProceduralGeneration.IslandGenerator
 			GUILayout.Space(10);
 			if (GUILayout.Button("Update Parameters"))
 			{
-				islandGenerator.UpdateParams();
+				islandGenerator.UpdateGridParameters();
 			}
 		}
 	}

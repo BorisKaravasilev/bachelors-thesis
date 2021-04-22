@@ -6,6 +6,7 @@ namespace ProceduralGeneration.IslandGenerator
 	[System.Serializable]
 	public class IslandGenerationParams
 	{
+		public bool GenerateAllOnStart = false;
 		public bool PreviewProgress;
 		public float VisualStepTime;
 		public Material PreviewsMaterial;

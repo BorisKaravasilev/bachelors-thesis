@@ -53,6 +53,24 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		/// <summary>
+		/// Generate island area at once (May drop frame rate).
+		/// </summary>
+		public GameObject Generate()
+		{
+			if (Initialized)
+			{
+				taskList.Execute();
+				UpdateProgress();
+			}
+			else
+			{
+				PrintErrorParamsNotAssigned("Init()");
+			}
+
+			return gameObject;
+		}
+
+		/// <summary>
 		/// Initializes all the partial tasks and adds them to a task list.
 		/// </summary>
 		public void Init(IslandGenerationParams generationParams)

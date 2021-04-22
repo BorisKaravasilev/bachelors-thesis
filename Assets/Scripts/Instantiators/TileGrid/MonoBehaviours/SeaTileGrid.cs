@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Generates sea tiles on a square grid.
+/// </summary>
 public class SeaTileGrid : MonoBehaviour
 {
 	[SerializeField] private Transform player;
@@ -24,20 +27,13 @@ public class SeaTileGrid : MonoBehaviour
 	void Start()
     {
 		seaTileGrid = new TileGrid<SeaTile>(seaTileGridParams, gameObject.transform);
+		UpdateFromPlayerPosition();
 	}
 
     // Update is called once per frame
     void Update()
     {
-	    List<SeaTile> newSeaTiles = seaTileGrid.InstantiateTiles(player.position);
-	    newSeaTiles?.ForEach(tile => tile.SetSeaMaterials(seaMaterial, seaBedMaterial));
-
-		if (previewMode)
-		    newSeaTiles?.ForEach(tile => tile.GeneratePreview());
-		else
-		    newSeaTiles?.ForEach(tile => tile.Generate(seaLevel));
-
-		UpdateBoundingBox(newSeaTiles);
+	    UpdateFromPlayerPosition();
 	}
 
     void OnValidate()
@@ -45,7 +41,23 @@ public class SeaTileGrid : MonoBehaviour
 	    seaTileGrid?.UpdateParameters(seaTileGridParams);
     }
 
-    private void UpdateBoundingBox(List<SeaTile> newSeaTiles)
+	/// <summary>
+	/// Instantiates new and destroys old sea tiles depending on players position.
+	/// </summary>
+    private void UpdateFromPlayerPosition()
+    {
+	    List<SeaTile> newSeaTiles = seaTileGrid.InstantiateTiles(player.position);
+	    newSeaTiles?.ForEach(tile => tile.SetSeaMaterials(seaMaterial, seaBedMaterial));
+
+	    if (previewMode)
+		    newSeaTiles?.ForEach(tile => tile.GeneratePreview());
+	    else
+		    newSeaTiles?.ForEach(tile => tile.Generate(seaLevel));
+
+	    UpdateBoundingBox(newSeaTiles);
+    }
+
+	private void UpdateBoundingBox(List<SeaTile> newSeaTiles)
     {
 	    if (newSeaTiles?.Count > 0)
 	    {
