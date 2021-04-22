@@ -302,8 +302,8 @@ MonoBehaviour:
   generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
   gridParams: {fileID: 11400000, guid: a007c8c82a1842c49b593f09519d61a6, type: 2}
   islandGenerationParams:
-    GenerateAllOnStart: 1
-    PreviewProgress: 0
+    GenerateAllOnStart: 0
+    PreviewProgress: 1
     ShowIslandNames: 1
     IslandNamesFontSize: 24
     VisualStepTime: 0.2

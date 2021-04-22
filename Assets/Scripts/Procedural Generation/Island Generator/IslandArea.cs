@@ -133,7 +133,8 @@ namespace ProceduralGeneration.IslandGenerator
 			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult, 40);
 
 			// Object Placement
-			//GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(addMultiplicationResults.GetResult, generateTexture.GetTerrainTypesAtPixels);
+			Debug.Log(Type.Name);
+			GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(addMultiplicationResults.GetResult, generateTexture.GetTerrainTypesAtPixels);
 		}
 
 		/// <summary>
@@ -339,18 +340,23 @@ namespace ProceduralGeneration.IslandGenerator
 
 		private GenerateObjectPositions AddGenerateObjectPositionsTask(Func<Color[]> getHeightmap, Func<TerrainBlend[]> getTerrainTypesAtPixels)
 		{
-			GenerateObjectPositionsParams parameters = new GenerateObjectPositionsParams
+			if (Type.PlacedObjectParams != null)
 			{
-				Radius = Radius,
-				GetHeightmap = getHeightmap,
-				GetTerrainTypesAtPixels = getTerrainTypesAtPixels,
-				Resolution = GetResolution(),
-				PlacedObjectParams = Type.PlacedObjectParams
-			};
+				GenerateObjectPositionsParams parameters = new GenerateObjectPositionsParams
+				{
+					Radius = Radius,
+					GetHeightmap = getHeightmap,
+					GetTerrainTypesAtPixels = getTerrainTypesAtPixels,
+					Resolution = GetResolution(),
+					PlacedObjectParams = Type.PlacedObjectParams
+				};
 
-			GenerateObjectPositions generateObjectPositions = new GenerateObjectPositions(parameters);
-			taskList.AddTask(generateObjectPositions);
-			return generateObjectPositions;
+				GenerateObjectPositions generateObjectPositions = new GenerateObjectPositions(parameters);
+				taskList.AddTask(generateObjectPositions);
+				return generateObjectPositions;
+			}
+
+			return null;
 		}
 
 		#endregion

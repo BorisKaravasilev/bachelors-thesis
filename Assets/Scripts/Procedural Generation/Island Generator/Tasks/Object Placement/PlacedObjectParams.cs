@@ -17,7 +17,9 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// The minimum terrain type fraction required for the object to be placed.
 		/// </summary>
-		public TerrainTypeFraction MinimumTerrainFraction;
+		public string MinimumTerrainFractionName;
+		public float MinimumTerrainFractionAmount = 0.5f; // 0 to 1
+
 		public GameObject ObjectToPlace;
 		public GridParams GridParams;
 		public OffsetParams OffsetParams;

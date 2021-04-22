@@ -56,12 +56,6 @@ namespace ProceduralGeneration.IslandGenerator
 			positions = jitteredGrid.GetPointsInBoundingBox(boundingBox);
 			positions.RemoveAll(IsPositionBad);
 			SetPositionsHeights();
-
-			foreach (var position in positions)
-			{
-				PreviewObject preview = new PreviewObject(PrimitiveType.Cube, null);
-				preview.SetLocalPosition(position.Position);
-			}
 		}
 
 		protected override void GetInputFromPreviousStep()
@@ -111,10 +105,8 @@ namespace ProceduralGeneration.IslandGenerator
 
 			foreach (TerrainTypeFraction typeFraction in terrainTypes)
 			{
-				TerrainTypeFraction requiredTypeFraction = placedObjectParams.MinimumTerrainFraction;
-
-				bool typeOk = typeFraction.Type == requiredTypeFraction.Type;
-				bool minAmountOk = typeFraction.Amount >= requiredTypeFraction.Amount;
+				bool typeOk = typeFraction.Type.Name == placedObjectParams.MinimumTerrainFractionName;
+				bool minAmountOk = typeFraction.Amount >= placedObjectParams.MinimumTerrainFractionAmount;
 
 				if (typeOk && minAmountOk) return true;
 			}
