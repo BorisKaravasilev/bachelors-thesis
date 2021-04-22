@@ -5,7 +5,7 @@ using ProceduralGeneration.IslandGenerator;
 using TaskManagement;
 using UnityEngine;
 
-namespace IslandAreaTest
+namespace ProceduralGeneration.IslandGenerator
 {
 	/// <summary>
 	/// Generates positions on an island area.

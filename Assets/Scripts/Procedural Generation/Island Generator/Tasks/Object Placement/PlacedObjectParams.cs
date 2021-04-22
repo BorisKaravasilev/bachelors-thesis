@@ -1,7 +1,7 @@
 ﻿using ProceduralGeneration.IslandGenerator;
 using UnityEngine;
 
-namespace IslandAreaTest
+namespace ProceduralGeneration.IslandGenerator
 {
 	public class PlacedObjectParams
 	{
