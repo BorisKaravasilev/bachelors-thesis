@@ -360,6 +360,14 @@ public class TerrainMesh
 			meshFilter.mesh = Mesh;
 			meshRenderer.material = material;
 			meshRenderer.material.mainTexture = texture;
+
+			Rigidbody rigidbody = MeshGO.AddComponent<Rigidbody>();
+			rigidbody.useGravity = false;
+			rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
+			MeshCollider collider = MeshGO.AddComponent<MeshCollider>();
+			collider.sharedMesh = meshFilter.mesh;
+			collider.convex = true;
 		}
 	}
 }
