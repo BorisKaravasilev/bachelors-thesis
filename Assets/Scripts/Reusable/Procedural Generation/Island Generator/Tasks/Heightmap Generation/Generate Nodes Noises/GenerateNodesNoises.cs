@@ -1,9 +1,8 @@
+using MyRandom;
 using System;
 using System.Collections.Generic;
-using MyRandom;
 using TaskManagement;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 
 namespace ProceduralGeneration.IslandGenerator
 {

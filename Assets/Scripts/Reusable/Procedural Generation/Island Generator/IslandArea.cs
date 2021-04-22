@@ -62,20 +62,35 @@ namespace ProceduralGeneration.IslandGenerator
 
 			InstantiateProgressText();
 
-			// Add generation tasks to the task list
+			// Initialize and add generation tasks to the task list
+
+			// Terrain nodes
 			GenerateTerrainNodes generateTerrainNodes = AddGenerateNodesTask();
 			ShowTerrainNodes showTerrainNodes = AddShowTerrainNodesTask(generateTerrainNodes);
+
+			// Gradients
 			GenerateNodesGradients generateNodesGradients = AddGenerateNodesGradientsTask(generateTerrainNodes);
 			ShowTextures showGradients = AddShowTexturesTask("Show Node Gradients", generateNodesGradients.GetResult);
 			HideObjects<IHideable> hideGradients = AddHideObjectsTask("Hide Node Gradients", showGradients.GetResult);
+
+			// Noises
 			GenerateNodesNoises generateNodesNoises = AddGenerateNodesNoisesTask(generateTerrainNodes);
 			ShowTextures showNodesNoises = AddShowTexturesTask("Show Nodes Noises", generateNodesNoises.GetResult);
 			HideObjects<IHideable> hideNodesNoises = AddHideObjectsTask("Hide Nodes Noises", showNodesNoises.GetResult);
 
-			// Multiply Nodes Gradients and Noises TODO: This
-			//MultiplyTextureLists multiplyGradientsAndNoises = new MultiplyTextureLists(generateNodesGradients.GetResult, generateNodesNoises.GetResult, 1);
-			//multiplyGradientsAndNoises.Name = "Multiply Node Gradients and Noises";
-			//taskList.AddTask(multiplyGradientsAndNoises);
+			// Multiplication
+			MultiplyTextureLists multiplyGradientsAndNoises = AddMultiplyTextureListsTask("Multiply Node Gradients and Noises", generateNodesGradients.GetResult, generateNodesNoises.GetResult);
+			ShowTextures showMultiplicationResult = AddShowTexturesTask("Show Gradients and Noises Multiplication Result", multiplyGradientsAndNoises.GetResult);
+			HideObjects<IHideable> hideMultiplicationResult = AddHideObjectsTask("Hide Multiplication Result", showMultiplicationResult.GetResult);
+			
+			// Addition
+			AddTextures addMultiplicationResults = AddAddTexturesTask("Add Multiplication Results Together", multiplyGradientsAndNoises.GetResult);
+			ShowTextures showAdditionResult = AddShowTexturesTask("Show Addition Result", addMultiplicationResults.GetResultInList);
+			HideObjects<IHideable> hideAdditionResult = AddHideObjectsTask("Hide Addition Result", showAdditionResult.GetResult);
+
+			// Texture
+			GenerateIslandAreaTexture generateTexture = AddGenerateIslandAreaTextureTask(generateTerrainNodes.GetResult, multiplyGradientsAndNoises.GetResult, addMultiplicationResults.GetResult);
+			ShowTextures showTexture = AddShowTexturesTask("Show Island Area Texture", generateTexture.GetResultInList);
 
 			Initialized = true;
 		}
@@ -168,7 +183,53 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(Position, Radius, GetResolution(), generateTerrainNodes.GetResult);
 			taskList.AddTask(generateNodesNoises);
+
 			return generateNodesNoises;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list any "Multiply Texture Lists" task.
+		/// </summary>
+		private MultiplyTextureLists AddMultiplyTextureListsTask(string name, Func<List<Color[]>> getMultiplicands, Func<List<Color[]>> getMultipliers)
+		{
+			MultiplyTextureLists multiplyTextureLists = new MultiplyTextureLists(getMultiplicands, getMultipliers);
+			multiplyTextureLists.Name = name;
+			taskList.AddTask(multiplyTextureLists);
+
+			return multiplyTextureLists;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list any "Add Textures" task.
+		/// </summary>
+		private AddTextures AddAddTexturesTask(string name, Func<List<Color[]>> getTextures, int stepSize = 1)
+		{
+			AddTextures addTextures = new AddTextures(getTextures);
+			addTextures.SetParams(stepSize);
+			addTextures.Name = name;
+			taskList.AddTask(addTextures);
+
+			return addTextures;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list the "Generate Island Area Texture" task.
+		/// </summary>
+		private GenerateIslandAreaTexture AddGenerateIslandAreaTextureTask(Func<List<TerrainNode>> getTerrainNodes, Func<List<Color[]>> getTerrainNodesHeightmaps, Func<Color[]> getHeightmap)
+		{
+			GenerateIslandAreaTextureParams parameters = new GenerateIslandAreaTextureParams
+			{
+				TerrainNodesParams = Type.TerrainNodesParams,
+				GetTerrainNodes = getTerrainNodes,
+				GetTerrainNodesHeightmaps = getTerrainNodesHeightmaps,
+				GetHeightmap = getHeightmap,
+				Resolution = GetResolution()
+			};
+
+			GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(parameters);
+			taskList.AddTask(generateTexture);
+
+			return generateTexture;
 		}
 
 		#endregion

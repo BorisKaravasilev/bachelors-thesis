@@ -140,15 +140,15 @@ public class IslandAreaOld : GridObject
 		hideAdditionResult.Name = "Hide Addition Result";
 		taskList.AddTask(hideAdditionResult);
 
-		// Generate Island Area Texture
-		GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(resolution, terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult, multiplyGradientsAndNoises.GetResult, 10);
-		taskList.AddTask(generateTexture);
+		//// Generate Island Area Texture
+		//GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(resolution, terrainNodesParams, generateTerrainNodes.GetResult, addMultiplicationResults.GetResult, multiplyGradientsAndNoises.GetResult, 10);
+		//taskList.AddTask(generateTexture);
 
-		// Show Island Area Texture
-		ShowTexture showIslandAreaTexture = new ShowTexture(texturePreviewMaterial, diameter, resolution, parent, generateTexture.GetResult);
-		showIslandAreaTexture.Name = "Show Island Area Texture";
-		showIslandAreaTexture.SetParams(1, previewProgress, visualStepTime);
-		taskList.AddTask(showIslandAreaTexture);
+		//// Show Island Area Texture
+		//ShowTexture showIslandAreaTexture = new ShowTexture(texturePreviewMaterial, diameter, resolution, parent, generateTexture.GetResult);
+		//showIslandAreaTexture.Name = "Show Island Area Texture";
+		//showIslandAreaTexture.SetParams(1, previewProgress, visualStepTime);
+		//taskList.AddTask(showIslandAreaTexture);
 
 
 
@@ -182,15 +182,15 @@ public class IslandAreaOld : GridObject
 		taskList.AddTask(translateMeshVertices);
 
 		// Hide Island Area Texture
-		HidePreviewObjects<TexturePreview> hideIslandAreaTexture = new HidePreviewObjects<TexturePreview>(showIslandAreaTexture.GetResultInList);
-		hideIslandAreaTexture.SetParams(1, previewProgress);
-		hideIslandAreaTexture.Name = "Hide Island Area Texture";
-		taskList.AddTask(hideIslandAreaTexture);
+		//HidePreviewObjects<TexturePreview> hideIslandAreaTexture = new HidePreviewObjects<TexturePreview>(showIslandAreaTexture.GetResultInList);
+		//hideIslandAreaTexture.SetParams(1, previewProgress);
+		//hideIslandAreaTexture.Name = "Hide Island Area Texture";
+		//taskList.AddTask(hideIslandAreaTexture);
 
 		// Generate Mesh
-		GenerateMesh generateMesh = new GenerateMesh(meshMaterial, translateMeshVertices.GetResult, generateTexture.GetResult);
-		generateMesh.SetParams(40, true, previewProgress ? visualStepTime : 0f);
-		taskList.AddTask(generateMesh);
+		//GenerateMesh generateMesh = new GenerateMesh(meshMaterial, translateMeshVertices.GetResult, generateTexture.GetResult);
+		//generateMesh.SetParams(40, true, previewProgress ? visualStepTime : 0f);
+		//taskList.AddTask(generateMesh);
 
 		Initialized = true;
 	}

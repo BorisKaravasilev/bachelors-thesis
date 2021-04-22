@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ProceduralGeneration.IslandGenerator;
+using UnityEngine;
 
 namespace IslandAreaTest
 {

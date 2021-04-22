@@ -15,7 +15,7 @@ MonoBehaviour:
   TerrainTypes:
   - Name: Sea Bed Sand
     Color: {r: 0.8962264, g: 0.79605794, b: 0.114142045, a: 0}
-    StartingHeight: 0.1
+    StartingHeight: 0
     DominationProbability: 0
     NoiseParams:
       Scale: 4.85
@@ -34,4 +34,4 @@ MonoBehaviour:
   MinNodes: 1
   MaxNodes: 4
   MaxDistanceMultiplier: 0.8
-  BlendingHeight: 0
+  BlendingHeight: 0.1
