@@ -383,7 +383,8 @@ MonoBehaviour:
     VisualStepTime: 0.2
     PreviewsMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
     TexturePreviewMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
-    PixelsPerUnit: 5
+    PixelsPerUnit: 4
+    VerticesPerUnit: 0.6
     IslandTypes:
     - {fileID: 11400000, guid: 40f71bae8944be640b305016dd161541, type: 2}
 --- !u!4 &496581467
