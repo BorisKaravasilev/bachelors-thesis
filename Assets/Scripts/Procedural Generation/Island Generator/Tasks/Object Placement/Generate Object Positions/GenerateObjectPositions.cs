@@ -1,6 +1,7 @@
 using ObjectPlacement.JitteredGrid;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaskManagement;
 using UnityEngine;
 
@@ -21,6 +22,9 @@ namespace ProceduralGeneration.IslandGenerator
 		private Func<Color[]> getHeightmap;
 		private Color[] heightmap;
 
+		private Func<TerrainMesh> getTerrainMesh;
+		private TerrainMesh terrainMesh;
+
 		private Func<TerrainBlend[]> getTerrainTypesAtPixels;
 		private TerrainBlend[] terrainTypesAtPixels;
 
@@ -38,6 +42,7 @@ namespace ProceduralGeneration.IslandGenerator
 			radius = parameters.Radius;
 			maxTerrainHeight = parameters.MaxTerrainHeight;
 			getHeightmap = parameters.GetHeightmap;
+			getTerrainMesh = parameters.GetTerrainMesh;
 			getTerrainTypesAtPixels = parameters.GetTerrainTypesAtPixels;
 
 			Vector3 areaBottomLeft = new Vector3(-radius, 0f, -radius);
@@ -63,6 +68,7 @@ namespace ProceduralGeneration.IslandGenerator
 		protected override void GetInputFromPreviousStep()
 		{
 			heightmap = getHeightmap();
+			terrainMesh = getTerrainMesh();
 			terrainTypesAtPixels = getTerrainTypesAtPixels();
 		}
 
@@ -81,8 +87,46 @@ namespace ProceduralGeneration.IslandGenerator
 
 				Vector3 liftedPosition = position.Position;
 				liftedPosition.y = heightmap[pixelIndex].r * maxTerrainHeight;
+
+				float groundedObjectHeight = GetClosestFourVerticesAverageHeight(liftedPosition);
+				Debug.Log($"Grounded Height: {groundedObjectHeight},  Actual height: {liftedPosition.y}");
+				liftedPosition.y = groundedObjectHeight;
+
 				position.Position = liftedPosition;
 			}
+		}
+
+		/// <summary>
+		/// To prevent objects floating in the air its height is calculated as an average of the closest four vertices.
+		/// </summary>
+		private float GetClosestFourVerticesAverageHeight(Vector3 position)
+		{
+			List<Vector3> vertices = terrainMesh.Vertices.ToList();
+			List<Vector3> orderedByDistance = vertices.OrderBy(vertex => GetDistanceToVertex(vertex, position)).ToList();
+
+			int verticesToAverageCount = orderedByDistance.Count >= 4 ? 4 : orderedByDistance.Count;
+			float heightSum = 0f;
+
+			for (int i = 0; i < verticesToAverageCount; i++)
+			{
+				heightSum += orderedByDistance[i].y;
+			}
+
+			float average = orderedByDistance.Count > 0 ? heightSum / verticesToAverageCount : position.y;
+
+			return average;
+		}
+
+		/// <summary>
+		/// Compensates for the vertices offset from center by "radius" in X and Z. Calculates distance to position.
+		/// </summary>
+		private float GetDistanceToVertex(Vector3 vertex, Vector3 position)
+		{
+			Vector3 offsettedVertex = vertex;
+			offsettedVertex.x -= radius;
+			offsettedVertex.z -= radius;
+
+			return Vector3.Distance(offsettedVertex, position);
 		}
 
 		private bool IsPositionBad(GridPoint position)

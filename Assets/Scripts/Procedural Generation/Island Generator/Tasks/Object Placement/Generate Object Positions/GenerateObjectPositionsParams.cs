@@ -11,6 +11,7 @@ namespace ProceduralGeneration.IslandGenerator
 		public float Radius { get; set; }
 		public float MaxTerrainHeight { get; set; }
 		public Func<Color[]> GetHeightmap { get; set; }
+		public Func<TerrainMesh> GetTerrainMesh { get; set; }
 		public Func<TerrainBlend[]> GetTerrainTypesAtPixels { get; set; }
 	}
 }

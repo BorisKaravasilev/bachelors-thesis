@@ -13,7 +13,7 @@ namespace TaskManagement
 		public int TotalSteps
 		{
 			get => totalSteps;
-			protected set => totalSteps = value < 1 ? 1 : value;
+			protected set => totalSteps = value < 0 ? 0 : value;
 		}
 
 		private int remainingSteps = 1;

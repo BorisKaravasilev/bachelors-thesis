@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Basic
   probability: 1
-  PixelsPerUnit: 6
+  PixelsPerUnit: 5
   VerticesPerUnit: 1
   TerrainNodesParams: {fileID: 11400000, guid: ef1b8d9865ab36144b92ea948d7eadc7, type: 2}
   PlacedObjectParams: {fileID: 11400000, guid: 6d437699a949670469589ef0281b840c, type: 2}

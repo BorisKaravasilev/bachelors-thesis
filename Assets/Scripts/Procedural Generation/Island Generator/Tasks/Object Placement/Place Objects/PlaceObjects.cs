@@ -39,10 +39,12 @@ namespace ProceduralGeneration.IslandGenerator
 			int positionIndex = ExecutedSteps;
 
 			GameObject newObject = GameObject.Instantiate(placedObjectParams.ObjectToPlace, parent);
-			newObject.transform.localPosition = positions[positionIndex].Position;
 
 			float scale = positions[positionIndex].MaxRadius;
 			newObject.transform.localScale = new Vector3(scale, scale, scale);
+
+			Vector3 objectPosition = positions[positionIndex].Position;
+			newObject.transform.localPosition = objectPosition;
 
 			placedObjects.Add(newObject);
 		}

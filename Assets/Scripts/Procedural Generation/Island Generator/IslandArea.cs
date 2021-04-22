@@ -130,12 +130,20 @@ namespace ProceduralGeneration.IslandGenerator
 			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
 			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult, 40);
 			TranslateMeshVertices translateMeshVertices = AddTranslateMeshVerticesTask(generateMeshVertices.GetResult, 10);
+
+
+			// Object Placement
+			if (Type.PlacedObjectParams != null)
+			{
+				GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(addMultiplicationResults.GetResult, translateMeshVertices.GetResult, generateTexture.GetTerrainTypesAtPixels);
+				PlaceObjects placeObjects = AddPlaceObjectsTask(generateObjectPositions.GetResult);
+			}
+
+
 			HideObjects<IHideable> hideTexture = AddHideObjectsTask("Hide Island Area Texture", showTexture.GetResult);
 			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult, 40);
 
-			// Object Placement
-			GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(addMultiplicationResults.GetResult, generateTexture.GetTerrainTypesAtPixels);
-			PlaceObjects placeObjects = AddPlaceObjectsTask(generateObjectPositions.GetResult);
+
 		}
 
 		/// <summary>
@@ -342,26 +350,22 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Generate Object Positions" task.
 		/// </summary>
-		private GenerateObjectPositions AddGenerateObjectPositionsTask(Func<Color[]> getHeightmap, Func<TerrainBlend[]> getTerrainTypesAtPixels)
+		private GenerateObjectPositions AddGenerateObjectPositionsTask(Func<Color[]> getHeightmap, Func<TerrainMesh> getMesh, Func<TerrainBlend[]> getTerrainTypesAtPixels)
 		{
-			if (Type.PlacedObjectParams != null)
+			GenerateObjectPositionsParams parameters = new GenerateObjectPositionsParams
 			{
-				GenerateObjectPositionsParams parameters = new GenerateObjectPositionsParams
-				{
-					Radius = Radius,
-					MaxTerrainHeight = Type.MaxTerrainHeight,
-					GetHeightmap = getHeightmap,
-					GetTerrainTypesAtPixels = getTerrainTypesAtPixels,
-					Resolution = GetResolution(),
-					PlacedObjectParams = Type.PlacedObjectParams
-				};
+				Radius = Radius,
+				MaxTerrainHeight = Type.MaxTerrainHeight,
+				GetHeightmap = getHeightmap,
+				GetTerrainMesh = getMesh,
+				GetTerrainTypesAtPixels = getTerrainTypesAtPixels,
+				Resolution = GetResolution(),
+				PlacedObjectParams = Type.PlacedObjectParams
+			};
 
-				GenerateObjectPositions generateObjectPositions = new GenerateObjectPositions(parameters);
-				taskList.AddTask(generateObjectPositions);
-				return generateObjectPositions;
-			}
-
-			return null;
+			GenerateObjectPositions generateObjectPositions = new GenerateObjectPositions(parameters);
+			taskList.AddTask(generateObjectPositions);
+			return generateObjectPositions;
 		}
 
 		/// <summary>

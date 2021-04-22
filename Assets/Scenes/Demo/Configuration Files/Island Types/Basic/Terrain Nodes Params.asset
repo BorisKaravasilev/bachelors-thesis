@@ -24,7 +24,7 @@ MonoBehaviour:
       Type: 0
   - Name: Sand
     Color: {r: 0.9245283, g: 0.91711885, b: 0.16135636, a: 0}
-    StartingHeight: 0.1
+    StartingHeight: 0.25
     DominationProbability: 0
     NoiseParams:
       Scale: 3.85
@@ -33,7 +33,7 @@ MonoBehaviour:
       Type: 0
   - Name: Grass
     Color: {r: 0.31174344, g: 0.7735849, b: 0.09122462, a: 0}
-    StartingHeight: 0.2
+    StartingHeight: 0.3
     DominationProbability: 0.3
     NoiseParams:
       Scale: 3.21

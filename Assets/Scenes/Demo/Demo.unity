@@ -303,10 +303,10 @@ MonoBehaviour:
   gridParams: {fileID: 11400000, guid: a007c8c82a1842c49b593f09519d61a6, type: 2}
   islandGenerationParams:
     GenerateAllOnStart: 0
-    PreviewProgress: 1
+    PreviewProgress: 0
     ShowIslandNames: 1
     IslandNamesFontSize: 24
-    VisualStepTime: 0.2
+    VisualStepTime: 0.1
     PreviewsMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
     TexturePreviewMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
     IslandTypes:
@@ -320,7 +320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 496581465}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -448,7 +448,7 @@ MonoBehaviour:
     xTiles: 5
     zTiles: 4
     destroyFarTiles: 1
-  seaLevel: 0.2
+  seaLevel: 0.25
   previewMode: 0
   boundingBox3D: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
 --- !u!850595691 &1601033968
@@ -721,7 +721,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_LocalPosition.z
