@@ -4,19 +4,17 @@ using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
 {
+	/// <summary>
+	/// Translates mesh vertices to a target position.
+	/// </summary>
 	public class TranslateMeshVertices : DividableTask
 	{
-		// Input
+		// Inputs
 		private bool visualize;
 
-		// Inputs from previous task
+		// Inputs from previous tasks
 		private Func<TerrainMesh> getTerrainMesh;
 		private TerrainMesh terrainMesh;
-
-		// Internal
-
-		// Output
-
 
 		public TranslateMeshVertices(bool visualize, Func<TerrainMesh> getTerrainMesh)
 		{

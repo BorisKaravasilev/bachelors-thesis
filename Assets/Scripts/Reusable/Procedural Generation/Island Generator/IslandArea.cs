@@ -100,7 +100,7 @@ namespace ProceduralGeneration.IslandGenerator
 			// Mesh
 			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
 			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult);
-
+			TranslateMeshVertices translateMeshVertices = AddTranslateMeshVerticesTask(generateMeshVertices.GetResult);
 
 			// Object Placement
 
@@ -273,7 +273,21 @@ namespace ProceduralGeneration.IslandGenerator
 			GenerateMeshVertices generateMeshVertices = new GenerateMeshVertices(parameters);
 			generateMeshVertices.SetParams(40, true, minStepDuration);
 			taskList.AddTask(generateMeshVertices);
+
 			return generateMeshVertices;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list the "Translate Mesh Vertices" task.
+		/// </summary>
+		private TranslateMeshVertices AddTranslateMeshVerticesTask(Func<TerrainMesh> getMesh)
+		{
+			TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(generationParams.PreviewProgress, getMesh);
+			float minStepDuration = generationParams.PreviewProgress ? generationParams.VisualStepTime / 20 : 0f;
+			translateMeshVertices.SetParams(10, true, minStepDuration);
+			taskList.AddTask(translateMeshVertices);
+
+			return translateMeshVertices;
 		}
 
 		#endregion
