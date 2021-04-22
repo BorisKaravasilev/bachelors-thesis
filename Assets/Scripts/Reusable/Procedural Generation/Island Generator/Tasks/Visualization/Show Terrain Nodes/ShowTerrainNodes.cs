@@ -20,7 +20,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private List<TerrainNode> terrainNodes;
 
 		// Outputs
-		private List<PreviewObject> previews;
+		private List<IHideable> previews;
 
 		public ShowTerrainNodes(ShowTerrainNodesParams parameters)
 		{
@@ -31,10 +31,10 @@ namespace ProceduralGeneration.IslandGenerator
 			previewParent = parameters.Parent;
 			getTerrainNodes = parameters.GetTerrainNodes;
 
-			previews = new List<PreviewObject>();
+			previews = new List<IHideable>();
 		}
 
-		public List<PreviewObject> GetResult()
+		public List<IHideable> GetResult()
 		{
 			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
 			return previews;

@@ -92,6 +92,16 @@ namespace ProceduralGeneration.IslandGenerator
 			GenerateIslandAreaTexture generateTexture = AddGenerateIslandAreaTextureTask(generateTerrainNodes.GetResult, multiplyGradientsAndNoises.GetResult, addMultiplicationResults.GetResult);
 			ShowTextures showTexture = AddShowTexturesTask("Show Island Area Texture", generateTexture.GetResultInList);
 
+			// Object Positions
+			// - generate
+			// - show
+			// - hide
+
+			// Mesh
+			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
+
+			// Object Placement
+
 			Initialized = true;
 		}
 
