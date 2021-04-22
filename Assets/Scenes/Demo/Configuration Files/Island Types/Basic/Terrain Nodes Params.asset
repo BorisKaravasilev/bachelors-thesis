@@ -31,6 +31,24 @@ MonoBehaviour:
       OffsetX: 0
       OffsetY: 0
       Type: 0
+  - Name: Grass
+    Color: {r: 0.31174344, g: 0.7735849, b: 0.09122462, a: 0}
+    StartingHeight: 0.2
+    DominationProbability: 0.3
+    NoiseParams:
+      Scale: 3.21
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
+  - Name: Rock
+    Color: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 0}
+    StartingHeight: 0.6
+    DominationProbability: 0.2
+    NoiseParams:
+      Scale: 3.21
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
   MinNodes: 1
   MaxNodes: 4
   MaxDistanceMultiplier: 0.8
