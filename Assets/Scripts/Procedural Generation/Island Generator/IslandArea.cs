@@ -19,6 +19,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private const string DEFAULT_NAME = "IslandArea";
 		private IslandGenerationParams generationParams;
 		private TaskList taskList;
+		private TextMesh name;
 
 		// Progress
 		private string lastTaskName = "";
@@ -78,10 +79,24 @@ namespace ProceduralGeneration.IslandGenerator
 			this.generationParams = generationParams;
 			Type = DetermineIslandType(generationParams.IslandTypes);
 
+			// Name Visualization
+			InstantiateNameText(Type.MaxTerrainHeight / 2, GetNameFromPosition(Position, Type.IslandNames));
+
+			// Progress Visualization
 			InstantiateProgressText();
 
-			// Initialize and add generation tasks to the task list
+			InitAllTasks();
 
+			Initialized = true;
+		}
+
+		#region Generation Tasks Setup
+
+		/// <summary>
+		/// Initializes and adds all generation tasks to the task list.
+		/// </summary>
+		private void InitAllTasks()
+		{
 			// Terrain nodes
 			GenerateTerrainNodes generateTerrainNodes = AddGenerateNodesTask();
 			ShowTerrainNodes showTerrainNodes = AddShowTerrainNodesTask(generateTerrainNodes);
@@ -100,7 +115,7 @@ namespace ProceduralGeneration.IslandGenerator
 			MultiplyTextureLists multiplyGradientsAndNoises = AddMultiplyTextureListsTask("Multiply Node Gradients and Noises", generateNodesGradients.GetResult, generateNodesNoises.GetResult);
 			ShowTextures showMultiplicationResult = AddShowTexturesTask("Show Gradients and Noises Multiplication Result", multiplyGradientsAndNoises.GetResult);
 			HideObjects<IHideable> hideMultiplicationResult = AddHideObjectsTask("Hide Multiplication Result", showMultiplicationResult.GetResult);
-			
+
 			// Addition
 			AddTextures addMultiplicationResults = AddAddTexturesTask("Add Multiplication Results Together", multiplyGradientsAndNoises.GetResult);
 			ShowTextures showAdditionResult = AddShowTexturesTask("Show Addition Result", addMultiplicationResults.GetResultInList);
@@ -124,10 +139,7 @@ namespace ProceduralGeneration.IslandGenerator
 
 			// Object Placement
 
-			Initialized = true;
 		}
-
-		#region Generation Tasks Setup
 
 		/// <summary>
 		/// Initializes and adds to task list the "Generate Terrain Nodes" task.
@@ -369,6 +381,43 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Randomly chooses a name from a list of names;
+		/// </summary>
+		private string GetNameFromPosition(Vector3 position, TextAsset namesAsset)
+		{
+
+			if (namesAsset != null)
+			{
+				RandomFromSeed random = new RandomFromSeed(position, "Name From Position");
+				string[] allNames = namesAsset.text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+				int nameIndex = random.Next(0, allNames.Length);
+				return allNames[nameIndex];
+			}
+
+			return "";
+		}
+
+		/// <summary>
+		/// Instantiates 3D Text to display the islands areas name.
+		/// </summary>
+		private void InstantiateNameText(float height, string islandAreaName = "Island Area Name")
+		{
+			if (generationParams.ShowIslandNames)
+			{
+				GameObject nameTextObject = new GameObject("Island Area Name");
+				nameTextObject.transform.SetParent(gameObject.transform);
+				nameTextObject.transform.eulerAngles = new Vector3(90f, 0f, 0f);
+				nameTextObject.transform.localPosition = new Vector3(-Radius, height, -Radius);
+				nameTextObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+				name = nameTextObject.AddComponent<TextMesh>();
+				name.fontSize = 20;
+
+				name.text = islandAreaName;
+			}
+		}
 
 		/// <summary>
 		/// Calculates the minimum time that every visual step should be displayed for.

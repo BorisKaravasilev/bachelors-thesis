@@ -18,5 +18,6 @@ namespace ProceduralGeneration.IslandGenerator
 		public TerrainNodesParams TerrainNodesParams;
 		public float MaxTerrainHeight = 1f;
 		public Material TerrainMeshMaterial;
+		public TextAsset IslandNames;
 	}
 }

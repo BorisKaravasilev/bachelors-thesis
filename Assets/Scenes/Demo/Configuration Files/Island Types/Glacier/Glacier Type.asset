@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db82bc9c002353c43a014633bd0c6aec, type: 3}
-  m_Name: Basic Type
+  m_Name: Glacier Type
   m_EditorClassIdentifier: 
-  Name: Basic
+  Name: Glacier
   probability: 1
-  TerrainNodesParams: {fileID: 11400000, guid: ef1b8d9865ab36144b92ea948d7eadc7, type: 2}
-  MaxTerrainHeight: 2
-  TerrainMeshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
-  IslandNames: {fileID: 4900000, guid: a670ed85c8eedaf4989ebf1d5997306b, type: 3}
+  TerrainNodesParams: {fileID: 11400000, guid: b01b5e637e4fde94fb245e1629ac27ec, type: 2}
+  MaxTerrainHeight: 3
+  TerrainMeshMaterial: {fileID: 2100000, guid: ac427f04820b5d64fa1815b7494bf5da, type: 2}
+  IslandNames: {fileID: 0}
