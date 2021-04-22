@@ -287,7 +287,7 @@ namespace ProceduralGeneration.IslandGenerator
 			int pixelCount = GetResolution();
 			Vector2Int resolution = new Vector2Int(pixelCount, pixelCount);
 
-			int verticesCount = (int) (diameter * generationParams.VerticesPerUnit);
+			int verticesCount = (int) (diameter * Type.VerticesPerUnit);
 			Vector2Int vertices = new Vector2Int(verticesCount, verticesCount);
 
 			GenerateMeshVerticesParams parameters = new GenerateMeshVerticesParams
@@ -317,7 +317,7 @@ namespace ProceduralGeneration.IslandGenerator
 			TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(generationParams.PreviewProgress, getMesh);
 
 			float diameter = Radius * 2;
-			int verticesCount = (int)(diameter * generationParams.VerticesPerUnit);
+			int verticesCount = (int)(diameter * Type.VerticesPerUnit);
 			int halfOfTrianglesToGenerate = (verticesCount - 1) * (verticesCount - 1);
 			float minStepDuration = GetVisualStepTime(stepSize, halfOfTrianglesToGenerate);
 
@@ -434,7 +434,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private int GetResolution()
 		{
 			float diameter = Radius * 2;
-			return (int)(diameter * generationParams.PixelsPerUnit);
+			return (int)(diameter * Type.PixelsPerUnit);
 		}
 
 		/// <summary>

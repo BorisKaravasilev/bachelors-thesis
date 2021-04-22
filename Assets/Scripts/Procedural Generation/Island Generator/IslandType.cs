@@ -15,6 +15,11 @@ namespace ProceduralGeneration.IslandGenerator
 			set => probability = value;
 		}
 
+		[Range(1, 20)]
+		public int PixelsPerUnit = 10;
+		[Range(0.5f, 6f)]
+		public float VerticesPerUnit = 0.5f;
+
 		public TerrainNodesParams TerrainNodesParams;
 		public float MaxTerrainHeight = 1f;
 		public Material TerrainMeshMaterial;
