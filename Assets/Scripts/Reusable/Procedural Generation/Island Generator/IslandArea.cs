@@ -99,8 +99,10 @@ namespace ProceduralGeneration.IslandGenerator
 
 			// Mesh
 			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
-			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult);
-			TranslateMeshVertices translateMeshVertices = AddTranslateMeshVerticesTask(generateMeshVertices.GetResult);
+			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult, 40);
+			TranslateMeshVertices translateMeshVertices = AddTranslateMeshVerticesTask(generateMeshVertices.GetResult, 10);
+			HideObjects<IHideable> hideTexture = AddHideObjectsTask("Hide Island Area Texture", showTexture.GetResult);
+			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult, 40);
 
 			// Object Placement
 
@@ -247,7 +249,7 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Generate Mesh Vertices" task.
 		/// </summary>
-		private GenerateMeshVertices AddGenerateMeshVerticesTask(Func<Color[]> getHeightmap)
+		private GenerateMeshVertices AddGenerateMeshVerticesTask(Func<Color[]> getHeightmap, int stepSize = 1)
 		{
 			float diameter = Radius * 2;
 			Vector3 dimensions = new Vector3(diameter, Type.MaxTerrainHeight, diameter);
@@ -268,10 +270,10 @@ namespace ProceduralGeneration.IslandGenerator
 				Visualize = generationParams.PreviewProgress
 			};
 
-			float minStepDuration = generationParams.PreviewProgress ? generationParams.VisualStepTime : 0f;
+			float minStepDuration = GetVisualStepTime(stepSize, verticesCount * verticesCount);
 
 			GenerateMeshVertices generateMeshVertices = new GenerateMeshVertices(parameters);
-			generateMeshVertices.SetParams(40, true, minStepDuration);
+			generateMeshVertices.SetParams(stepSize, true, minStepDuration);
 			taskList.AddTask(generateMeshVertices);
 
 			return generateMeshVertices;
@@ -280,14 +282,34 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Translate Mesh Vertices" task.
 		/// </summary>
-		private TranslateMeshVertices AddTranslateMeshVerticesTask(Func<TerrainMesh> getMesh)
+		private TranslateMeshVertices AddTranslateMeshVerticesTask(Func<TerrainMesh> getMesh, int stepSize = 1)
 		{
 			TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(generationParams.PreviewProgress, getMesh);
-			float minStepDuration = generationParams.PreviewProgress ? generationParams.VisualStepTime / 20 : 0f;
-			translateMeshVertices.SetParams(10, true, minStepDuration);
+
+			float diameter = Radius * 2;
+			int verticesCount = (int)(diameter * generationParams.VerticesPerUnit);
+			int halfOfTrianglesToGenerate = (verticesCount - 1) * (verticesCount - 1);
+			float minStepDuration = GetVisualStepTime(stepSize, halfOfTrianglesToGenerate);
+
+			translateMeshVertices.SetParams(stepSize, true, minStepDuration);
 			taskList.AddTask(translateMeshVertices);
 
 			return translateMeshVertices;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list the "Generate Mesh" task.
+		/// </summary>
+		private GenerateMesh AddGenerateMeshTask(Func<TerrainMesh> getTerrainMesh, Func<Color[]> getTexturePixels, int stepSize = 1)
+		{
+			GenerateMesh generateMesh = new GenerateMesh(Type.TerrainMeshMaterial, getTerrainMesh, getTexturePixels);
+
+			float minStepDuration = GetVisualStepTime(stepSize, 100);
+
+			generateMesh.SetParams(stepSize, true, minStepDuration);
+			taskList.AddTask(generateMesh);
+
+			return generateMesh;
 		}
 
 		#endregion
@@ -329,6 +351,15 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Calculates the minimum time that every visual step should be displayed for.
+		/// </summary>
+		private float GetVisualStepTime(int stepSize, int totalSteps)
+		{
+			float stepVisualizationTime = ((float)stepSize / totalSteps) * generationParams.VisualStepTime;
+			return generationParams.PreviewProgress ? stepVisualizationTime : 0f;
+		}
 
 		/// <summary>
 		/// Calculates the resolution of the textures for this area from the pixels per unit.
