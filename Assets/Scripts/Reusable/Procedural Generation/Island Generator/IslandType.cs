@@ -6,7 +6,7 @@ namespace ProceduralGeneration.IslandGenerator
 	[CreateAssetMenu]
 	public class IslandType : ScriptableObject, IHasProbability
 	{
-		public string Name;
+		public string Name = "New Island Type";
 
 		[SerializeField] private float probability = 1f;
 		public float Probability
@@ -16,5 +16,6 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		public TerrainNodesParams TerrainNodesParams;
+		public float MaxTerrainHeight = 1f;
 	}
 }

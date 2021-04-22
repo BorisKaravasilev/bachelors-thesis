@@ -99,6 +99,8 @@ namespace ProceduralGeneration.IslandGenerator
 
 			// Mesh
 			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
+			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult);
+
 
 			// Object Placement
 
@@ -240,6 +242,38 @@ namespace ProceduralGeneration.IslandGenerator
 			taskList.AddTask(generateTexture);
 
 			return generateTexture;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list the "Generate Mesh Vertices" task.
+		/// </summary>
+		private GenerateMeshVertices AddGenerateMeshVerticesTask(Func<Color[]> getHeightmap)
+		{
+			float diameter = Radius * 2;
+			Vector3 dimensions = new Vector3(diameter, Type.MaxTerrainHeight, diameter);
+
+			int pixelCount = GetResolution();
+			Vector2Int resolution = new Vector2Int(pixelCount, pixelCount);
+
+			int verticesCount = (int) (diameter * generationParams.VerticesPerUnit);
+			Vector2Int vertices = new Vector2Int(verticesCount, verticesCount);
+
+			GenerateMeshVerticesParams parameters = new GenerateMeshVerticesParams
+			{
+				Resolution = resolution,
+				Dimensions = dimensions,
+				GetHeightmap = getHeightmap,
+				Parent = gameObject.transform,
+				VerticesCount = vertices,
+				Visualize = generationParams.PreviewProgress
+			};
+
+			float minStepDuration = generationParams.PreviewProgress ? generationParams.VisualStepTime : 0f;
+
+			GenerateMeshVertices generateMeshVertices = new GenerateMeshVertices(parameters);
+			generateMeshVertices.SetParams(40, true, minStepDuration);
+			taskList.AddTask(generateMeshVertices);
+			return generateMeshVertices;
 		}
 
 		#endregion
