@@ -15,8 +15,9 @@ namespace ProceduralGeneration.IslandGenerator
 		private PlacedObjectParams placedObjectParams;
 		private int resolution;
 		private float radius;
+		private float maxTerrainHeight;
 
-		// Inputs from previous task
+		// Inputs from previous tasks
 		private Func<Color[]> getHeightmap;
 		private Color[] heightmap;
 
@@ -27,7 +28,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private BoundingBox3D boundingBox;
 		private JitteredGrid jitteredGrid;
 
-		// Output
+		// Outputs
 		private List<GridPoint> positions;
 
 		public GenerateObjectPositions(GenerateObjectPositionsParams parameters)
@@ -35,6 +36,7 @@ namespace ProceduralGeneration.IslandGenerator
 			placedObjectParams = parameters.PlacedObjectParams;
 			resolution = parameters.Resolution;
 			radius = parameters.Radius;
+			maxTerrainHeight = parameters.MaxTerrainHeight;
 			getHeightmap = parameters.GetHeightmap;
 			getTerrainTypesAtPixels = parameters.GetTerrainTypesAtPixels;
 
@@ -78,7 +80,7 @@ namespace ProceduralGeneration.IslandGenerator
 				int pixelIndex = TextureFunctions.CoordsToArrayIndex(resolution, resolution, pixelCoords);
 
 				Vector3 liftedPosition = position.Position;
-				liftedPosition.y = heightmap[pixelIndex].r;
+				liftedPosition.y = heightmap[pixelIndex].r * maxTerrainHeight;
 				position.Position = liftedPosition;
 			}
 		}

@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minHeight: 0
   maxHeight: 1
-  ObjectToPlace: {fileID: 0}
+  MinimumTerrainFractionName: Grass
+  MinimumTerrainFractionAmount: 1
+  ObjectToPlace: {fileID: 5403057480543174845, guid: aa5f8e3a752ef454ba9e36e82024b762, type: 3}
   GridParams:
     spacing: 1
     pointCountLimit: 500
   OffsetParams:
-    maxOffset: 0
-    threshold: 0
+    maxOffset: 0.2
+    threshold: 0.6
     xOffsetParams:
       Scale: 10.235
       OffsetX: 0
@@ -32,7 +34,7 @@ MonoBehaviour:
       OffsetY: 0
       Type: 0
     thresholdParams:
-      Scale: 10.05
+      Scale: 8.67
       OffsetX: 0
       OffsetY: 0
       Type: 0

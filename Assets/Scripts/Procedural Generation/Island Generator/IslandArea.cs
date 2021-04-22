@@ -3,6 +3,7 @@ using MyRandom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ObjectPlacement.JitteredGrid;
 using TaskManagement;
 using UnityEngine;
 
@@ -133,8 +134,8 @@ namespace ProceduralGeneration.IslandGenerator
 			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult, 40);
 
 			// Object Placement
-			Debug.Log(Type.Name);
 			GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(addMultiplicationResults.GetResult, generateTexture.GetTerrainTypesAtPixels);
+			PlaceObjects placeObjects = AddPlaceObjectsTask(generateObjectPositions.GetResult);
 		}
 
 		/// <summary>
@@ -338,6 +339,9 @@ namespace ProceduralGeneration.IslandGenerator
 			return generateMesh;
 		}
 
+		/// <summary>
+		/// Initializes and adds to task list the "Generate Object Positions" task.
+		/// </summary>
 		private GenerateObjectPositions AddGenerateObjectPositionsTask(Func<Color[]> getHeightmap, Func<TerrainBlend[]> getTerrainTypesAtPixels)
 		{
 			if (Type.PlacedObjectParams != null)
@@ -345,6 +349,7 @@ namespace ProceduralGeneration.IslandGenerator
 				GenerateObjectPositionsParams parameters = new GenerateObjectPositionsParams
 				{
 					Radius = Radius,
+					MaxTerrainHeight = Type.MaxTerrainHeight,
 					GetHeightmap = getHeightmap,
 					GetTerrainTypesAtPixels = getTerrainTypesAtPixels,
 					Resolution = GetResolution(),
@@ -357,6 +362,17 @@ namespace ProceduralGeneration.IslandGenerator
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Initializes and adds to task list the "Place Objects" task.
+		/// </summary>
+		private PlaceObjects AddPlaceObjectsTask(Func<List<GridPoint>> getPositions)
+		{
+			PlaceObjects placeObjects = new PlaceObjects(gameObject.transform, Type.PlacedObjectParams, getPositions);
+			taskList.AddTask(placeObjects);
+
+			return placeObjects;
 		}
 
 		#endregion
