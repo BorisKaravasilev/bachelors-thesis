@@ -130,20 +130,16 @@ namespace ProceduralGeneration.IslandGenerator
 			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
 			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult, 40);
 			TranslateMeshVertices translateMeshVertices = AddTranslateMeshVerticesTask(generateMeshVertices.GetResult, 10);
-
-
-			// Object Placement
-			if (Type.PlacedObjectParams != null)
-			{
-				GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(addMultiplicationResults.GetResult, translateMeshVertices.GetResult, generateTexture.GetTerrainTypesAtPixels);
-				PlaceObjects placeObjects = AddPlaceObjectsTask(generateObjectPositions.GetResult);
-			}
-
-
 			HideObjects<IHideable> hideTexture = AddHideObjectsTask("Hide Island Area Texture", showTexture.GetResult);
 			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult, 40);
 
-
+			// Object Placement
+			foreach (PlacedObjectParams placedObjectParams in Type.PlacedObjectParams)
+			{
+				if (placedObjectParams == null) continue;
+				GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(placedObjectParams, addMultiplicationResults.GetResult, translateMeshVertices.GetResult, generateTexture.GetTerrainTypesAtPixels);
+				PlaceObjects placeObjects = AddPlaceObjectsTask(placedObjectParams, generateObjectPositions.GetResult);
+			}
 		}
 
 		/// <summary>
@@ -350,7 +346,7 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Generate Object Positions" task.
 		/// </summary>
-		private GenerateObjectPositions AddGenerateObjectPositionsTask(Func<Color[]> getHeightmap, Func<TerrainMesh> getMesh, Func<TerrainBlend[]> getTerrainTypesAtPixels)
+		private GenerateObjectPositions AddGenerateObjectPositionsTask(PlacedObjectParams placedObjectParams, Func<Color[]> getHeightmap, Func<TerrainMesh> getMesh, Func<TerrainBlend[]> getTerrainTypesAtPixels)
 		{
 			GenerateObjectPositionsParams parameters = new GenerateObjectPositionsParams
 			{
@@ -360,7 +356,7 @@ namespace ProceduralGeneration.IslandGenerator
 				GetTerrainMesh = getMesh,
 				GetTerrainTypesAtPixels = getTerrainTypesAtPixels,
 				Resolution = GetResolution(),
-				PlacedObjectParams = Type.PlacedObjectParams
+				PlacedObjectParams = placedObjectParams
 			};
 
 			GenerateObjectPositions generateObjectPositions = new GenerateObjectPositions(parameters);
@@ -371,9 +367,9 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Place Objects" task.
 		/// </summary>
-		private PlaceObjects AddPlaceObjectsTask(Func<List<GridPoint>> getPositions)
+		private PlaceObjects AddPlaceObjectsTask(PlacedObjectParams placedObjectParams, Func<List<GridPoint>> getPositions)
 		{
-			PlaceObjects placeObjects = new PlaceObjects(gameObject.transform, Type.PlacedObjectParams, getPositions);
+			PlaceObjects placeObjects = new PlaceObjects(gameObject.transform, placedObjectParams, getPositions);
 			taskList.AddTask(placeObjects);
 
 			return placeObjects;

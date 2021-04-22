@@ -1,4 +1,5 @@
-﻿using MyRandom;
+﻿using System.Collections.Generic;
+using MyRandom;
 using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
@@ -21,7 +22,7 @@ namespace ProceduralGeneration.IslandGenerator
 		public float VerticesPerUnit = 0.5f;
 
 		public TerrainNodesParams TerrainNodesParams;
-		public PlacedObjectParams PlacedObjectParams;
+		public List<PlacedObjectParams> PlacedObjectParams;
 
 		public float MaxTerrainHeight = 1f;
 		public Material TerrainMeshMaterial;

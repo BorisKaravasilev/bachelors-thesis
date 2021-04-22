@@ -15,9 +15,12 @@ MonoBehaviour:
   Name: Basic
   probability: 1
   PixelsPerUnit: 5
-  VerticesPerUnit: 1
+  VerticesPerUnit: 1.4
   TerrainNodesParams: {fileID: 11400000, guid: ef1b8d9865ab36144b92ea948d7eadc7, type: 2}
-  PlacedObjectParams: {fileID: 11400000, guid: 6d437699a949670469589ef0281b840c, type: 2}
+  PlacedObjectParams:
+  - {fileID: 11400000, guid: 6d437699a949670469589ef0281b840c, type: 2}
+  - {fileID: 11400000, guid: f66c007960c089844b3edd571569c962, type: 2}
+  - {fileID: 11400000, guid: c845dae13807c1c41bfe8abae57bf64e, type: 2}
   MaxTerrainHeight: 3
   TerrainMeshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
   IslandNames: {fileID: 4900000, guid: a670ed85c8eedaf4989ebf1d5997306b, type: 3}

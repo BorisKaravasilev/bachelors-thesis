@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Glacier Type
   m_EditorClassIdentifier: 
   Name: Glacier
-  probability: 1
+  probability: 0.1
   PixelsPerUnit: 4
   VerticesPerUnit: 1
   TerrainNodesParams: {fileID: 11400000, guid: b01b5e637e4fde94fb245e1629ac27ec, type: 2}
-  PlacedObjectParams: {fileID: 0}
+  PlacedObjectParams: []
   MaxTerrainHeight: 3.2
   TerrainMeshMaterial: {fileID: 2100000, guid: ac427f04820b5d64fa1815b7494bf5da, type: 2}
   IslandNames: {fileID: 0}

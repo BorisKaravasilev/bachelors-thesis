@@ -300,9 +300,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
-  gridParams: {fileID: 11400000, guid: a007c8c82a1842c49b593f09519d61a6, type: 2}
+  gridParams: {fileID: 11400000, guid: 410193c4c2808d94e9296626bf82d211, type: 2}
   islandGenerationParams:
-    GenerateAllOnStart: 0
+    GenerateAllOnStart: 1
     PreviewProgress: 0
     ShowIslandNames: 1
     IslandNamesFontSize: 24
@@ -311,6 +311,7 @@ MonoBehaviour:
     TexturePreviewMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
     IslandTypes:
     - {fileID: 11400000, guid: 40f71bae8944be640b305016dd161541, type: 2}
+    - {fileID: 11400000, guid: d78185540fbb9e5448a1f658cb308f9e, type: 2}
     - {fileID: 11400000, guid: 4ab829a8fb1a54c4487d7a3092c3b273, type: 2}
 --- !u!4 &496581467
 Transform:

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae7acf030992eba4aa89676761533bda, type: 3}
+  m_Name: Grass Object Params
+  m_EditorClassIdentifier: 
+  minHeight: 0
+  maxHeight: 0.4
+  MinimumTerrainFractionName: Grass
+  MinimumTerrainFractionAmount: 0.9
+  ObjectToPlace: {fileID: 1488684175275520, guid: 2ab833ef86401f8409c0310ffb61631e, type: 3}
+  GridParams:
+    spacing: 1
+    pointCountLimit: 500
+  OffsetParams:
+    maxOffset: 0.3
+    threshold: 0.7
+    xOffsetParams:
+      Scale: 9.57
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
+    zOffsetParams:
+      Scale: 10.5
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
+    thresholdParams:
+      Scale: 7.92
+      OffsetX: 0
+      OffsetY: 0
+      Type: 0
