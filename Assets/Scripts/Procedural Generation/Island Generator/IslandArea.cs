@@ -125,11 +125,6 @@ namespace ProceduralGeneration.IslandGenerator
 			GenerateIslandAreaTexture generateTexture = AddGenerateIslandAreaTextureTask(generateTerrainNodes.GetResult, multiplyGradientsAndNoises.GetResult, addMultiplicationResults.GetResult);
 			ShowTextures showTexture = AddShowTexturesTask("Show Island Area Texture", generateTexture.GetResultInList);
 
-			// Object Positions
-			// - generate
-			// - show
-			// - hide
-
 			// Mesh
 			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
 			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult, 40);
@@ -138,7 +133,7 @@ namespace ProceduralGeneration.IslandGenerator
 			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult, 40);
 
 			// Object Placement
-
+			//GenerateObjectPositions generateObjectPositions = AddGenerateObjectPositionsTask(addMultiplicationResults.GetResult, generateTexture.GetTerrainTypesAtPixels);
 		}
 
 		/// <summary>
@@ -342,6 +337,22 @@ namespace ProceduralGeneration.IslandGenerator
 			return generateMesh;
 		}
 
+		private GenerateObjectPositions AddGenerateObjectPositionsTask(Func<Color[]> getHeightmap, Func<TerrainBlend[]> getTerrainTypesAtPixels)
+		{
+			GenerateObjectPositionsParams parameters = new GenerateObjectPositionsParams
+			{
+				Radius = Radius,
+				GetHeightmap = getHeightmap,
+				GetTerrainTypesAtPixels = getTerrainTypesAtPixels,
+				Resolution = GetResolution(),
+				PlacedObjectParams = Type.PlacedObjectParams
+			};
+
+			GenerateObjectPositions generateObjectPositions = new GenerateObjectPositions(parameters);
+			taskList.AddTask(generateObjectPositions);
+			return generateObjectPositions;
+		}
+
 		#endregion
 
 		#region Progress Visualization
@@ -413,7 +424,7 @@ namespace ProceduralGeneration.IslandGenerator
 				nameTextObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
 				name = nameTextObject.AddComponent<TextMesh>();
-				name.fontSize = 20;
+				name.fontSize = generationParams.IslandNamesFontSize;
 
 				name.text = islandAreaName;
 			}

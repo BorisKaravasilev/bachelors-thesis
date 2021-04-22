@@ -17,6 +17,7 @@ MonoBehaviour:
   PixelsPerUnit: 6
   VerticesPerUnit: 1
   TerrainNodesParams: {fileID: 11400000, guid: ef1b8d9865ab36144b92ea948d7eadc7, type: 2}
-  MaxTerrainHeight: 2
+  PlacedObjectParams: {fileID: 0}
+  MaxTerrainHeight: 3
   TerrainMeshMaterial: {fileID: 2100000, guid: 2b82aa56357c4e04dbaf498a81418526, type: 2}
   IslandNames: {fileID: 4900000, guid: a670ed85c8eedaf4989ebf1d5997306b, type: 3}

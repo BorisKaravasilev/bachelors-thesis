@@ -21,6 +21,8 @@ namespace ProceduralGeneration.IslandGenerator
 		public float VerticesPerUnit = 0.5f;
 
 		public TerrainNodesParams TerrainNodesParams;
+		public PlacedObjectParams PlacedObjectParams;
+
 		public float MaxTerrainHeight = 1f;
 		public Material TerrainMeshMaterial;
 		public TextAsset IslandNames;

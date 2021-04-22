@@ -9,6 +9,7 @@ namespace ProceduralGeneration.IslandGenerator
 		public bool GenerateAllOnStart = false;
 		public bool PreviewProgress;
 		public bool ShowIslandNames;
+		public int IslandNamesFontSize = 20;
 		public float VisualStepTime;
 		public Material PreviewsMaterial;
 		public Material TexturePreviewMaterial;

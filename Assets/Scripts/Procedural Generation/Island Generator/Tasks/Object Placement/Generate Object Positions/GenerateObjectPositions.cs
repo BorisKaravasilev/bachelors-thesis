@@ -1,7 +1,6 @@
 using ObjectPlacement.JitteredGrid;
 using System;
 using System.Collections.Generic;
-using ProceduralGeneration.IslandGenerator;
 using TaskManagement;
 using UnityEngine;
 
@@ -31,21 +30,19 @@ namespace ProceduralGeneration.IslandGenerator
 		// Output
 		private List<GridPoint> positions;
 
-		public GenerateObjectPositions(PlacedObjectParams placedObjectParams, int resolution, float radius,
-			GridParams gridParams, OffsetParams offsetParams, Func<Color[]> getHeightmap,
-			Func<TerrainBlend[]> getTerrainTypesAtPixels)
+		public GenerateObjectPositions(GenerateObjectPositionsParams parameters)
 		{
-			this.placedObjectParams = placedObjectParams;
-			this.resolution = resolution;
-			this.radius = radius;
-			this.getHeightmap = getHeightmap;
-			this.getTerrainTypesAtPixels = getTerrainTypesAtPixels;
+			placedObjectParams = parameters.PlacedObjectParams;
+			resolution = parameters.Resolution;
+			radius = parameters.Radius;
+			getHeightmap = parameters.GetHeightmap;
+			getTerrainTypesAtPixels = parameters.GetTerrainTypesAtPixels;
 
 			Vector3 areaBottomLeft = new Vector3(-radius, 0f, -radius);
 			Vector3 areaTopRight = new Vector3(radius, 0f, radius);
 			boundingBox = new BoundingBox3D(areaBottomLeft, areaTopRight);
 
-			jitteredGrid = new JitteredGrid(gridParams, offsetParams);
+			jitteredGrid = new JitteredGrid(placedObjectParams.GridParams, placedObjectParams.OffsetParams);
 		}
 
 		public List<GridPoint> GetResult()
@@ -59,6 +56,12 @@ namespace ProceduralGeneration.IslandGenerator
 			positions = jitteredGrid.GetPointsInBoundingBox(boundingBox);
 			positions.RemoveAll(IsPositionBad);
 			SetPositionsHeights();
+
+			foreach (var position in positions)
+			{
+				PreviewObject preview = new PreviewObject(PrimitiveType.Cube, null);
+				preview.SetLocalPosition(position.Position);
+			}
 		}
 
 		protected override void GetInputFromPreviousStep()

@@ -5,7 +5,7 @@ namespace ObjectPlacement.JitteredGrid
 	[System.Serializable]
 	public class GridParams
 	{
-		[Range(10, 40)]
+		[Range(1, 40)]
 		[SerializeField] private int spacing;
 		public int Spacing
 		{
