@@ -89,7 +89,6 @@ namespace ProceduralGeneration.IslandGenerator
 				liftedPosition.y = heightmap[pixelIndex].r * maxTerrainHeight;
 
 				float groundedObjectHeight = GetClosestFourVerticesAverageHeight(liftedPosition);
-				Debug.Log($"Grounded Height: {groundedObjectHeight},  Actual height: {liftedPosition.y}");
 				liftedPosition.y = groundedObjectHeight;
 
 				position.Position = liftedPosition;
