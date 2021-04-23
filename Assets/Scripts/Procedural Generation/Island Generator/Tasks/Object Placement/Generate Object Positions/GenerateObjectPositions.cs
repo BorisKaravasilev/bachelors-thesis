@@ -8,7 +8,7 @@ using UnityEngine;
 namespace ProceduralGeneration.IslandGenerator
 {
 	/// <summary>
-	/// Generates positions on an island area.
+	/// Generates positions on an island area by removing unsuitable positions on a jittered grid.
 	/// </summary>
 	public class GenerateObjectPositions : DividableTask
 	{

@@ -60,9 +60,13 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		/// <summary>
-		/// Returns terrain nodes strength based on its heightmap and blending height.
+		/// Returns terrain node's strength based on its heightmap and blending height.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>
+		/// Returns 0 when "pixel height" is 0.
+		/// Near the border of node's influence returns value from 0 to 1.
+		/// When pixel height is bigger or equal to blending height 1 is returned (full strength).
+		/// </returns>
 		private float GetNodeStrength(TerrainNode node, int pixelIndex)
 		{
 			int nodeIndex = terrainNodes.IndexOf(node);
