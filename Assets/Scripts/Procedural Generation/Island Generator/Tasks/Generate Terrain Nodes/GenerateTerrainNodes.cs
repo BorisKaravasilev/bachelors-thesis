@@ -7,7 +7,7 @@ using UnityEngine;
 namespace ProceduralGeneration.IslandGenerator
 {
 	/// <summary>
-	/// Generates terrain nodes defining properties of a terrain in a specified radius.
+	/// Generates terrain nodes, each defining properties of a terrain in a specified radius.
 	/// </summary>
 	public class GenerateTerrainNodes : DividableTask
 	{
