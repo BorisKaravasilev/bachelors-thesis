@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Basic Type (Without trees)
   m_EditorClassIdentifier: 
   Name: Basic (Without trees)
-  probability: 1
+  probability: 0.5
   PixelsPerUnit: 5
   VerticesPerUnit: 1.4
   TerrainNodesParams: {fileID: 11400000, guid: 60650c7d3e678bd4d849b9ffbb9fc831, type: 2}

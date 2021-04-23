@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Glacier Type
   m_EditorClassIdentifier: 
   Name: Glacier
-  probability: 0.1
+  probability: 0.2
   PixelsPerUnit: 4
   VerticesPerUnit: 1
   TerrainNodesParams: {fileID: 11400000, guid: b01b5e637e4fde94fb245e1629ac27ec, type: 2}

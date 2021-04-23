@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
-  gridParams: {fileID: 11400000, guid: 410193c4c2808d94e9296626bf82d211, type: 2}
+  gridParams: {fileID: 11400000, guid: f241fe3f7e37e8c49965a31b56adf5f1, type: 2}
   islandGenerationParams:
     GenerateAllOnStart: 1
     PreviewProgress: 0
@@ -741,7 +741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.02
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_LocalPosition.z

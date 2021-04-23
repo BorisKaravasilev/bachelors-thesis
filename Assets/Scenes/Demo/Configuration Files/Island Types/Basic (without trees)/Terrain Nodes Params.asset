@@ -32,7 +32,7 @@ MonoBehaviour:
       OffsetY: 0
       Type: 0
   - Name: Grass
-    Color: {r: 0.31174344, g: 0.7735849, b: 0.09122462, a: 0}
+    Color: {r: 0.27793923, g: 0.7264151, b: 0.065103225, a: 0}
     StartingHeight: 0.25
     DominationProbability: 0
     NoiseParams:
