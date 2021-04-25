@@ -2,6 +2,9 @@
 
 namespace TaskManagement
 {
+	/// <summary>
+	/// Task that can be divided into multiple steps.
+	/// </summary>
 	public abstract class DividableTask
 	{
 		public string Name { get; set; }
@@ -36,14 +39,14 @@ namespace TaskManagement
 		/// <summary>
 		/// In range of 0 to 1.
 		/// </summary>
-		public float Progress => (float) ExecutedSteps / totalSteps;
+		public float Progress => totalSteps == 0 ? 1f : (float) ExecutedSteps / totalSteps;
 
 		public bool Enabled { get; set; }
 
 		public bool IsWaiting { get; private set; }
 		private float lastStepStartTime;
 
-		public DividableTask(string name = "Single Task")
+		public DividableTask(string name = "Dividable Task")
 		{
 			Name = name;
 			Enabled = true;
