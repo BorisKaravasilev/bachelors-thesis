@@ -9,15 +9,14 @@ public class TileGrid<TTile> where TTile : Tile, new()
 	private List<Tile> tiles;
 	private Vector3 playerTilePosition = new Vector3(0, 0, 0);
 
-	private GameObject gameObject;
+	private Transform parent;
 
-	public TileGrid(TileGridParams parameters, Transform parent = null)
+	public TileGrid(TileGridParams parameters, Transform parent)
 	{
 		this.parameters = parameters;
+		this.parent = parent;
 
 		tiles = new List<Tile>();
-		gameObject = new GameObject("TileGrid");
-		gameObject.transform.SetParent(parent);
 	}
 
 	/// <summary>
@@ -90,7 +89,7 @@ public class TileGrid<TTile> where TTile : Tile, new()
 				if (!IsTileGenerated(currentTilePosition))
 				{
 					TTile newTile = new TTile();
-					newTile.SetParameters(parameters.tileSize, currentTilePosition, gameObject.transform);
+					newTile.SetParameters(parameters.tileSize, currentTilePosition, parent);
 					tiles.Add(newTile);
 					newlyInstantiated.Add(newTile);
 				}
@@ -187,7 +186,8 @@ public class TileGrid<TTile> where TTile : Tile, new()
 			playerOriginOffsetZ = parameters.tileSize + playerOriginOffsetZ;
 		}
 
-		Vector3 tileOrigin = new Vector3(playerX - playerOriginOffsetX, 0, playerZ - playerOriginOffsetZ);
+		float gridHeight = parent.position.y;
+		Vector3 tileOrigin = new Vector3(playerX - playerOriginOffsetX, gridHeight, playerZ - playerOriginOffsetZ);
 
 		return tileOrigin;
 	}

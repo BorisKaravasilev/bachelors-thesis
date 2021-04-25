@@ -4,7 +4,6 @@ namespace Instantiators.ObjectGrid
 {
 	public class GridObject
 	{
-		public Vector3 Position { get; private set; }
 		public float Radius { get; private set; }
 
 		protected GameObject gameObject;
@@ -14,18 +13,15 @@ namespace Instantiators.ObjectGrid
 		public GridObject()
 		{
 			gameObject = new GameObject(DEFAULT_NAME);
-
-			Position = Vector3.zero;
 			Radius = 1f;
 		}
 
 		public GameObject Init(GridObjectParams parameters, Transform parent)
 		{
-			Position = parameters.Position;
 			Radius = parameters.Radius;
 
 			SetParent(parent);
-			SetPosition(Position);
+			SetPosition(parameters.Position);
 
 			return gameObject;
 		}
@@ -49,14 +45,25 @@ namespace Instantiators.ObjectGrid
 			transform.position = position;
 		}
 
+		public void SetLocalPosition(Vector3 localPosition)
+		{
+			Transform transform = gameObject.transform;
+			transform.localPosition = localPosition;
+		}
+
 		public Vector3 GetPosition()
 		{
 			return gameObject.transform.position;
 		}
 
+		public Vector3 GetLocalPosition()
+		{
+			return gameObject.transform.localPosition;
+		}
+
 		public GridObjectParams GetParams()
 		{
-			return new GridObjectParams(Position, Radius);
+			return new GridObjectParams(GetPosition(), Radius);
 		}
 	}
 }

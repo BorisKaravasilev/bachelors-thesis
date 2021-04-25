@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
 {
+	/// <summary>
+	/// Object representing and island area that can be placed on a grid.
+	/// </summary>
 	public class IslandArea : GridObject
 	{
 		// Properties
@@ -81,7 +84,7 @@ namespace ProceduralGeneration.IslandGenerator
 			Type = DetermineIslandType(generationParams.IslandTypes);
 
 			// Name Visualization
-			InstantiateNameText(Type.MaxTerrainHeight / 2, GetNameFromPosition(Position, Type.IslandNames));
+			InstantiateNameText(Type.MaxTerrainHeight / 2, GetNameFromPosition(GetPosition(), Type.IslandNames));
 
 			// Progress Visualization
 			InstantiateProgressText();
@@ -226,7 +229,7 @@ namespace ProceduralGeneration.IslandGenerator
 		/// </summary>
 		private GenerateNodesNoises AddGenerateNodesNoisesTask(GenerateTerrainNodes generateTerrainNodes)
 		{
-			GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(Position, Radius, GetResolution(), generateTerrainNodes.GetResult);
+			GenerateNodesNoises generateNodesNoises = new GenerateNodesNoises(GetPosition(), Radius, GetResolution(), generateTerrainNodes.GetResult);
 			taskList.AddTask(generateNodesNoises);
 
 			return generateNodesNoises;
@@ -479,7 +482,7 @@ namespace ProceduralGeneration.IslandGenerator
 		/// </summary>
 		private IslandType DetermineIslandType(List<IslandType> islandTypes)
 		{
-			RandomFromSeed randomGenerator = new RandomFromSeed(Position, "IslandTypePicker");
+			RandomFromSeed randomGenerator = new RandomFromSeed(GetPosition(), "IslandTypePicker");
 			int randomIndex = randomGenerator.PickItemIndex(islandTypes.Cast<IHasProbability>().ToList());
 
 			if (randomIndex < 0) Debug.LogError("No island type index was randomly picked.");

@@ -108,7 +108,12 @@ namespace Instantiators.ObjectGrid
 			if (!IsObjectGenerated(position.Position))
 			{
 				TObject newObject = new TObject();
-				GridObjectParams newObjectParams = new GridObjectParams(position.Position, position.MaxRadius);
+
+				// Shift the positions height to the height of the grid
+				Vector3 shiftedPosition = position.Position;
+				shiftedPosition.y = gameObject.transform.position.y;
+
+				GridObjectParams newObjectParams = new GridObjectParams(shiftedPosition, position.MaxRadius);
 
 				newObject.Init(newObjectParams, gameObject.transform);
 				return newObject;
@@ -140,7 +145,7 @@ namespace Instantiators.ObjectGrid
 		{
 			foreach (TObject obj in objects)
 			{
-				if (obj.Position == gridPoint.Position) return obj;
+				if (obj.GetPosition() == gridPoint.Position) return obj;
 			}
 
 			return null;

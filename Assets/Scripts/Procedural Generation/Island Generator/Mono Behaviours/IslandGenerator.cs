@@ -110,7 +110,7 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			if (!islandArea.Initialized || !islandArea.Finished)
 			{
-				return Vector3.Distance(islandArea.Position, point);
+				return Vector3.Distance(islandArea.GetPosition(), point);
 			}
 
 			return -1f;
