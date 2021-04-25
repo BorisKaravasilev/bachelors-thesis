@@ -65,9 +65,12 @@ namespace ProceduralGeneration.IslandGenerator
 			for (int pixelIndex = 0; pixelIndex < texturePixelCount; pixelIndex++)
 			{
 				Vector2Int pixel2DCoords = TextureFunctions.ArrayIndexToCoords(resolution, resolution, pixelIndex);
-				Vector2 noiseCoords = new Vector2();
-				noiseCoords.x = (float) pixel2DCoords.x / resolution + randomXOffset;
-				noiseCoords.y = (float) pixel2DCoords.y / resolution + randomYOffset;
+
+				Vector2 noiseCoords = new Vector2
+				{
+					x = (float) pixel2DCoords.x / resolution + randomXOffset,
+					y = (float) pixel2DCoords.y / resolution + randomYOffset
+				};
 
 				float intensity = nodeNoise.GetValue(noiseCoords);
 				Color pixelColor = new Color(intensity, intensity, intensity);

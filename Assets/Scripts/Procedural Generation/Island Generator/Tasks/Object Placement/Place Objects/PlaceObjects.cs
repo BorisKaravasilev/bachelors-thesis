@@ -27,6 +27,8 @@ namespace ProceduralGeneration.IslandGenerator
 
 		public PlaceObjects(Transform parent, PlacedObjectParams placedObjectParams, Func<List<GridPoint>> getPositions)
 		{
+			Name = "Place Objects";
+
 			this.parent = parent;
 			this.placedObjectParams = placedObjectParams;
 			this.getPositions = getPositions;

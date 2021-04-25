@@ -37,6 +37,8 @@ namespace ProceduralGeneration.IslandGenerator
 
 		public GenerateObjectPositions(GenerateObjectPositionsParams parameters)
 		{
+			Name = "Generate Object Positions";
+
 			placedObjectParams = parameters.PlacedObjectParams;
 			resolution = parameters.Resolution;
 			radius = parameters.Radius;

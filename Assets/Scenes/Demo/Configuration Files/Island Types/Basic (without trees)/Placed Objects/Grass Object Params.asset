@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Grass Object Params
   m_EditorClassIdentifier: 
   minHeight: 0
-  maxHeight: 0.4
+  maxHeight: 1
   MinimumTerrainFractionName: Grass
   MinimumTerrainFractionAmount: 0.9
-  ObjectToPlace: {fileID: 1488684175275520, guid: 2ab833ef86401f8409c0310ffb61631e, type: 3}
+  ObjectToPlace: {fileID: 7511737381404840681, guid: 7c51a4bb9e31f844eac4512d0a7e3115, type: 3}
   GridParams:
     spacing: 1
     pointCountLimit: 500

@@ -120,10 +120,10 @@ namespace ProceduralGeneration.IslandGenerator
 			// Addition
 			AddTextures addMultiplicationResults = AddAddTexturesTask("Add Multiplication Results Together", multiplyGradientsAndNoises.GetResult);
 			ShowTextures showAdditionResult = AddShowTexturesTask("Show Addition Result", addMultiplicationResults.GetResultInList);
-			HideObjects<IHideable> hideAdditionResult = AddHideObjectsTask("Hide Addition Result", showAdditionResult.GetResult);
 
 			// Texture
 			GenerateIslandAreaTexture generateTexture = AddGenerateIslandAreaTextureTask(generateTerrainNodes.GetResult, multiplyGradientsAndNoises.GetResult, addMultiplicationResults.GetResult);
+			HideObjects<IHideable> hideAdditionResult = AddHideObjectsTask("Hide Addition Result", showAdditionResult.GetResult);
 			ShowTextures showTexture = AddShowTexturesTask("Show Island Area Texture", generateTexture.GetResultInList);
 
 			// Mesh
@@ -317,10 +317,7 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(generationParams.PreviewProgress, getMesh);
 
-			float diameter = Radius * 2;
-			int verticesCount = (int)(diameter * Type.VerticesPerUnit);
-			int halfOfTrianglesToGenerate = (verticesCount - 1) * (verticesCount - 1);
-			float minStepDuration = GetVisualStepTime(stepSize, halfOfTrianglesToGenerate);
+			float minStepDuration = GetVisualStepTime(stepSize, GetMeshTrianglesCount() / 2);
 
 			translateMeshVertices.SetParams(stepSize, true, minStepDuration);
 			taskList.AddTask(translateMeshVertices);
@@ -335,7 +332,7 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			GenerateMesh generateMesh = new GenerateMesh(Type.TerrainMeshMaterial, getTerrainMesh, getTexturePixels);
 
-			float minStepDuration = GetVisualStepTime(stepSize, 100);
+			float minStepDuration = GetVisualStepTime(stepSize, GetMeshTrianglesCount() / 2);
 
 			generateMesh.SetParams(stepSize, true, minStepDuration);
 			taskList.AddTask(generateMesh);
@@ -414,6 +411,13 @@ namespace ProceduralGeneration.IslandGenerator
 		}
 
 		#endregion
+
+		private int GetMeshTrianglesCount()
+		{
+			float diameter = Radius * 2;
+			int verticesCount = (int)(diameter * Type.VerticesPerUnit);
+			return (verticesCount - 1) * (verticesCount - 1) * 2;
+		}
 
 		/// <summary>
 		/// Randomly chooses a name from a list of names;
