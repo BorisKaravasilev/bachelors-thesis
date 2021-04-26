@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Generates a terrain mesh with the option to visualize the progress.
+/// </summary>
 public class TerrainMesh
 {
 	// Height Map
