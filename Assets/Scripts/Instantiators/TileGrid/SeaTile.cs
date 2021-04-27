@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class SeaTile : Tile
 {
@@ -34,6 +35,7 @@ public class SeaTile : Tile
 		sea = GeneratePlane(Size, seaLevel);
 		sea.name = "Sea";
 		sea.GetComponent<Renderer>().material = seaMaterial;
+		sea.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
 		Component.Destroy(sea.GetComponent<MeshCollider>());
 	}
 }
