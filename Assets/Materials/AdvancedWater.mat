@@ -42,6 +42,9 @@ Material:
     - Vector1_B3CBB829: 0.3
     - Vector1_CA14E921: 35
     - Vector1_F2FA5F4B: 0.1
+    - Wave_Height: 0.1
+    - Wave_Scale: 10
+    - Wave_Speed: 0.05
     m_Colors:
     - Color_3E07AE61: {r: 0, g: 0.8762181, b: 0.93333334, a: 0.6980392}
     - Color_408C12DD: {r: 0.06674972, g: 0.8918287, b: 0.9433962, a: 0.9019608}
