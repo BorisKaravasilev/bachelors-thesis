@@ -239,7 +239,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 34
+  field of view: 50
   orthographic: 0
   orthographic size: 20.6
   m_Depth: 0
@@ -331,20 +331,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df5769f9d2c3934da3af42d44235fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
-  gridParams: {fileID: 11400000, guid: 410193c4c2808d94e9296626bf82d211, type: 2}
+  generatedArea: {fileID: 11400000, guid: 5a571c4bec9d26d47b2d76fc438219a0, type: 2}
+  gridParams: {fileID: 11400000, guid: b24dadf5ed29f594695dd8cda0691d25, type: 2}
   islandGenerationParams:
     GenerateAllOnStart: 1
     PreviewProgress: 0
-    ShowIslandNames: 1
+    ShowIslandNames: 0
     IslandNamesFontSize: 28
     VisualStepTime: 0.1
     PreviewsMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
     TexturePreviewMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
     IslandTypes:
-    - {fileID: 11400000, guid: 40f71bae8944be640b305016dd161541, type: 2}
-    - {fileID: 11400000, guid: d78185540fbb9e5448a1f658cb308f9e, type: 2}
-    - {fileID: 11400000, guid: 4ab829a8fb1a54c4487d7a3092c3b273, type: 2}
+    - {fileID: 11400000, guid: b4a099c41cfe07a4292ad59758fc8d19, type: 2}
 --- !u!4 &496581467
 Transform:
   m_ObjectHideFlags: 0
@@ -474,7 +472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 808562768}
-  seaMaterial: {fileID: 2100000, guid: 2f04293f627c9ff4a86b0e05e325b268, type: 2}
+  seaMaterial: {fileID: 2100000, guid: 9e3114b079ae86a449435e0378423e9f, type: 2}
   seaBedMaterial: {fileID: 2100000, guid: 7904f68233bd1f84c9844bf9d8f67753, type: 2}
   seaTileGridParams:
     tileSize: 20
@@ -483,7 +481,7 @@ MonoBehaviour:
     destroyFarTiles: 1
   seaLevel: 0.26
   previewMode: 0
-  boundingBox3D: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
+  boundingBox3D: {fileID: 11400000, guid: 5a571c4bec9d26d47b2d76fc438219a0, type: 2}
 --- !u!1 &1081191747
 GameObject:
   m_ObjectHideFlags: 0
@@ -867,18 +865,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8629059275097310947, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.0025
-      objectReference: {fileID: 0}
-    - target: {fileID: 8629059275097310947, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.0025
-      objectReference: {fileID: 0}
-    - target: {fileID: 8629059275097310947, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.0025
-      objectReference: {fileID: 0}
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -922,10 +908,6 @@ PrefabInstance:
     - target: {fileID: 8629059276484687598, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8629059276484687600, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
-      propertyPath: speed
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8629059276484687601, guid: 9644551274a21144b93744a9a9dc3b29, type: 3}
       propertyPath: m_Constraints
