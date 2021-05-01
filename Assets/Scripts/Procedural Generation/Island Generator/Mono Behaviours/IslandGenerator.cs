@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using Instantiators.ObjectGrid;
+﻿using Instantiators.ObjectGrid;
 using ObjectPlacement.JitteredGrid;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ProceduralGeneration.IslandGenerator
@@ -33,6 +32,12 @@ namespace ProceduralGeneration.IslandGenerator
 
 		void OnValidate()
 		{
+			UpdateGridParameters();
+		}
+
+		public void ToggleGenerateVisually()
+		{
+			islandGenerationParams.PreviewProgress = !islandGenerationParams.PreviewProgress;
 			UpdateGridParameters();
 		}
 
