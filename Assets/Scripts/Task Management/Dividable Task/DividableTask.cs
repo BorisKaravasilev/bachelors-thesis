@@ -33,8 +33,8 @@ namespace TaskManagement
 		}
 
 		public int ExecutedSteps => TotalSteps - RemainingSteps;
-		public int StepSize { get; set; }
-		public float MinStepDuration { get; set; } // For visualization purposes
+		public float MinExecutionTime { get; set; } // Guarantees a minimum execution time (task can wait for visualization)
+		public float MaxExecutionTime { get; set; } // Regulates how many steps should be executed to keep good frame rate
 
 		/// <summary>
 		/// In range of 0 to 1.
@@ -50,17 +50,20 @@ namespace TaskManagement
 		{
 			Name = name;
 			Enabled = true;
-			StepSize = 1;
-			MinStepDuration = 0f;
+			MinExecutionTime = 0f;
 			lastStepStartTime = 0f;
 			IsWaiting = false;
+			MaxExecutionTime = float.MaxValue;
 		}
 
-		public void SetParams(int stepSize, bool enabled = true, float minStepDuration = 0)
+		/// <summary>
+		/// Sets tasks parameters.
+		/// </summary>
+		public void SetParams(float maxExecutionTime, bool enabled = true, float minExecutionTime = 0)
 		{
-			StepSize = stepSize;
 			Enabled = enabled;
-			MinStepDuration = minStepDuration;
+			MinExecutionTime = minExecutionTime;
+			MaxExecutionTime = maxExecutionTime;
 		}
 
 		/// <summary>
@@ -93,7 +96,7 @@ namespace TaskManagement
 		{
 			if (IsWaiting)
 			{
-				if (MinStepDurationElapsed(MinStepDuration))
+				if (MinExecutionTimeElapsed())
 				{
 					IsWaiting = false;
 				}
@@ -108,31 +111,47 @@ namespace TaskManagement
 			}
 			else
 			{
-				if (!MinStepDurationElapsed(MinStepDuration)) return 0;
+				if (!MinExecutionTimeElapsed()) return 0;
 			}
 
 			lastStepStartTime = Time.realtimeSinceStartup;
 			int executedSteps = 0;
-			int stepsToExecute = StepSize;
 
-			while (RemainingSteps > 0 && stepsToExecute > 0)
+			while (RemainingSteps > 0 && !MaxExecutionTimeElapsed())
 			{
 				ExecuteStep();
-				stepsToExecute--;
 				RemainingSteps--;
 				executedSteps++;
 			}
 
-			if (RemainingSteps == 0 && !MinStepDurationElapsed(MinStepDuration)) IsWaiting = true;
+			if (RemainingSteps == 0 && !MinExecutionTimeElapsed()) IsWaiting = true;
 
 			return executedSteps;
 		}
 
-		private bool MinStepDurationElapsed(float minStepDuration)
+		/// <summary>
+		/// Returns true if the time of execution is longer than the minimum.
+		/// </summary>
+		private bool MinExecutionTimeElapsed()
 		{
-			float intervalBetweenSteps = Time.realtimeSinceStartup - lastStepStartTime;
+			float interval = Time.realtimeSinceStartup - lastStepStartTime;
 
-			if (intervalBetweenSteps > minStepDuration)
+			if (interval > MinExecutionTime)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Returns true if the time of execution is longer than the maximum.
+		/// </summary>
+		private bool MaxExecutionTimeElapsed()
+		{
+			float interval = Time.realtimeSinceStartup - lastStepStartTime;
+
+			if (interval > MaxExecutionTime)
 			{
 				return true;
 			}

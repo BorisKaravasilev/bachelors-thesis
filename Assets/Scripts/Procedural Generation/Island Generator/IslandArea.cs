@@ -33,8 +33,7 @@ namespace ProceduralGeneration.IslandGenerator
 		public IslandArea()
 		{
 			gameObject.name = DEFAULT_NAME;
-			taskList = new TaskList();
-			taskList.DebugMode = false;
+			taskList = new TaskList {DebugMode = false};
 			Initialized = false;
 		}
 
@@ -131,10 +130,10 @@ namespace ProceduralGeneration.IslandGenerator
 
 			// Mesh
 			HideObjects<IHideable> hideTerrainNodes = AddHideObjectsTask("Hide Terrain Nodes", showTerrainNodes.GetResult);
-			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult, 40);
-			TranslateMeshVertices translateMeshVertices = AddTranslateMeshVerticesTask(generateMeshVertices.GetResult, 10);
+			GenerateMeshVertices generateMeshVertices = AddGenerateMeshVerticesTask(addMultiplicationResults.GetResult);
+			TranslateMeshVertices translateMeshVertices = AddTranslateMeshVerticesTask(generateMeshVertices.GetResult);
 			HideObjects<IHideable> hideTexture = AddHideObjectsTask("Hide Island Area Texture", showTexture.GetResult);
-			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult, 40);
+			GenerateMesh generateMesh = AddGenerateMeshTask(translateMeshVertices.GetResult, generateTexture.GetResult);
 
 			// Object Placement
 			foreach (PlacedObjectParams placedObjectParams in Type.PlacedObjectParams)
@@ -151,7 +150,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private GenerateTerrainNodes AddGenerateNodesTask()
 		{
 			GenerateTerrainNodes generateTerrainNodes = new GenerateTerrainNodes(Type.TerrainNodesParams, GetParams());
-			generateTerrainNodes.SetParams(Type.TerrainNodesParams.MaxNodes);
+			generateTerrainNodes.SetParams(generationParams.MaxExecutionTime);
 			taskList.AddTask(generateTerrainNodes);
 
 			return generateTerrainNodes;
@@ -171,7 +170,7 @@ namespace ProceduralGeneration.IslandGenerator
 			};
 
 			ShowTerrainNodes showTerrainNodes = new ShowTerrainNodes(parameters);
-			showTerrainNodes.SetParams(1, generationParams.PreviewProgress, generationParams.VisualStepTime);
+			showTerrainNodes.SetParams(generationParams.MaxExecutionTime, generationParams.PreviewProgress, generationParams.VisualStepTime);
 			taskList.AddTask(showTerrainNodes);
 
 			return showTerrainNodes;
@@ -204,7 +203,7 @@ namespace ProceduralGeneration.IslandGenerator
 			};
 
 			ShowTextures showTextures = new ShowTextures(parameters);
-			showTextures.SetParams(1, generationParams.PreviewProgress, generationParams.VisualStepTime);
+			showTextures.SetParams(generationParams.MaxExecutionTime, generationParams.PreviewProgress, generationParams.VisualStepTime);
 			showTextures.Name = name;
 			taskList.AddTask(showTextures);
 
@@ -217,7 +216,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private HideObjects<IHideable> AddHideObjectsTask(string name, Func<List<IHideable>> getPreviewObjects)
 		{
 			HideObjects<IHideable> hideObjects = new HideObjects<IHideable>(getPreviewObjects);
-			hideObjects.SetParams(1, generationParams.PreviewProgress);
+			hideObjects.SetParams(generationParams.MaxExecutionTime, generationParams.PreviewProgress);
 			hideObjects.Name = name;
 			taskList.AddTask(hideObjects);
 
@@ -250,10 +249,10 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list any "Add Textures" task.
 		/// </summary>
-		private AddTextures AddAddTexturesTask(string name, Func<List<Color[]>> getTextures, int stepSize = 1)
+		private AddTextures AddAddTexturesTask(string name, Func<List<Color[]>> getTextures)
 		{
 			AddTextures addTextures = new AddTextures(getTextures);
-			addTextures.SetParams(stepSize);
+			addTextures.SetParams(generationParams.MaxExecutionTime);
 			addTextures.Name = name;
 			taskList.AddTask(addTextures);
 
@@ -275,6 +274,7 @@ namespace ProceduralGeneration.IslandGenerator
 			};
 
 			GenerateIslandAreaTexture generateTexture = new GenerateIslandAreaTexture(parameters);
+			generateTexture.SetParams(generationParams.MaxExecutionTime);
 			taskList.AddTask(generateTexture);
 
 			return generateTexture;
@@ -283,7 +283,7 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Generate Mesh Vertices" task.
 		/// </summary>
-		private GenerateMeshVertices AddGenerateMeshVerticesTask(Func<Color[]> getHeightmap, int stepSize = 1)
+		private GenerateMeshVertices AddGenerateMeshVerticesTask(Func<Color[]> getHeightmap)
 		{
 			float diameter = Radius * 2;
 			Vector3 dimensions = new Vector3(diameter, Type.MaxTerrainHeight, diameter);
@@ -304,10 +304,10 @@ namespace ProceduralGeneration.IslandGenerator
 				Visualize = generationParams.PreviewProgress
 			};
 
-			float minStepDuration = GetVisualStepTime(stepSize, verticesCount * verticesCount);
+			float minStepDuration = GetVisualStepTime(verticesCount * verticesCount);
 
 			GenerateMeshVertices generateMeshVertices = new GenerateMeshVertices(parameters);
-			generateMeshVertices.SetParams(stepSize, true, minStepDuration);
+			generateMeshVertices.SetParams(generationParams.MaxExecutionTime, true, minStepDuration);
 			taskList.AddTask(generateMeshVertices);
 
 			return generateMeshVertices;
@@ -316,13 +316,13 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Translate Mesh Vertices" task.
 		/// </summary>
-		private TranslateMeshVertices AddTranslateMeshVerticesTask(Func<TerrainMesh> getMesh, int stepSize = 1)
+		private TranslateMeshVertices AddTranslateMeshVerticesTask(Func<TerrainMesh> getMesh)
 		{
 			TranslateMeshVertices translateMeshVertices = new TranslateMeshVertices(generationParams.PreviewProgress, getMesh);
 
-			float minStepDuration = GetVisualStepTime(stepSize, GetMeshTrianglesCount() / 2);
+			float minStepDuration = GetVisualStepTime(GetMeshTrianglesCount() / 2);
 
-			translateMeshVertices.SetParams(stepSize, true, minStepDuration);
+			translateMeshVertices.SetParams(generationParams.MaxExecutionTime, true, minStepDuration);
 			taskList.AddTask(translateMeshVertices);
 
 			return translateMeshVertices;
@@ -331,13 +331,13 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Initializes and adds to task list the "Generate Mesh" task.
 		/// </summary>
-		private GenerateMesh AddGenerateMeshTask(Func<TerrainMesh> getTerrainMesh, Func<Color[]> getTexturePixels, int stepSize = 1)
+		private GenerateMesh AddGenerateMeshTask(Func<TerrainMesh> getTerrainMesh, Func<Color[]> getTexturePixels)
 		{
 			GenerateMesh generateMesh = new GenerateMesh(Type.TerrainMeshMaterial, getTerrainMesh, getTexturePixels);
 
-			float minStepDuration = GetVisualStepTime(stepSize, GetMeshTrianglesCount() / 2);
+			float minStepDuration = GetVisualStepTime(GetMeshTrianglesCount() / 2);
 
-			generateMesh.SetParams(stepSize, true, minStepDuration);
+			generateMesh.SetParams(generationParams.MaxExecutionTime, true, minStepDuration);
 			taskList.AddTask(generateMesh);
 
 			return generateMesh;
@@ -370,6 +370,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private PlaceObjects AddPlaceObjectsTask(PlacedObjectParams placedObjectParams, Func<List<GridPoint>> getPositions)
 		{
 			PlaceObjects placeObjects = new PlaceObjects(gameObject.transform, placedObjectParams, getPositions);
+			placeObjects.SetParams(generationParams.MaxExecutionTime);
 			taskList.AddTask(placeObjects);
 
 			return placeObjects;
@@ -462,9 +463,9 @@ namespace ProceduralGeneration.IslandGenerator
 		/// <summary>
 		/// Calculates the minimum time that every visual step should be displayed for.
 		/// </summary>
-		private float GetVisualStepTime(int stepSize, int totalSteps)
+		private float GetVisualStepTime(int totalSteps)
 		{
-			float stepVisualizationTime = ((float)stepSize / totalSteps) * generationParams.VisualStepTime;
+			float stepVisualizationTime = (1f / totalSteps) * generationParams.VisualStepTime;
 			return generationParams.PreviewProgress ? stepVisualizationTime : 0f;
 		}
 
