@@ -80,7 +80,7 @@ namespace ProceduralGeneration.IslandGenerator
 			}
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			terrainNodes = getTerrainNodes();
 			terrainNodesHeightmaps = getTerrainNodesHeightmaps();

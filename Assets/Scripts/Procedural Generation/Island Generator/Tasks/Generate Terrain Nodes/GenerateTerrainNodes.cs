@@ -52,7 +52,7 @@ namespace ProceduralGeneration.IslandGenerator
 			return terrainNodes;
 		}
 
-		protected override void GetInputFromPreviousStep() { /* Not used */ }
+		protected override void GetInputFromPreviousTask() { /* Not used */ }
 
 		protected override void SetSteps()
 		{

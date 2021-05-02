@@ -46,7 +46,7 @@ namespace ProceduralGeneration.IslandGenerator
 			terrainMesh.GenerateVerticesStep(1, visualize);
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			heightmap = getHeightmap();
 			terrainMesh = new TerrainMesh(parent, heightmap, resolution, dimensions, verticesCount);

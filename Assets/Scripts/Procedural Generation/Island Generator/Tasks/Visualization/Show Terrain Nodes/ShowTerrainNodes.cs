@@ -49,7 +49,7 @@ namespace ProceduralGeneration.IslandGenerator
 			previews.Add(newPreview);
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			this.terrainNodes = getTerrainNodes();
 		}

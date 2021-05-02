@@ -52,7 +52,7 @@ namespace ProceduralGeneration.IslandGenerator
 			resultTextures.Add(resultTexture);
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			multiplicandTextures = getMultiplicandTextures();
 			multiplierTextures = getMultiplierTextures();

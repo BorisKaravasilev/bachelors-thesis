@@ -25,7 +25,7 @@ namespace ProceduralGeneration.IslandGenerator
 			previewObjects[objectIndex].Hide();
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			previewObjects = getObjects();
 		}

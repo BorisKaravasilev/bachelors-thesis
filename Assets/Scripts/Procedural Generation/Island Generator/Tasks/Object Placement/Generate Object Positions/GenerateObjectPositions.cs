@@ -67,7 +67,7 @@ namespace ProceduralGeneration.IslandGenerator
 			SetPositionsHeights();
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			heightmap = getHeightmap();
 			terrainMesh = getTerrainMesh();

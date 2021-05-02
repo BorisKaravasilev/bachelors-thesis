@@ -51,7 +51,7 @@ namespace ProceduralGeneration.IslandGenerator
 			placedObjects.Add(newObject);
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			positions = getPositions();
 		}

@@ -73,7 +73,7 @@ namespace TaskManagement
 		{
 			if (NotStarted)
 			{
-				GetInputFromPreviousStep();
+				GetInputFromPreviousTask();
 				SetSteps();
 			}
 
@@ -106,7 +106,7 @@ namespace TaskManagement
 
 			if (NotStarted)
 			{
-				GetInputFromPreviousStep();
+				GetInputFromPreviousTask();
 				SetSteps();
 			}
 			else
@@ -167,7 +167,7 @@ namespace TaskManagement
 		/// <summary>
 		/// Gets called before the first step is executed.
 		/// </summary>
-		protected abstract void GetInputFromPreviousStep();
+		protected abstract void GetInputFromPreviousTask();
 
 		/// <summary>
 		/// Gets called before the first step, but after "GetInputFromPreviousStep()" is called.

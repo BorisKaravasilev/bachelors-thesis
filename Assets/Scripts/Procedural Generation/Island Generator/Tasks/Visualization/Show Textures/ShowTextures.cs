@@ -64,7 +64,7 @@ namespace ProceduralGeneration.IslandGenerator
 			previewObjects.Add(previewObject);
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			textures = getTextures();
 		}

@@ -46,7 +46,7 @@ namespace ProceduralGeneration.IslandGenerator
 			}
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			terrainMesh = getTerrainMesh();
 			texturePixels = getTexturePixels();

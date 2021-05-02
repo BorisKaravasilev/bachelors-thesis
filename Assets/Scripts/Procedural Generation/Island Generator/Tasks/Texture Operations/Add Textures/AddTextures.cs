@@ -47,7 +47,7 @@ namespace ProceduralGeneration.IslandGenerator
 			}
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			textures = getTextures();
 

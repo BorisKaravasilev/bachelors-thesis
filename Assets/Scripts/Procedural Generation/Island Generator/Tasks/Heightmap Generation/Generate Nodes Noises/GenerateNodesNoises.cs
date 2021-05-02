@@ -81,7 +81,7 @@ namespace ProceduralGeneration.IslandGenerator
 			noises.Add(noise);
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			terrainNodes = getTerrainNodes();
 		}

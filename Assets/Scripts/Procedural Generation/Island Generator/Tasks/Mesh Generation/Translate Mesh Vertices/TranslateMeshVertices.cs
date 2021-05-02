@@ -35,7 +35,7 @@ namespace ProceduralGeneration.IslandGenerator
 			terrainMesh.UpdateVerticesPositions(0.01f, visualize);
 		}
 
-		protected override void GetInputFromPreviousStep()
+		protected override void GetInputFromPreviousTask()
 		{
 			terrainMesh = getTerrainMesh();
 			terrainMesh.SetTargetVerticesPositions(visualize);
