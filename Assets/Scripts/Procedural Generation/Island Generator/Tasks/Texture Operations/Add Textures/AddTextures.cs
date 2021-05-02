@@ -16,7 +16,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private List<Color[]> textures;
 
 		// Outputs
-		private Color[] finalTexture;
+		private Color[] resultTexture;
 
 		public AddTextures(Func<List<Color[]>> getTextures)
 		{
@@ -27,13 +27,13 @@ namespace ProceduralGeneration.IslandGenerator
 		public Color[] GetResult()
 		{
 			if (!Finished) Debug.LogWarning($"\"GetResult()\" called on {Name} task before finished.");
-			return finalTexture;
+			return resultTexture;
 		}
 
 		public List<Color[]> GetResultInList()
 		{
 			if (!Finished) Debug.LogWarning($"\"GetResultInList()\" called on {Name} task before finished.");
-			List<Color[]> resultWrapperList = new List<Color[]> {finalTexture};
+			List<Color[]> resultWrapperList = new List<Color[]> {resultTexture};
 			return resultWrapperList;
 		}
 
@@ -41,9 +41,9 @@ namespace ProceduralGeneration.IslandGenerator
 		{
 			int textureIndex = ExecutedSteps;
 
-			for (int i = 0; i < finalTexture.Length; i++)
+			for (int i = 0; i < resultTexture.Length; i++)
 			{
-				finalTexture[i] += textures[textureIndex][i];
+				resultTexture[i] += textures[textureIndex][i];
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace ProceduralGeneration.IslandGenerator
 			}
 			else
 			{
-				finalTexture = new Color[textures[0].Length];
+				resultTexture = new Color[textures[0].Length];
 			}
 		}
 
