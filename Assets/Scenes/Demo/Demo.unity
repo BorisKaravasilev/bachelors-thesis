@@ -346,6 +346,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 808562768}
+  cameraZoomSpeed: 1
+  minFOV: 15
+  maxFOV: 70
 --- !u!114 &142699287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,7 +575,7 @@ MonoBehaviour:
     PreviewProgress: 0
     ShowIslandNames: 1
     IslandNamesFontSize: 28
-    VisualStepTime: 0.15
+    VisualStepTime: 0.3
     MaxExecutionTime: 0.001
     PreviewsMaterial: {fileID: 2100000, guid: 87383c2251816aa43ad0beaa72355160, type: 2}
     TexturePreviewMaterial: {fileID: 2100000, guid: 516a50d8dda8fc34c87e2ff32eca5a6b, type: 2}
@@ -647,7 +650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.9411765}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9607843}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1163,9 +1166,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Arrow keys  -  movement
+  m_Text: 'Movement     -     Arrow keys
 
-    Mouse wheel  -  zoom'
+    Zoom             -     Shift / Ctrl'
 --- !u!222 &1297868819
 CanvasRenderer:
   m_ObjectHideFlags: 0
