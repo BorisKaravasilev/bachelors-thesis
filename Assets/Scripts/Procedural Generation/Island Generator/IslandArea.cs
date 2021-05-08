@@ -301,7 +301,8 @@ namespace ProceduralGeneration.IslandGenerator
 				GetHeightmap = getHeightmap,
 				Parent = gameObject.transform,
 				VerticesCount = vertices,
-				Visualize = generationParams.PreviewProgress
+				Visualize = generationParams.PreviewProgress,
+				VerticesPreviewMaterial = generationParams.PreviewsMaterial
 			};
 
 			float minStepDuration = GetVisualStepTime(verticesCount * verticesCount);

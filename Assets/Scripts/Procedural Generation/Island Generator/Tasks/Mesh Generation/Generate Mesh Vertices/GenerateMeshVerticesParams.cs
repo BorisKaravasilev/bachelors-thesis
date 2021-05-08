@@ -15,5 +15,6 @@ namespace ProceduralGeneration.IslandGenerator
 		public Vector3 Dimensions { get; set; }
 		public Vector2Int VerticesCount { get; set; }
 		public Func<Color[]> GetHeightmap { get; set; }
+		public Material VerticesPreviewMaterial { get; set; }
 	}
 }

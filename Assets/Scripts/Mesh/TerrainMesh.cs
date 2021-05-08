@@ -18,6 +18,7 @@ public class TerrainMesh
 	public Vector3 Dimensions { get; set; }
 	public Vector2Int VerticesCount { get; set; }
 	public Vector3[] Vertices { get; set; }
+	public Material VerticesPreviewMaterial { get; private set; }
 	private Vector2 verticesSpacing;
 	private float verticesTranslationProgress;
 
@@ -64,7 +65,7 @@ public class TerrainMesh
 	private Color[] oldVerticesColors;
 	private Color[] targetVerticesColors;
 
-	public TerrainMesh(Transform parent, Color[] heightMap, Vector2Int resolution, Vector3 dimensions, Vector2Int verticesCount)
+	public TerrainMesh(Transform parent, Color[] heightMap, Vector2Int resolution, Vector3 dimensions, Vector2Int verticesCount, Material verticesPreviewMaterial)
 	{
 		// Height Map
 		HeightMap = heightMap;
@@ -93,6 +94,7 @@ public class TerrainMesh
 		oldVerticesColors = new Color[(verticesCount.x) * (verticesCount.y)];
 		targetVerticesColors = new Color[(verticesCount.x) * (verticesCount.y)];
 		verticesTranslationProgress = 0f;
+		VerticesPreviewMaterial = verticesPreviewMaterial;
 	}
 
 	public void GenerateMeshStep(int trianglesToGenerate)
@@ -179,7 +181,7 @@ public class TerrainMesh
 
 			if (visualize)
 			{
-				oldVerticesColors[i] = VertexVisualizations[i].GetComponent<Renderer>().material.GetColor("_BaseColor");
+				oldVerticesColors[i] = VertexVisualizations[i].GetComponent<Renderer>().material.color;
 			}
 		}
 	}
@@ -201,7 +203,7 @@ public class TerrainMesh
 			{
 				VertexVisualizations[i].transform.localPosition = Vertices[i];
 				Color newColor = Color.Lerp(oldVerticesColors[i], targetVerticesColors[i], verticesTranslationProgress);
-				VertexVisualizations[i].GetComponent<Renderer>().material.SetColor("_BaseColor", newColor);
+				VertexVisualizations[i].GetComponent<Renderer>().material.color = newColor;
 			}
 		}
 	}
@@ -292,7 +294,8 @@ public class TerrainMesh
 		// Set vertex marker properties
 		vertexMarker.transform.localScale = new Vector3(markerRadius, markerRadius, markerRadius);
 		vertexMarker.transform.localPosition = Vertices[vertexIndex];
-		vertexMarker.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.black);
+		vertexMarker.GetComponent<Renderer>().material = VerticesPreviewMaterial;
+		vertexMarker.GetComponent<Renderer>().material.color = Color.black;
 		VertexVisualizations.Add(vertexMarker);
 	}
 
@@ -364,13 +367,14 @@ public class TerrainMesh
 			meshRenderer.material = material;
 			meshRenderer.material.mainTexture = texture;
 
-			Rigidbody rigidbody = MeshGO.AddComponent<Rigidbody>();
-			rigidbody.useGravity = false;
-			rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			// Needs fixing
+			//Rigidbody rigidbody = MeshGO.AddComponent<Rigidbody>();
+			//rigidbody.useGravity = false;
+			//rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-			MeshCollider collider = MeshGO.AddComponent<MeshCollider>();
-			collider.sharedMesh = meshFilter.mesh;
-			collider.convex = true;
+			//MeshCollider collider = MeshGO.AddComponent<MeshCollider>();
+			//collider.sharedMesh = meshFilter.mesh;
+			//collider.convex = true;
 		}
 	}
 }

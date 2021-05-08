@@ -167,7 +167,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 61296505}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 1.33
   m_Height: 7.25
   m_Direction: 2
@@ -571,7 +571,7 @@ MonoBehaviour:
   generatedArea: {fileID: 11400000, guid: a45b32496847e014bbf669a74f182092, type: 2}
   gridParams: {fileID: 11400000, guid: 410193c4c2808d94e9296626bf82d211, type: 2}
   islandGenerationParams:
-    GenerateAllOnStart: 1
+    GenerateAllOnStart: 0
     PreviewProgress: 0
     ShowIslandNames: 1
     IslandNamesFontSize: 28
@@ -1209,7 +1209,7 @@ MonoBehaviour:
   textColor: {r: 0, g: 0, b: 0, a: 1}
   fontSize: 16
   updatePeriod: 0.5
-  lowFpsThreshold: 60
+  lowFpsThreshold: 30
 --- !u!4 &1494603127
 Transform:
   m_ObjectHideFlags: 0
@@ -1296,7 +1296,7 @@ GameObject:
   - component: {fileID: 1933642512}
   - component: {fileID: 1933642511}
   m_Layer: 0
-  m_Name: Simple Puse Menu
+  m_Name: Simple Pause Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

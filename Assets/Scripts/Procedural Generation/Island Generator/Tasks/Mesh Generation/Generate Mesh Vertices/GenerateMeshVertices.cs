@@ -15,6 +15,7 @@ namespace ProceduralGeneration.IslandGenerator
 		private Vector2Int resolution;
 		private Vector3 dimensions;
 		private Vector2Int verticesCount;
+		private Material verticesPreviewMaterial;
 
 		// Inputs from previous task
 		private Func<Color[]> getHeightmap;
@@ -33,6 +34,7 @@ namespace ProceduralGeneration.IslandGenerator
 			dimensions = parameters.Dimensions;
 			verticesCount = parameters.VerticesCount;
 			getHeightmap = parameters.GetHeightmap;
+			verticesPreviewMaterial = parameters.VerticesPreviewMaterial;
 		}
 
 		public TerrainMesh GetResult()
@@ -49,7 +51,7 @@ namespace ProceduralGeneration.IslandGenerator
 		protected override void GetInputFromPreviousTask()
 		{
 			heightmap = getHeightmap();
-			terrainMesh = new TerrainMesh(parent, heightmap, resolution, dimensions, verticesCount);
+			terrainMesh = new TerrainMesh(parent, heightmap, resolution, dimensions, verticesCount, verticesPreviewMaterial);
 
 			Vector3 offset = new Vector3(-dimensions.x / 2, 0, -dimensions.z / 2);
 			terrainMesh.CreateVerticesParent(offset);

@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TaskManagement.TaskList">
+    <Position X="15.75" Y="7" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACIEAAAAoAQAAAQACAAAIAAAAAAAAAACACiAAAA=</HashCode>
+      <FileName>Assets\Scripts\Task Management\TaskList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskManagement.DividableTask">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>EQAAAQIAAAAAAIQCAAQABAYAAAYIAAAAQQAAEBCBBAE=</HashCode>
+      <FileName>Assets\Scripts\Task Management\Dividable Task\DividableTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.GenerateTerrainNodes">
+    <Position X="0.5" Y="7" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>IAAIAAAAAEoQAAAAAAAAAAAAQAAAAAAAQEQIEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Generate Terrain Nodes\GenerateTerrainNodes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.GenerateNodesGradients">
+    <Position X="8" Y="7" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.749" />
+        <Point X="9.125" Y="6.749" />
+        <Point X="9.125" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAEIICAAAgAAAAAAAAAACAgAAAAAAAAQkAAEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Heightmap Generation\Generate Nodes Gradients\GenerateNodesGradients.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.GenerateNodesNoises">
+    <Position X="8" Y="0.5" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.747" />
+        <Point X="9.125" Y="6.747" />
+        <Point X="9.125" Y="4.492" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAEAIgAAAgQAAAAAAAAICAAAAAAAAAAQEAEEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Heightmap Generation\Generate Nodes Noises\GenerateNodesNoises.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.GenerateMesh">
+    <Position X="10.5" Y="0.5" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.726" />
+        <Point X="11.625" Y="6.726" />
+        <Point X="11.625" Y="3.723" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAYEAAEABAIEE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Mesh Generation\Generate Mesh\GenerateMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.GenerateMeshVertices">
+    <Position X="13" Y="7" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.749" />
+        <Point X="14.125" Y="6.749" />
+        <Point X="14.125" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAABCAAAAAABAEgAAACAQAAAAAAAQQEAAEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Mesh Generation\Generate Mesh Vertices\GenerateMeshVertices.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.TranslateMeshVertices">
+    <Position X="5.5" Y="3.75" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.749" />
+        <Point X="6.625" Y="6.749" />
+        <Point X="6.625" Y="6.588" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAABAAAAAAAAAAAAAAAAAQEAAEAAAAEE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Mesh Generation\Translate Mesh Vertices\TranslateMeshVertices.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.GenerateObjectPositions">
+    <Position X="15.5" Y="0.5" Width="2.75" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.738" />
+        <Point X="16.875" Y="6.738" />
+        <Point X="16.875" Y="6.415" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAABBCABAAAAAAAAAJCAQAAAAEAAwQEAAEAEAEWE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Object Placement\Generate Object Positions\GenerateObjectPositions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.PlaceObjects">
+    <Position X="3" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAABAAAAAIAAAAQAAAAAAQEAAEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Object Placement\Place Objects\PlaceObjects.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.GenerateIslandAreaTexture">
+    <Position X="13" Y="0.5" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.749" />
+        <Point X="14.125" Y="6.749" />
+        <Point X="14.125" Y="5.454" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAJAIAAgAgAAAQAAAQAACAQAAAAAAAQQEAQMAAAIAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Texture Generation\Generate Island Area Texture\GenerateIslandAreaTexture.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.AddTextures">
+    <Position X="5.5" Y="0.5" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.718" />
+        <Point X="5.377" Y="6.718" />
+        <Point X="5.377" Y="2" />
+        <Point X="5.5" Y="2" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgwEAAAAAAAAAAAAAAAAAAAAAAQEAAEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Texture Operations\Add Textures\AddTextures.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.MultiplyTextureLists">
+    <Position X="10.5" Y="7" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.717" />
+        <Point X="11.625" Y="6.717" />
+        <Point X="11.625" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAQAAAAAAAAACAAAAAAiAAAQkAAEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Texture Operations\Multiply Texture Lists\MultiplyTextureLists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.HideObjects&lt;THideable&gt;">
+    <Position X="3" Y="3.75" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.749" />
+        <Point X="4.125" Y="6.749" />
+        <Point X="4.125" Y="6.204" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAACAAAAAAAQAAAEAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Visualization\Hide Objects\HideObjects.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.ShowTerrainNodes">
+    <Position X="3" Y="7" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.737" />
+        <Point X="4.125" Y="6.737" />
+        <Point X="4.125" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>CAAAAIAEAAgAAAAAAAiAAAAAAAAAAAAAQEAAEABAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Visualization\Show Terrain Nodes\ShowTerrainNodes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.ShowTextures">
+    <Position X="5.5" Y="7" Width="2.25" />
+    <InheritanceLine Type="TaskManagement.DividableTask" ManuallyRouted="true">
+      <Path>
+        <Point X="1.625" Y="6.353" />
+        <Point X="1.625" Y="6.732" />
+        <Point X="6.625" Y="6.732" />
+        <Point X="6.625" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQEAAAABBAAAAACAACAAAAAAAQEAAMABAAAE=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Tasks\Visualization\Show Textures\ShowTextures.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

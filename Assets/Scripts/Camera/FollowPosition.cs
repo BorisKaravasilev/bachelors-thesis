@@ -10,6 +10,7 @@ public class FollowPosition : MonoBehaviour
 
 	private Vector3 offset;
 	private Camera followingCamera;
+	private float startingFOV;
 
     // Start is called before the first frame update
     void Start()

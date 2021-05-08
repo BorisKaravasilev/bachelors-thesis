@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ProceduralGeneration.IslandGenerator.TerrainBlendList">
+    <Position X="5.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAABAAAEAAAAAAAAAAAAI=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Texture Generator\TerrainBlendList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.TerrainBlend">
+    <Position X="2.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAEAAAEAAAAAICAABAAAACAACAACCAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Texture Generator\TerrainBlend.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProceduralGeneration.IslandGenerator.TerrainTypeFraction">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAACAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Procedural Generation\Island Generator\Texture Generator\TerrainTypeFraction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
