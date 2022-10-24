@@ -1,9 +1,11 @@
 # Bachelor's Thesis - Boris Karavasilev
 
+*Brno University of Technology - Spring 2021*
+
 **Title:** Generating Terrain with Animated Water Surface in Unity <br>
 **Unity Version:** 2021.1.1f1
 
-The text of the thesis can be found [here](./thesis.pdf).
+The full text of the thesis can be found [here](./thesis.pdf).
 
 ## Goal
 
